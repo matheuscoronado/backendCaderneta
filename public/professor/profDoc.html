@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedNotes - Visualização do Professor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="profDoc.css">
+    <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg"/>
+</head>
+
+<body>
+    <!-- Aplicação Principal (inicialmente oculta) -->
+    <div id="app">
+        <!-- Cabeçalho -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <i class="fas fa-book-medical"></i>
+                    <h1>MedNotes - Professor</h1>
+                </div>
+                <button id="logout-btn" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Busca -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Buscar aluno...">
+            </div>
+
+            <!-- Lista de Alunos -->
+            <div class="students-section">
+                <h2>Turma de Teste</h2>
+                <div id="students-list" class="students-grid">
+                    <!-- Alunos serão carregados aqui -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar de Anotações do Aluno -->
+        <div id="notes-sidebar" class="notes-sidebar">
+            <div class="sidebar-header">
+                <h2 id="sidebar-student-name">Anotações</h2>
+                <button id="close-sidebar" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="sidebar-notes-list" class="sidebar-notes-list">
+                <!-- Anotações do aluno serão carregadas aqui -->
+            </div>
+        </div>
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Modal de Visualização de Anotação -->
+        <div id="note-modal" class="note-modal hidden">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-header">
+                        <div>
+                            <h2 id="modal-note-title"></h2>
+                            <p id="modal-note-date"></p>
+                            <p id="modal-note-author"></p>
+                        </div>
+                        <button id="close-note-modal" class="close-button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="modal-note-content" class="note-content"></div>
+
+                    <div id="modal-note-suggestions" class="suggestions-container hidden">
+                        <h3>Sugestões da IA</h3>
+                        <div id="modal-suggestions-content" class="suggestions-content"></div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Feedback do Professor</h3>
+                        <textarea id="teacher-feedback" placeholder="Digite seu feedback para o aluno..."></textarea>
+                        <div class="feedback-actions">
+                            <button id="cancel-feedback" class="secondary-button">
+                                Cancelar
+                            </button>
+                            <button id="save-feedback" class="primary-button">
+                                <i class="fas fa-save"></i> Salvar Feedback
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="profDoc.js"></script>
+</body>
+
+</html>
