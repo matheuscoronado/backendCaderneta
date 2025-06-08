@@ -4,10 +4,10 @@ document.getElementById('login-form').addEventListener('submit', async function(
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    const basePath = '/caderneta-digital-1'; // ajuste conforme sua pasta no htdocs
+    const basePath = '/backendCardeneta';
 
     try {
-        const response = await fetch(`${basePath}/public/home/login.php`, { 
+        const response = await fetch(`${basePath}/backend/views/login.php`, { 
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`
@@ -22,8 +22,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
             // Redireciona conforme o tipo
             if (data.user.tipo === 'administrador') {
-                window.location.href = `${basePath}/public/admin/configADM.html`;
-            } else if (data.user.tipo === 'teacher') {
+                window.location.href = `${basePath}/public/admin/admin.php`;
+            } else if (data.user.tipo === 'professor') {
                 window.location.href = `${basePath}/public/professor/profDoc.html`;
             } else {
                 window.location.href = `${basePath}/public/aluno/alunoUso.html`;

@@ -5,12 +5,12 @@
 
         public function login(){
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $email = $_POST['email'];
-                $password = $_POST['password'];
+                $email      = $_POST['email'];
+                $password   = $_POST['password'];
 
                 $user = User::findByEmail($email);
 
-                if ($user && password_verify($password, $user['password'])) {
+                if ($user && password_verify($password, $user['senha_hash'])) {
                     session_start();
 
                     $_SESSION['usuario_id'] = $user['id'];

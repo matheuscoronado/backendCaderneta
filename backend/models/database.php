@@ -8,9 +8,8 @@
                 $db = 'cadernetadigital';
                 $user = 'root';
                 $password = '';
-                $port = 3307;
 
-                self::$instance = new PDO("mysql:host=$host;dbname=$db;port=$port", $user, $password);
+                self::$instance = new PDO("mysql:host=$host;dbname=$db", $user, $password);
 
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }

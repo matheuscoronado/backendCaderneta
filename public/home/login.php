@@ -7,7 +7,7 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "cadernetadigital";
-$port = 3307;
+$port = 3306;
 
 $email = $_POST['email'] ?? '';
 $senha = $_POST['senha'] ?? '';
