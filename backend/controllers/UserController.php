@@ -1,32 +1,51 @@
 <?php
-require_once 'backend/models/user.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Coleta os dados do formulário
-    $nome = $_POST['name'];
-    $email = $_POST['email'];
-    $senha = password_hash($_POST['password'], PASSWORD_DEFAULT); // Criptografa a senha
-    $funcao = $_POST['funcao'];
+    class UserController
+    {
+        public function register(){
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+            'nome'      => $_POST['nome'],
+            'email'     => $_POST['email'],
+            'senha_hash'=> password_hash($_POST['password'], PASSWORD_DEFAULT),
+            'tipo'      => $_POST['funcao']
+            ];
 
-    try {
-        // Prepara os dados no formato esperado pelo método create
-        $data = [
-        'nome' => $nome,
-        'email' => $email,
-        'senha_hash' => password_hash($senha, PASSWORD_DEFAULT),
-        'tipo' => $funcao,
-        ];
+            User::create($data);
 
+            header('Location: admin.php');
+            } else { 
+                include'bakend/views/register.php';
+            }
+        }
 
-        User::create($data);
+        public function edit($id)
+        {
+            session_start();
+            if ($_SESSION['tipo'] == 'administrador') {
+                $user = User::find($id);
+                if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $data = [
+                        'nome'      => $_POST['nome'],
+                        'email'     => $_POST['email'],
+                        'senha_hash'=> password_hash($_POST['password'], PASSWORD_DEFAULT),
+                        'tipo'      => $_POST['tipo']
+                    ];
+                    User::update($id, $data);
+                    header('Location: index.php?action=list');
+                } else {
+                    include 'backend/views/edit_user.php';
+                }
+            } else{
+                echo "Acesso negado. Você não tem permissão para editar usuários.";
+            }
+        }
 
-        // Redireciona para a tela de listagem de usuários (ou dashboard)
-        header('Location: admin.php');
-        exit();
-
-    } catch (PDOException $e) {
-        echo "Erro ao cadastrar usuário: " . $e->getMessage();
-    }
-} else {
-    echo "Método inválido.";
-}
+        public function list()
+        {
+            session_start();
+                $users = User::all();
+                include 'backend/views/list_users.php';
+            }
+        }
+?>

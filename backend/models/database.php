@@ -1,19 +1,20 @@
 <?php
-    class Database{
-        private static $instance = null;
+class Database {
+    private static $instance = null;
 
-        public static function getConnection(){
-            if (!self::$instance) {
-                $host = 'localhost';
-                $db = 'cadernetadigital';
-                $user = 'root';
-                $password = '';
+    public static function getConnection() {
+        if (!self::$instance) {
+            $host = 'localhost';
+            $port = '3307'; 
+            $db = 'cadernetadigital';
+            $user = 'root';
+            $password = '';
 
-                self::$instance = new PDO("mysql:host=$host;dbname=$db", $user, $password);
-
-                self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            }
-            return self::$instance;
+            
+            self::$instance = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $password);
+            self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+        return self::$instance;
     }
+}
 ?>
