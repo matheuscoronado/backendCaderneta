@@ -1,66 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+    <!-- Meta tags básicas para configuração da página -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedNotes - Caderneta Digital</title>
-    <link rel="stylesheet" href="AlunoUso.css">
+    
+    <!-- Links para folhas de estilo e bibliotecas externas -->
+    <link rel="stylesheet" href="alunoUso.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg"/>
+    
+    <!-- Biblioteca para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
-
-    <!-- Aplicação Principal (inicialmente oculta) -->
+    <!-- Container principal da aplicação -->
     <div id="app" class="app-container">
-        <!-- Cabeçalho -->
+        <!-- Cabeçalho da aplicação -->
         <header class="app-header">
             <div class="header-content">
+                <!-- Logo e nome da aplicação -->
                 <div class="logo-container">
                     <i class="fas fa-book-medical"></i>
                     <h1>MedNotes</h1>
                 </div>
-                <button id="logout-btn" class="logout-button">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
+                
+                <!-- Ações do cabeçalho (tema e logout) -->
+                <div class="header-actions">
+                    <!-- Botão para alternar entre tema claro/escuro -->
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <!-- Botão para sair da aplicação -->
+                    <button id="logout-btn" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- Sidebar de Anotações -->
-        <div id="notes-sidebar" class="notes-sidebar">
-            <div class="sidebar-header">
-                <h2>Suas Anotações</h2>
-                <button id="close-sidebar" class="close-button">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div id="sidebar-notes-list" class="sidebar-notes-list">
-                <!-- Anotações serão carregadas aqui -->
-            </div>
-        </div>
-        <div id="sidebar-overlay" class="sidebar-overlay"></div>
-
-        <!-- Conteúdo Principal -->
+        <!-- Conteúdo principal da aplicação -->
         <main class="main-content">
-            <!-- Editor de Anotações -->
+            <!-- Editor de anotações -->
             <div class="note-editor">
                 <h2>Nova Anotação</h2>
-                <div class="form-group">
+                <div class="form-group title-input">
                     <input type="text" id="note-title" placeholder="Título (ex: Procedimento com Paciente X)">
                 </div>
                 <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
                 <div class="editor-actions">
+                    <!-- Botão para salvar anotação -->
                     <button id="save-btn" class="save-button">
                         <i class="fas fa-save"></i> Salvar
                     </button>
+                    
+                    <!-- Botão para analisar anotação com IA -->
                     <button id="analyze-btn" class="analyze-button">
                         <i class="fas fa-robot"></i> Analisar com IA
                     </button>
                 </div>
             </div>
 
-            <!-- Sugestões da IA -->
+            <!-- Container para sugestões da IA (inicialmente oculto) -->
             <div id="suggestions-container" class="suggestions-container hidden">
                 <div class="suggestions-header">
                     <h2>Sugestões da IA</h2>
@@ -68,35 +71,80 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div id="suggestions-content" class="suggestions-content">
-                    <!-- Sugestões serão inseridas aqui -->
-                </div>
-            </div>
-
-            <!-- Anotações Anteriores -->
-            <div class="previous-notes">
-                <h2>Anotações Anteriores</h2>
-                <div id="notes-list" class="notes-list">
-                    <!-- Anotações serão carregadas aqui -->
-                </div>
+                <div id="suggestions-content" class="suggestions-content"></div>
             </div>
         </main>
 
-        <!-- Rodapé Móvel -->
+        <!-- Sidebar para listagem de anotações (inicialmente oculto) -->
+        <div id="notes-sidebar" class="notes-sidebar">
+            <div class="sidebar-header">
+                <h2 id="sidebar-student-name">Minhas Anotações</h2>
+                <button id="close-sidebar" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="sidebar-notes-list" class="sidebar-notes-list"></div>
+            
+            <!-- Botão para exportar anotações como PDF -->
+            <button id="export-pdf-btn" class="export-button">
+                <i class="fas fa-file-pdf"></i> Exportar PDF
+            </button>
+        </div>
+        
+        <!-- Overlay para quando o sidebar estiver aberto -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Menu mobile no rodapé -->
         <nav class="mobile-footer">
+            <!-- Botão para criar nova anotação -->
             <button id="new-note-btn" class="footer-button active">
                 <i class="fas fa-plus"></i>
             </button>
+            
+            <!-- Botão para visualizar anotações -->
             <button id="view-notes-btn" class="footer-button">
                 <i class="fas fa-book"></i>
-            </button>
-            <button id="settings-btn" class="footer-button">
-                <i class="fas fa-cog"></i>
             </button>
         </nav>
     </div>
 
-    <!-- Modal de Carregamento -->
+    <!-- Modal para edição de anotações (inicialmente oculto) -->
+    <div id="edit-note-modal" class="note-modal hidden">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <div>
+                        <h2>Editar Anotação</h2>
+                    </div>
+                    <button id="close-edit-modal" class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group title-input">
+                    <input type="text" id="edit-note-title" placeholder="Título">
+                </div>
+                <textarea id="edit-note-content" rows="8" placeholder="Conteúdo da anotação..."></textarea>
+                
+                <!-- Container para sugestões da IA na edição -->
+                <div id="edit-note-suggestions" class="suggestions-container">
+                    <h3>Sugestões da IA</h3>
+                    <div id="edit-suggestions-content" class="suggestions-content"></div>
+                </div>
+
+                <!-- Ações para a anotação sendo editada -->
+                <div class="edit-actions">
+                    <button id="update-note-btn" class="primary-button">
+                        <i class="fas fa-save"></i> Atualizar
+                    </button>
+                    <button id="delete-note-btn" class="secondary-button">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de carregamento (inicialmente oculto) -->
     <div id="loading-modal" class="loading-modal hidden">
         <div class="loading-content">
             <div class="loading-spinner"></div>
@@ -104,36 +152,7 @@
         </div>
     </div>
 
-    <!-- Modal de Configurações -->
-    <div id="settings-modal" class="settings-modal hidden">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h2>Configurações</h2>
-                <button id="close-settings" class="close-button">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="settings-options">
-                <div class="setting-option">
-                    <label>
-                        <input type="checkbox">
-                        <span>Modo Escuro</span>
-                    </label>
-                </div>
-                <div class="setting-option">
-                    <label>
-                        <input type="checkbox">
-                        <span>Notificações</span>
-                    </label>
-                </div>
-                <button class="save-settings-button">
-                    Salvar Configurações
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Script principal da aplicação -->
     <script src="alunoUso.js"></script>
 </body>
-
 </html>

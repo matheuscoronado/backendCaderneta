@@ -2,27 +2,21 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" type='text/css' media='screen' href="css/style.css">
-</head>
-
-<body class="<?= $_SESSION['tipo']?>">
-    <div class="container">
-        <?php if ($_SESSION['tipo'] == 'administrador'): ?>
-
-    <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Configurações - MedNotes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="public/admin/configADM.css" />
     <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg" />
     </head>
 
-    <body class="bg-gray-50 min-h-screen">
+<body class="<?= $_SESSION['tipo']?>">
+    <div class="container">
+        <?php if ($_SESSION['tipo'] == 'administrador'): ?>
+            <link rel="stylesheet" href="public/admin/configADM.css" />
+
+    <body >
     <!-- Cabeçalho -->
     <header class="bg-white shadow-sm p-4">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -34,9 +28,10 @@
             <h1 class="text-lg sm:text-xl font-bold text-gray-800">MedNotes - Admin Center</h1>
         </div>
         <div class="flex items-center gap-2 self-end sm:self-auto">
-            <button id="add-user-btn"
+            <button id="add-
+            -btn"
             class="px-3 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm sm:text-base">
-            <i class="fas fa-plus mr-1 sm:mr-2"></i><span class="hidden sm:inline">Adicionar</span>
+            <a href="index.php?action=register">Adicionar +</a>
             </button>
             <button id="logout-btn" class="text-gray-600 hover:text-blue-600 text-sm sm:text-base">
             <i class="fas fa-sign-out-alt"></i>
@@ -148,7 +143,7 @@
         </a>
     </nav>
 
-    <script src="admin.js"></script>
+    <script src="public/admin/configADM.js"></script>
     </body>
 
         <?php elseif ($_SESSION['tipo'] == 'professor'): ?>
@@ -157,7 +152,7 @@
             <p>Área exclusiva do Professor.</p>
 
             <?php else: ?>
-            <p>Área exclusiva do Colaborador.</p>
+            <p>Área exclusiva do Aluno.</p>
         <?php endif; ?>
         
 

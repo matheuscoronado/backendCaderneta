@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +10,35 @@
 </head>
 
 <body>
+    <!-- Tela de Login -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-book-medical login-icon"></i>
+                <h1>MedNotes</h1>
+                <p>Acesso do Professor</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Aplicação Principal (inicialmente oculta) -->
-    <div id="app">
+    <div id="app" class="hidden">
         <!-- Cabeçalho -->
         <header class="app-header">
             <div class="header-content">
@@ -20,9 +46,14 @@
                     <i class="fas fa-book-medical"></i>
                     <h1>MedNotes - Professor</h1>
                 </div>
-                <button id="logout-btn" class="logout-button">
+                <div class="header-actions">
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="logout-btn" class="logout-button">
                         <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -96,5 +127,4 @@
 
     <script src="profDoc.js"></script>
 </body>
-
 </html>

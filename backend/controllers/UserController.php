@@ -15,7 +15,7 @@
 
             header('Location: admin.php');
             } else { 
-                include'bakend/views/register.php';
+                include'backend/views/register.php';
             }
         }
 

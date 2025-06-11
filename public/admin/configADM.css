@@ -1,0 +1,212 @@
+/* Variáveis CSS para temas claro e escuro */
+:root {
+    --primary-color: #3b82f6;         /* Azul principal */
+    --primary-dark: #2563eb;          /* Azul mais escuro */
+    --secondary-color: #6b7280;       /* Cinza para texto secundário */
+    --light-gray: #f3f4f6;            /* Cinza claro para fundos */
+    --medium-gray: #e5e7eb;           /* Cinza médio para bordas */
+    --dark-gray: #4b5563;             /* Cinza escuro */
+    --white: #ffffff;                 /* Branco */
+    --black: #000000;                 /* Preto */
+    --red: #ef4444;                   /* Vermelho para botões de ação */
+    --green: #10b981;                 /* Verde para feedback positivo */
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);          /* Sombra leve */
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);       /* Sombra média */
+    --rounded: 0.5rem;                /* Bordas arredondadas padrão */
+    --rounded-lg: 0.75rem;            /* Bordas arredondadas maiores */
+    
+    /* Valores padrão para o tema claro */
+    --bg-color: #ffffff;              /* Cor de fundo */
+    --text-color: #1f2937;            /* Cor do texto */
+    --card-bg: #ffffff;               /* Cor de fundo dos cards */
+    --border-color: #e5e7eb;          /* Cor das bordas */
+
+    --view-color: #3b82f6;
+    --view-hover: #2563eb;
+    --view-bg: #ebf2ff;
+    --view-border: #bfdbfe;
+    
+    --edit-color: #d97706;
+    --edit-hover: #b45309;
+    --edit-bg: #fef3c7;
+    --edit-border: #fde68a;
+    
+    --delete-color: #ef4444;
+    --delete-hover: #dc2626;
+    --delete-bg: #fee2e2;
+    --delete-border: #fecaca;
+}
+
+/* Estilos para o tema escuro */
+.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #f4f6f3;
+    --card-bg: #2d2d2d;
+    --border-color: #4b5563;
+    --light-gray: #2d2d2d;
+    --dark-gray: #292929;
+    --medium-gray: #4b5563;
+    --secondary-color: #9ca3af;
+
+    --view-color: #93c5fd;
+    --view-hover: #60a5fa;
+    --view-bg: #1e3a8a;
+    --view-border: #1e40af;
+    
+    --edit-color: #fcd34d;
+    --edit-hover: #fbbf24;
+    --edit-bg: #78350f;
+    --edit-border: #92400e;
+    
+    --delete-color: #fca5a5;
+    --delete-hover: #f87171;
+    --delete-bg: #7f1d1d;
+    --delete-border: #991b1b;
+}
+
+/* Estilos base para cartões de usuário */
+.user-card {
+    transition: all 0.2s ease;
+    border-left: 4px solid #3b82f6;
+}
+
+.user-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Seções por função */
+.role-section {
+    margin-bottom: 2.5rem;
+}
+
+.role-title {
+    background-color: #f3f4f6;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    font-size: 1.125rem;
+}
+
+/* No dark mode (as classes já estão definidas no seu CSS) */
+.dark-mode .role-title {
+    background-color: var(--dark-gray); /* #2d2d2d */
+    color: var(--text-color); /* #f4f6f3 */
+}
+
+/* Tabela e células */
+.responsive-table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.responsive-table table {
+    min-width: 100%;
+}
+
+.responsive-table th {
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+}
+
+.responsive-table td {
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+/* Botões de ação */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Modo noturno*/
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease;
+}
+
+.action-button i {
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+}
+
+/* Ajustes para mobile */
+@media (max-width: 640px) {
+    .role-title {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .responsive-table {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    .responsive-table td {
+        padding: 0.7rem;
+    }
+    
+    .action-buttons {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    
+    .action-button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Ajuste para o modal em mobile */
+    #user-form-modal > div,
+    #user-details-modal > div {
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 1rem auto;
+        padding: 1rem;
+    }
+}
+
+/* Melhorias para o formulário */
+#user-form input,
+#user-form select {
+    transition: border-color 0.2s ease;
+}
+
+#user-form input:focus,
+#user-form select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Botão de alternar senha */
+#toggle-password {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+#toggle-password:hover {
+    color: #3b82f6;
+}
