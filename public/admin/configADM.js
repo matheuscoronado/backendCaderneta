@@ -158,8 +158,7 @@ function showUserDetails(userId) {
 
     document.getElementById('user-details-modal').classList.remove('hidden');
 
-
-   // Configura os eventos para os botões existentes no modal
+    // Configura os eventos para os botões existentes no modal
     const editBtn = document.querySelector('#user-details-modal .mt-4 button:first-child');
     const deleteBtn = document.querySelector('#user-details-modal .mt-4 button:last-child');
 
@@ -193,15 +192,13 @@ function editUser(userId) {
     const user = users.find(u => u.id === userId);
     if (!user) return;
 
-    document.getElementById('form-modal-title').textContent = 'Editar Usuário';
-    document.getElementById('user-id').value = user.id;
-    document.getElementById('name').value = user.name;
-    document.getElementById('email').value = user.email;
-    document.getElementById('password').value = user.password;
-    document.getElementById('role').value = user.role;
-
-    document.getElementById('user-form-modal').classList.remove('hidden');
-    setupPasswordToggle(); // Configura o toggle de senha
+    // Abre o modal de edição com os dados do usuário
+    openEditModal({
+        id: user.id,
+        nome: user.name,
+        email: user.email,
+        funcao: user.role
+    });
 }
 
 // Salvar usuário (adicionar ou editar)
@@ -254,45 +251,6 @@ document.getElementById('user-form-modal').addEventListener('click', function (e
     if (e.target === this) {
         this.classList.add('hidden');
     }
-});
-
-// Modifique a função editUser para incluir a configuração do toggle
-function editUser(userId) {
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
-
-    document.getElementById('form-modal-title').textContent = 'Editar Usuário';
-    document.getElementById('user-id').value = user.id;
-    document.getElementById('name').value = user.name;
-    document.getElementById('email').value = user.email;
-    document.getElementById('password').value = user.password;
-    document.getElementById('role').value = user.role;
-
-    // Resetar o campo de senha para o estado padrão
-    document.getElementById('password').type = 'password';
-    const icon = document.querySelector('#toggle-password i');
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
-    
-    setupPasswordToggle();
-    document.getElementById('user-form-modal').classList.remove('hidden');
-}
-
-// Adicione também no evento de abrir o modal para adicionar novo usuário
-document.getElementById('add-user-btn').addEventListener('click', function() {
-    document.getElementById('form-modal-title').textContent = 'Adicionar Novo Usuário';
-    document.getElementById('user-form').reset();
-    document.getElementById('user-id').value = '';
-    
-
-    // Resetar o campo de senha
-    document.getElementById('password').type = 'password';
-    const icon = document.querySelector('#toggle-password i');
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
-    
-    setupPasswordToggle();
-    document.getElementById('user-form-modal').classList.remove('hidden');
 });
 
 // Configuração do toggle de senha
@@ -350,3 +308,4 @@ document.getElementById('logout-btn').addEventListener('click', function () {
     localStorage.removeItem('user');
     window.location.href = "/public/admin/configADM.html";
 });
+

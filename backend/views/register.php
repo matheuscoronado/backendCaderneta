@@ -7,7 +7,7 @@
   <title>Configurações - MedNotes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="public/admin/admin.css" />
+  <link rel="stylesheet" href="public/admin/configADM.css" />
   <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg" />
 </head>
 
@@ -62,7 +62,7 @@
         </form>
       </div>
     </div>
-  <script src="public/admin/admin.js"></script>
+  <script src="public/admin/configADM.js"></script>
 </body>
 
 </html>

@@ -21,7 +21,7 @@
                 $userController->list();
                 break;
             case 'dashboard':
-                $dashboardController->index();
+                $userController->dashboard();
                 break;
             case 'edit':
                 $id = $_GET['id'];
