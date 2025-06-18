@@ -1,12 +1,12 @@
 <?php
-    require_once 'backend/models/user.php';
+    require_once 'models/user.php';
 
     class AuthController {
 
         public function login(){
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $email      = $_POST['email'];
-                $password   = $_POST['password'];
+                $password   = $_POST['senha_hash'];
 
                 $user = User::findByEmail($email);
 
@@ -22,7 +22,7 @@
                 }
             }else {
                 // Renderiza a página de login
-                include 'backend/views/login.php';
+                include 'views/login.php';
             }
         }
     }

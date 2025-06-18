@@ -8,7 +8,7 @@
                 header('Location: index.php');
                 exit;
             }
-                include'backend/views/dashboard.php';
+                include'views/dashboard.php';
         }
     }
 ?>

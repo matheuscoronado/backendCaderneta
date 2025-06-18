@@ -7,7 +7,6 @@
     <title>Login | MedNotes - Caderneta Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <link rel="stylesheet" href="/public/home/login.css"/>
     <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg"/>
 </head>
 
@@ -27,8 +26,8 @@
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-                    <input type="password" name="password" id="password" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"/>
+                    <label for="senha_hash" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                    <input type="password" name="senha_hash" id="senha_hash" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"/>
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-medium">
@@ -38,7 +37,7 @@
         </div>
     </div>
 
-    <script src="/public/home/login.js"></script>
+    <script src="js/login.js"></script>
 </body>
 
 </html>

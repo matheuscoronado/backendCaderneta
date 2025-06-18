@@ -14,7 +14,7 @@ class UserController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validação básica dos dados
-            if (empty($_POST['nome']) || empty($_POST['email']) || empty($_POST['password'])) {
+            if (empty($_POST['nome']) || empty($_POST['email']) || empty($_POST['senha_hash'])) {
                 $_SESSION['error'] = "Todos os campos são obrigatórios!";
                 header('Location: index.php?action=register');
                 exit;
@@ -23,14 +23,14 @@ class UserController
             $data = [
                 'nome'      => trim($_POST['nome']),
                 'email'     => trim($_POST['email']),
-                'senha_hash'=> password_hash($_POST['password'], PASSWORD_DEFAULT),
-                'tipo'      => $_POST['funcao'] ?? 'aluno' // Valor padrão
+                'senha_hash'=> password_hash($_POST['senha_hash'], PASSWORD_DEFAULT),
+                'tipo'      => $_POST['tipo']
             ];
 
             try {
                 User::create($data);
                 $_SESSION['success'] = "Usuário cadastrado com sucesso!";
-                header('Location: dashboard.php');
+                header('Location: views/dashboard.php');
                 exit;
             } catch (Exception $e) {
                 $_SESSION['error'] = "Erro ao cadastrar usuário: " . $e->getMessage();
@@ -38,14 +38,14 @@ class UserController
                 exit;
             }
         } else { 
-            include 'backend/views/register.php';
+            include 'views/register.php';
         }
     }
 
     public function edit($id)
     {
         // Verifica permissão
-        if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] != 'administrador') {
+        if ($_SESSION['tipo'] != 'administrador') {
             $_SESSION['error'] = "Acesso negado. Você não tem permissão para editar usuários.";
             header('Location: index.php');
             exit;
@@ -81,14 +81,14 @@ class UserController
                 exit;
             }
         } else {
-            include 'backend/views/edit_user.php';
+            include 'views/edit_user.php';
         }
     }
 
     public function list()
     {
         // Verifica se o usuário tem permissão
-        if (!isset($_SESSION['tipo']) || !in_array($_SESSION['tipo'], ['administrador', 'professor'])) {
+        if ($_SESSION['tipo'] != 'administrador') {
             $_SESSION['error'] = "Acesso negado. Você não tem permissão para ver esta página.";
             header('Location: index.php');
             exit;
@@ -96,7 +96,7 @@ class UserController
 
         try {
             $users = User::all();
-            include 'backend/views/list_users.php'; // Ou dashboard.php
+            include 'views/list_users.php';
         } catch (Exception $e) {
             $_SESSION['error'] = "Erro ao carregar usuários: " . $e->getMessage();
             header('Location: index.php');
@@ -104,7 +104,7 @@ class UserController
         }
     }
     
-    // Adicione este método para o dashboard
+
     public function dashboard()
     {
         if (!isset($_SESSION['tipo'])) {
@@ -114,7 +114,7 @@ class UserController
 
         try {
             $users = ($_SESSION['tipo'] == 'administrador') ? User::all() : [];
-            include 'backend/views/dashboard.php';
+            include 'views/dashboard.php';
         } catch (Exception $e) {
             $_SESSION['error'] = "Erro ao carregar dashboard: " . $e->getMessage();
             header('Location: index.php');

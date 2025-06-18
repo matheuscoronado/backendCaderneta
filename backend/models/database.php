@@ -5,7 +5,7 @@ class Database {
     public static function getConnection() {
         if (!self::$instance) {
             $host = 'localhost';
-            $port = '3307'; 
+            $port = '3306'; 
             $db = 'cadernetadigital';
             $user = 'root';
             $password = '';
