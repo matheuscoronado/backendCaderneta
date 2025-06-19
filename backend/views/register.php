@@ -25,7 +25,7 @@
         <form id="user-form" action="salvar_usuario.php" method="POST" class="space-y-3 sm:space-y-4">
           <input type="hidden" id="user-id" name="user-id" />
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+            <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
             <input type="text" id="nome" name="nome" required
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 sm:py-2 px-2 sm:px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base" />
           </div>
@@ -35,13 +35,13 @@
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 sm:py-2 px-2 sm:px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base" />
           </div>
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-            <input type="password" id="password" name="password" required
+            <label for="senha_hash" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input type="password" id="senha_hash" name="senha_hash" required
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 sm:py-2 px-2 sm:px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base" />
           </div>
           <div>
-            <label for="funcao" class="block text-sm font-medium text-gray-700">Função</label>
-            <select id="funcao" name="funcao" required
+            <label for="tipo" class="block text-sm font-medium text-gray-700">Função</label>
+            <select id="tipo" name="tipo" required
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 sm:py-2 px-2 sm:px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base">
               <option value="">Selecione uma função</option>
               <option value="administrador">Administrador</option>
@@ -62,7 +62,7 @@
         </form>
       </div>
     </div>
-  <script src="public/admin/configADM.js"></script>
+    <script src="../js/admin.js"></script>
 </body>
 
 </html>

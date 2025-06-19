@@ -1,3 +1,8 @@
+<?php
+require_once 'models/User.php';
+$users = User::all();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -7,7 +12,16 @@
     <title>Configurações - MedNotes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="public/admin/configADM.css" />
+
+    <?php if ($_SESSION['tipo'] == 'administrador'): ?>
+    <link rel="stylesheet" href="css/admin.css" />
+    <?php elseif ($_SESSION['tipo'] == 'professor'): ?>
+        <link rel="stylesheet" href="css/professor.css" />
+    <?php else: ?>
+        <link rel="stylesheet" href="css/aluno.css" />
+    <?php endif; ?>
+
+    
     <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg" />
 
 </head>
@@ -41,10 +55,10 @@
                             <i class="fas fa-plus mr-1 sm:mr-2"></i><span class="hidden sm:inline">Adicionar</span>
                         </button>
 
-                        <button id="logout-btn" class="text-gray-600 hover:text-blue-600 text-sm sm:text-base">
-                            <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline"><a
-                                    href="../../login.html">Sair</a></span>
-                        </button>
+                        <a href="logout.php" id="logout-btn" class="text-gray-600 hover:text-blue-600 text-sm sm:text-base flex items-center gap-1">
+                        <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Sair</span>
+                        </a>
+
                     </div>
                 </div>
             </header>
@@ -60,16 +74,53 @@
                     </div>
 
                     <!-- Grupos de Usuários -->
-                    <div id="users-by-role">
-                        <!-- Os usuários serão organizados por função aqui -->
-                    </div>
+                    <div class="container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Perfil</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td><?= $user['id'] ?></td>
+                            <td><?= $user['nome'] ?></td>
+                            <td><?= $user['email'] ?></td>
+                            <td><?= $user['tipo'] ?></td>
+                            <td>
+
+                            <!-- Botão para editar usuário -->
+                            <button class="edit-user-btn" 
+                            data-id="<?= $user['id'] ?>" 
+                            data-nome="<?= $user['nome'] ?>" 
+                            data-email="<?= $user['email'] ?>" 
+                            data-tipo="<?= $user['tipo'] ?>">
+                            Editar</button>
+
+
+                                <!-- Permitir que administrador exclua -->
+                                <?php if ($_SESSION['tipo'] == 'administrador'): ?>
+                                    <a href="index.php?action=delete&id=<?= $user['id'] ?>" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                </tbody>
+            </table>
+        </div>
                 </div>
 
 
 
                 <!-- Modal de Adicionar/Editar Usuário -->
-                <div id="user-form-modal"
-                    class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
+                <div id="user-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
                     <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2"
                         style="background-color: var(--card-bg); border: 1px solid var(--border-color);">
                         <div class="flex justify-between items-center mb-4">
@@ -99,7 +150,7 @@
                                 <label for="senha_hash" class="block text-sm font-medium"
                                     style="color: var(--text-color);">Senha</label>
                                 <div class="relative mt-1">
-                                    <input type="password" id="senha_hash" name="senha_hash" required
+                                    <input type="password" id="senha_hash" name="senha_hash"
                                         class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                         style="background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">
                                     <button type="button" id="toggle-password"
@@ -110,14 +161,14 @@
                             </div>
                             <div>
                                 <label for="tipo" class="block text-sm font-medium"
-                                    tyle="color: var(--text-color);">Função</label>
+                                    style="color: var(--text-color);">Função</label>
                                 <select id="tipo" name="tipo" required
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1 sm:py-2 px-2 sm:px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                                     style="background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">
                                     <option value="">Selecione uma função</option>
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Professor">Professor</option>
-                                    <option value="Aluno">Aluno</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="professor">Professor</option>
+                                    <option value="aluno">Aluno</option>
                                 </select>
                             </div>
                             <div class="flex justify-end gap-2 sm:space-x-2">
@@ -387,10 +438,14 @@
         <?php endif; ?>
     </div>
 
-    <script src="../js/aluno.js"></script>
-    <script src="../js/professor.js"></script>
-    <script src="../js/admin.js"></script>
-    <script src="../js/login.js"></script>
+    <?php if ($_SESSION['tipo'] == 'administrador'): ?>
+    <script src="js/admin.js"></script>
+<?php elseif ($_SESSION['tipo'] == 'professor'): ?>
+    <script src="js/professor.js"></script>
+<?php else: ?>
+    <script src="js/aluno.js"></script>
+<?php endif; ?>
+
 </body>
 
 </html>

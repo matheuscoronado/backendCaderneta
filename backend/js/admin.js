@@ -1,311 +1,235 @@
-// Carrega os usuários ao abrir a página
-document.addEventListener('DOMContentLoaded', function () {
-    renderUsersByRole();
+document.addEventListener('DOMContentLoaded', function() {
+    // Variável global para armazenar os usuários
+    let users = [];
 
-    // Evento para abrir o modal de adicionar usuário
-    document.getElementById('add-user-btn').addEventListener('click', function () {
-        document.getElementById('form-modal-title').textContent = 'Adicionar Novo Usuário';
-        document.getElementById('user-form').reset();
-        document.getElementById('user-id').value = '';
-        document.getElementById('user-form-modal').classList.remove('hidden');
-    });
+    // Elementos do DOM
+    const modal = document.getElementById('user-form-modal');
+    const form = document.getElementById('user-form');
+    const userTable = document.querySelector('.styled-table tbody');
+    const addUserBtn = document.getElementById('add-user-btn');
+    const closeModalBtn = document.getElementById('close-form-modal');
+    const cancelFormBtn = document.getElementById('cancel-form');
+    const logoutBtn = document.getElementById('logout-btn');
+    const themeToggle = document.getElementById('theme-toggle');
 
-    // Evento para fechar o modal de formulário
-    document.getElementById('close-form-modal').addEventListener('click', function () {
-        document.getElementById('user-form-modal').classList.add('hidden');
-    });
+    // Inicialização
+    loadUsers();
+    setupEventListeners();
+    loadTheme();
 
-    document.getElementById('cancel-form').addEventListener('click', function () {
-        document.getElementById('user-form-modal').classList.add('hidden');
-    });
-
-    // Evento para submeter o formulário
-    document.getElementById('user-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        saveUser();
-    });
-
-    // Carrega o tema salvo no localStorage ou usa o tema claro por padrão
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-});
-
-// Renderiza os usuários agrupados por função
-function renderUsersByRole() {
-    const container = document.getElementById('users-by-role');
-    container.innerHTML = '';
-
-    // Agrupa usuários por função
-    const roles = [...new Set(users.map(user => user.role))];
-
-    roles.forEach(role => {
-        const roleUsers = users.filter(user => user.role === role);
-
-        const roleSection = document.createElement('div');
-        roleSection.className = 'role-section';
-
-        const roleTitle = document.createElement('div');
-        roleTitle.className = 'role-title';
-        roleTitle.textContent = role === 'Administrador' ? 'Administradores' :
-            role === 'Professor' ? 'Professores' :
-                role === 'Aluno' ? 'Alunos' :
-                    role + 's';
-
-        const table = document.createElement('div');
-        table.className = 'responsive-table';
-        table.innerHTML = `
-            <table class="min-w-full style="color: var(--text-color);">
-                <thead style ="background-color: var(--header-bg);">
-                    <tr style="border-bottom: 1px solid var(--border-color);">
-                        <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Nome</th>
-                        <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">E-mail</th>
-                        <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="users-list-${role.replace(/\s+/g, '-')}" class="divide-y" style="background-color: var(--card-bg); border-color: var(--border-color);">
-                    ${roleUsers.map(user => `
-                        <tr class="user-card" style="background-color: var(--card-bg); border-color: var(--border-color);">
-                            <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                                <div class="text-xs sm:text-sm font-medium" style="color: var(--text-color);">${user.name}</div>
-                            </td>
-                            <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                                <div class="text-xs sm:text-sm" style="color: var(--text-secondary);">${user.email}</div>
-                            </td>
-                            <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
-                                <div class="action-buttons flex flex-wrap gap-2 justify-end">
-                                    <!-- Botão Ver -->
-                                    <button class="view-user flex items-center text-[var(--view-color)] hover:text-[var(--view-hover)] px-2 py-1 rounded border border-[var(--view-border)] bg-[var(--view-bg)]" data-id="${user.id}">
-                                        <i class="fas fa-eye text-xs mr-1"></i>
-                                        <span class="text-xs">Ver</span>
-                                    </button>
-
-                                    <!-- Botão Editar -->
-                                    <button class="edit-user flex items-center text-[var(--edit-color)] hover:text-[var(--edit-hover)] px-2 py-1 rounded border border-[var(--edit-border)] bg-[var(--edit-bg)]" data-id="${user.id}">
-                                        <i class="fas fa-edit text-xs mr-1"></i>
-                                        <span class="text-xs">Editar</span>
-                                    </button>
-
-                                    <!-- Botão Excluir -->
-                                    <button class="delete-user flex items-center text-[var(--delete-color)] hover:text-[var(--delete-hover)] px-2 py-1 rounded border border-[var(--delete-border)] bg-[var(--delete-bg)]" data-id="${user.id}">
-                                        <i class="fas fa-trash text-xs mr-1"></i>
-                                        <span class="text-xs">Excluir</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-
-        roleSection.appendChild(roleTitle);
-        roleSection.appendChild(table);
-        container.appendChild(roleSection);
-    });
-
-    // Adiciona eventos aos botões
-    addUserEventListeners();
-}
-
-// Adiciona eventos aos botões de ação
-function addUserEventListeners() {
-    document.querySelectorAll('.view-user').forEach(button => {
-        button.addEventListener('click', function () {
-            const userId = parseInt(this.dataset.id);
-            showUserDetails(userId);
-        });
-    });
-
-    document.querySelectorAll('.edit-user').forEach(button => {
-        button.addEventListener('click', function () {
-            const userId = parseInt(this.dataset.id);
-            editUser(userId);
-        });
-    });
-
-    document.querySelectorAll('.delete-user').forEach(button => {
-        button.addEventListener('click', function () {
-            const userId = parseInt(this.dataset.id);
-            deleteUser(userId);
-        });
-    });
-}
-
-// Mostra os detalhes do usuário
-function showUserDetails(userId) {
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
-
-    const modalContent = document.getElementById('user-details-content');
-    modalContent.innerHTML = `
-        <div>
-            <span class="text-xs sm:text-sm font-medium text-gray-500">Nome:</span>
-            <p class="mt-1 text-xs sm:text-sm">${user.name}</p>
-        </div>
-        <div>
-            <span class="text-xs sm:text-sm font-medium text-gray-500">E-mail:</span>
-            <p class="mt-1 text-xs sm:text-sm">${user.email}</p>
-        </div>
-        <div>
-            <span class="text-xs sm:text-sm font-medium text-gray-500">Função:</span>
-            <p class="mt-1 text-xs sm:text-sm">${user.role}</p>
-        </div>
-        <div>
-            <span class="text-xs sm:text-sm font-medium text-gray-500">Último acesso:</span>
-            <p class="mt-1 text-xs sm:text-sm">${user.lastLogin}</p>
-        </div>
-    `;
-
-    document.getElementById('user-details-modal').classList.remove('hidden');
-
-    // Configura os eventos para os botões existentes no modal
-    const editBtn = document.querySelector('#user-details-modal .mt-4 button:first-child');
-    const deleteBtn = document.querySelector('#user-details-modal .mt-4 button:last-child');
-
-    // Remove event listeners antigos para evitar duplicação
-    editBtn.replaceWith(editBtn.cloneNode(true));
-    deleteBtn.replaceWith(deleteBtn.cloneNode(true));
-
-    // Seleciona os novos botões clonados
-    const newEditBtn = document.querySelector('#user-details-modal .mt-4 button:first-child');
-    const newDeleteBtn = document.querySelector('#user-details-modal .mt-4 button:last-child');
-
-    // Adiciona os eventos
-    newEditBtn.addEventListener('click', function() {
-        document.getElementById('user-details-modal').classList.add('hidden');
-        editUser(userId);
-    });
-
-    newDeleteBtn.addEventListener('click', function() {
-        document.getElementById('user-details-modal').classList.add('hidden');
-        deleteUser(userId);
-    });
-}
-
-// Fecha o modal de detalhes
-document.getElementById('close-user-modal').addEventListener('click', function () {
-    document.getElementById('user-details-modal').classList.add('hidden');
-});
-
-// Editar usuário
-function editUser(userId) {
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
-
-    // Abre o modal de edição com os dados do usuário
-    openEditModal({
-        id: user.id,
-        nome: user.name,
-        email: user.email,
-        funcao: user.role
-    });
-}
-
-// Salvar usuário (adicionar ou editar)
-function saveUser() {
-    const userId = document.getElementById('user-id').value;
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const role = document.getElementById('role').value;
-
-    if (userId) {
-        // Editar usuário existente
-        const index = users.findIndex(u => u.id == userId);
-        if (index !== -1) {
-            users[index] = {
-                ...users[index],
-                name,
-                email,
-                password,
-                role
-            };
-        }
-    } else {
-        // Adicionar novo usuário
-        const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-        users.push({
-            id: newId,
-            name,
-            email,
-            password,
-            role,
-            lastLogin: new Date().toISOString().split('T')[0]
-        });
-    }
-
-    document.getElementById('user-form-modal').classList.add('hidden');
-    renderUsersByRole();
-}
-
-// Excluir usuário
-function deleteUser(userId) {
-    if (confirm(`Tem certeza que deseja excluir este usuário?`)) {
-        users = users.filter(u => u.id !== userId);
-        renderUsersByRole();
-    }
-}
-
-// Evento para fechar o modal de formulário ao clicar fora dele
-document.getElementById('user-form-modal').addEventListener('click', function (e) {
-    if (e.target === this) {
-        this.classList.add('hidden');
-    }
-});
-
-// Configuração do toggle de senha
-function setupPasswordToggle() {
-    const passwordInput = document.getElementById('password');
-    const toggleButton = document.getElementById('toggle-password');
-    const icon = toggleButton.querySelector('i');
-
-    // Remove qualquer listener anterior para evitar duplicação
-    toggleButton.replaceWith(toggleButton.cloneNode(true));
-    const newToggleButton = document.getElementById('toggle-password');
-    const newIcon = newToggleButton.querySelector('i');
-
-    newToggleButton.addEventListener('click', function() {
-        const isPassword = passwordInput.type === 'password';
-        passwordInput.type = isPassword ? 'text' : 'password';
+    // Função para carregar usuários
+    async function loadUsers() {
+    try {
+        const response = await fetch('controllers/UserController.php?action=getAll');
         
-        // Alterna os ícones corretamente
-        newIcon.classList.toggle('fa-eye-slash');
-        newIcon.classList.toggle('fa-eye');
-    });
-}
-
-/**
- * Define o tema da aplicação (claro/escuro)
- * @param {string} theme - 'light' ou 'dark'
- */
-function setTheme(theme) {
-    if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
-    } else {
-        document.body.classList.remove('dark-mode');
-        document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
+        // Verifique primeiro se a resposta é válida
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        
+        // Debug: mostre a resposta bruta no console
+        console.log("Resposta bruta:", text);
+        
+        try {
+            const data = JSON.parse(text);
+            
+            if (!data.success) {
+                throw new Error(data.message || "Erro no servidor");
+            }
+            
+            users = data.users;
+            renderUsers();
+        } catch (e) {
+            console.error("Falha ao parsear JSON:", e);
+            throw new Error("Resposta inválida do servidor");
+        }
+    } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+        alert("Erro ao carregar usuários. Verifique o console para detalhes.");
     }
 }
 
-/**
- * Alterna entre temas claro e escuro
- */
-function toggleTheme() {
-    const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-}
+    // Função para renderizar usuários na tabela
+    function renderUsers() {
+        userTable.innerHTML = '';
 
-// Evento do botão de alternar tema
-document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.nome}</td>
+                <td>${user.email}</td>
+                <td>${user.tipo}</td>
+                <td>
+                    <button class="edit-user-btn" 
+                        data-id="${user.id}" 
+                        data-nome="${user.nome}" 
+                        data-email="${user.email}" 
+                        data-tipo="${user.tipo}">
+                        Editar
+                    </button>
+                    <button class="delete-user-btn" data-id="${user.id}">
+                        Excluir
+                    </button>
+                </td>
+            `;
+            userTable.appendChild(row);
+        });
 
-// Sistema de Logout
-document.getElementById('logout-btn').addEventListener('click', function () {
-    localStorage.removeItem('loggedIn');
-    localStorage.removeItem('user');
-    window.location.href = "/public/admin/configADM.html";
+        // Adiciona eventos aos botões recém-criados
+        addEditButtonsEventListeners();
+        addDeleteButtonsEventListeners();
+    }
+
+    // Função para configurar eventos
+    function setupEventListeners() {
+        // Botão para adicionar novo usuário
+        addUserBtn.addEventListener('click', () => {
+            document.getElementById('form-modal-title').textContent = 'Adicionar Novo Usuário';
+            form.reset();
+            document.getElementById('user-id').value = '';
+            document.getElementById('senha_hash').required = true;
+            modal.classList.remove('hidden');
+        });
+
+        // Fechar modal
+        closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+        cancelFormBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+        // Submit do formulário
+        form.addEventListener('submit', handleFormSubmit);
+
+        // Toggle de senha
+        document.getElementById('toggle-password').addEventListener('click', togglePasswordVisibility);
+
+        // Logout
+        logoutBtn.addEventListener('click', handleLogout);
+
+        // Toggle de tema
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Função para adicionar eventos aos botões de edição
+    function addEditButtonsEventListeners() {
+        document.querySelectorAll('.edit-user-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('form-modal-title').textContent = 'Editar Usuário';
+                document.getElementById('user-id').value = this.dataset.id;
+                document.getElementById('nome').value = this.dataset.nome;
+                document.getElementById('email').value = this.dataset.email;
+                document.getElementById('tipo').value = this.dataset.tipo;
+                document.getElementById('senha_hash').required = false;
+                modal.classList.remove('hidden');
+            });
+        });
+    }
+
+    // Função para adicionar eventos aos botões de exclusão
+    function addDeleteButtonsEventListeners() {
+        document.querySelectorAll('.delete-user-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.dataset.id;
+                deleteUser(userId);
+            });
+        });
+    }
+
+    // Função para lidar com o submit do formulário
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const userId = document.getElementById('user-id').value;
+        const action = userId ? 'update' : 'create';
+
+        try {
+            const response = await fetch(`controllers/UserController.php?action=${action}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                alert(data.message || 'Operação realizada com sucesso!');
+                modal.classList.add('hidden');
+                await loadUsers();
+            } else {
+                throw new Error(data.message || 'Erro ao realizar operação');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert(error.message);
+        }
+    }
+
+    // Função para excluir usuário
+    async function deleteUser(userId) {
+        if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+
+        try {
+            const response = await fetch(`controllers/UserController.php?action=delete&id=${userId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                alert(data.message || 'Usuário excluído com sucesso!');
+                await loadUsers();
+            } else {
+                throw new Error(data.message || 'Erro ao excluir usuário');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert(error.message);
+        }
+    }
+
+    // Função para alternar visibilidade da senha
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('senha_hash');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    // Função para lidar com logout
+    function handleLogout() {
+        fetch('controllers/AuthController.php?action=logout')
+            .then(() => {
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                console.error('Erro ao fazer logout:', error);
+            });
+    }
+
+    // Funções para gerenciamento de tema
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+    }
+
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        setTheme(currentTheme === 'light' ? 'dark' : 'light');
+    }
 });
-

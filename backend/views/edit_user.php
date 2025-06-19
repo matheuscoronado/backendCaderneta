@@ -19,10 +19,10 @@
             <input type="email" name="email" id="email" value="<?= $user['email']?>" required>
 
             <label for="password">Senha:</label>
-            <input type="password" name="password" id="password" value="<?= $user['senha_hash']?>" required>
+            <input type="password" name="senha_hash" id="senha_hash" value="<?= $user['senha_hash']?>" required>
 
             <label for="tipo">Perfil:</label>
-            <select name="funcao" id="funcao">
+            <select name="tipo" id="tipo">
                 <option value="administrador" <?= $user['tipo'] == 'administrador' ? 'selected' : '' ?>>Administrador</option>
                 <option value="professor" <?= $user['tipo'] == 'professor' ? 'selected' : '' ?>>Professor</option>
                 <option value="aluno" <?= $user['tipo'] == 'aluno' ? 'selected' : '' ?>>Aluno</option>

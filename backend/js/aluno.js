@@ -1,7 +1,3 @@
-/**
- * Verifica se o usuário está logado ao carregar a página
- * Se não estiver logado, redireciona para a página de login
- */
 document.addEventListener('DOMContentLoaded', function() {
 
     // Define o título padrão do sidebar
