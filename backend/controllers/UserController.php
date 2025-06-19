@@ -20,7 +20,7 @@ class UserController {
                 'tipo' => $_POST['tipo']
             ];
 
-            $result = User::create($data);
+            User::create($data);
             $this->sendResponse(201, ['success' => true, 'message' => 'Usuário criado com sucesso']);
         } catch (Exception $e) {
             $this->sendResponse(500, ['success' => false, 'message' => $e->getMessage()]);
