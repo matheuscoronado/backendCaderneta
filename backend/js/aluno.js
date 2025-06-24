@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+    const loggedIn = localStorage.getItem('loggedIn');
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // if (!loggedIn || !user) {
+    //     window.location.href = "/../../login.html";
+    //     return;
+    // }
+    
     // Define o título padrão do sidebar
     document.getElementById('sidebar-student-name').textContent = 'Minhas Anotações';
     
@@ -9,168 +16,154 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Carrega as anotações do usuário
     loadNotes();
+
+    // Configura o evento para mostrar campo de tópico personalizado
+    document.getElementById('note-topic').addEventListener('change', function() {
+        const customTopic = document.getElementById('custom-topic');
+        if (this.value === 'outro') {
+            customTopic.classList.remove('hidden');
+            customTopic.focus();
+        } else {
+            customTopic.classList.add('hidden');
+            customTopic.value = '';
+        }
+    });
+
+    // Evento do botão "Visualizar Anotações"
+    document.getElementById('view-notes-btn').addEventListener('click', function() {
+        loadNotes();
+        document.getElementById('notes-sidebar').classList.add('active');
+        document.getElementById('sidebar-overlay').classList.add('active');
+    });
 });
 
-/**
- * Função para enviar pergunta para a API de IA
- * @param {string} textoAnotacao - Texto da anotação a ser analisado
- * @returns {Promise<string>} Resposta da IA
- */
-async function enviarPergunta(textoAnotacao) {
-    try {
-        const response = await fetch("http://localhost:3000/api/pergunta", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ pergunta: textoAnotacao })
-        });
-
-        const data = await response.json();
-        return data.resposta || "Sem resposta da IA.";
-    } catch (error) {
-        console.error("Erro ao buscar resposta da IA:", error);
-        return "Erro ao buscar resposta da IA.";
-    }
-}
-
-/**
- * Evento do botão "Analisar com IA"
- * Envia o conteúdo da anotação para análise e exibe as sugestões
- */
-document.getElementById('analyze-btn').addEventListener('click', async function() {
-    const title = document.getElementById('note-title').value.trim();
-    const content = document.getElementById('note-content').value.trim();
-
-    if (!content) {
-        alert('Por favor, escreva algo para analisar');
-        return;
-    }
-
-    // Mostra o modal de carregamento
-    document.getElementById('loading-modal').classList.remove('hidden');
-
-    // Envia para análise e obtém resposta da IA
-    const respostaIA = await enviarPergunta(content);
-
-    // Salva a anotação com as sugestões da IA
-    saveStudentNote(title, content, respostaIA);
-    
-    // Recarrega a lista de anotações
-    loadNotes();
-    
-    // Esconde o modal de carregamento
-    document.getElementById('loading-modal').classList.add('hidden');
-
-    // Exibe as sugestões na tela
-    document.getElementById('suggestions-content').innerHTML = respostaIA;
-    document.getElementById('suggestions-container').classList.remove('hidden');
-});
-
-/**
- * Evento do botão "Salvar"
- * Salva a anotação sem análise de IA
- */
-document.getElementById('save-btn').addEventListener('click', function() {
-    const title = document.getElementById('note-title').value.trim();
-    const content = document.getElementById('note-content').value.trim();
-
-    if (!content) {
-        alert('Por favor, escreva algo para salvar');
-        return;
-    }
-
-    // Salva a anotação
-    saveStudentNote(title, content);
-    
-    // Recarrega a lista de anotações
-    loadNotes();
-
-    // Feedback visual de sucesso
-    const saveBtn = document.getElementById('save-btn');
-    saveBtn.innerHTML = '<i class="fas fa-check"></i> Salvo!';
-    saveBtn.classList.add('success');
-
-    // Limpa os campos
-    document.getElementById('note-title').value = '';
-    document.getElementById('note-content').value = '';
-
-    // Restaura o botão após 2 segundos
-    setTimeout(() => {
-        saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar';
-        saveBtn.classList.remove('success');
-    }, 2000);
-});
-
-/**
- * Salva uma anotação no localStorage
- * @param {string} title - Título da anotação
- * @param {string} content - Conteúdo da anotação
- * @param {string|null} suggestions - Sugestões da IA (opcional)
- * @returns {object} A nota salva
- */
-function saveStudentNote(title, content, suggestions = null) {
-    const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    // Verifica se já existe uma nota com o mesmo título e conteúdo
-    const existingNoteIndex = notes.findIndex(note => 
-        note.title === title && 
-        note.content === content && 
-        note.studentId === user.id
-    );
-
-    // Cria o objeto da nova nota
-    const newNote = {
-        id: existingNoteIndex !== -1 ? notes[existingNoteIndex].id : Date.now(),
-        studentId: user.id,
-        title,
-        content,
-        date: new Date().toLocaleDateString('pt-BR'),
-        suggestions,
-        lastEdited: new Date().toISOString()
-    };
-
-    // Atualiza ou adiciona a nota
-    if (existingNoteIndex !== -1) {
-        notes[existingNoteIndex] = newNote;
-    } else {
-        notes.unshift(newNote);
-    }
-
-    // Salva no localStorage
-    localStorage.setItem('studentNotes', JSON.stringify(notes));
-    return newNote;
-}
+// Respostas pré-programadas para cada tópico
+const TOPIC_RESPONSES = {
+    "procedimento-paciente": `
+        <h3>Orientações para Procedimentos com Pacientes</h3>
+        <ol>
+            <li>Verifique a identificação do paciente</li>
+            <li>Explique o procedimento e obtenha consentimento</li>
+            <li>Prepare o ambiente e materiais necessários</li>
+            <li>Siga protocolos de assepsia</li>
+            <li>Registre todas as etapas e observações</li>
+        </ol>
+    `,
+    "diagnostico-diferencial": `
+        <h3>Fluxo para Diagnóstico Diferencial</h3>
+        <ol>
+            <li>Liste todas as hipóteses diagnósticas possíveis</li>
+            <li>Priorize por probabilidade e gravidade</li>
+            <li>Identifique exames complementares necessários</li>
+            <li>Estabeleça critérios de inclusão/exclusão</li>
+            <li>Documente o raciocínio clínico</li>
+        </ol>
+    `,
+    "farmacologia": `
+        <h3>Checklist Farmacológico</h3>
+        <ul>
+            <li>Verifique alergias do paciente</li>
+            <li>Confira interações medicamentosas</li>
+            <li>Ajuste dose para função renal/hepática</li>
+            <li>Verifique via de administração correta</li>
+            <li>Oriente sobre efeitos adversos e posologia</li>
+        </ul>
+    `,
+    "exame-fisico": `
+        <h3>Protocolo de Exame Físico</h3>
+        <p><strong>Sequência básica:</strong> Inspeção → Palpação → Percussão → Ausculta</p>
+        <p><strong>A documentar:</strong></p>
+        <ul>
+            <li>Achados normais e anormais</li>
+            <li>Técnicas utilizadas</li>
+            <li>Reação do paciente</li>
+            <li>Terminologia técnica adequada</li>
+        </ul>
+    `,
+    "emergencia": `
+        <h3>Protocolo de Emergência</h3>
+        <ol>
+            <li>Realize avaliação primária (ABCDE)</li>
+            <li>Estabilize o paciente</li>
+            <li>Acione ajuda se necessário</li>
+            <li>Documente hora e sequência de intervenções</li>
+            <li>Registre evolução do quadro</li>
+        </ol>
+    `
+};
 
 /**
  * Carrega as anotações do usuário no sidebar
  */
 function loadNotes() {
+    try {
+        const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (!user) {
+            console.error('Usuário não encontrado no localStorage');
+            return;
+        }
+        
+        // Filtra apenas as anotações do usuário atual
+        const studentNotes = notes.filter(note => note.studentId === user.id);
+        const sidebarList = document.getElementById('sidebar-notes-list');
+
+        // Preenche a lista de anotações no sidebar
+        sidebarList.innerHTML = studentNotes.length > 0
+            ? studentNotes.map(note => `
+                <div class="sidebar-note" data-id="${note.id}">
+                    <span class="note-topic">${note.topic ? note.topic.toUpperCase() : 'GERAL'}</span>
+                    <h4>${note.title || 'Sem título'}</h4>
+                    <p>${note.date} • ${note.content.substring(0, 30)}${note.content.length > 30 ? '...' : ''}</p>
+                </div>
+            `).join('')
+            : '<div class="no-notes"><i class="fas fa-book-open"></i><p>Nenhuma anotação encontrada</p></div>';
+
+        // Adiciona eventos de clique para abrir anotações no modal de edição
+        document.querySelectorAll('.sidebar-note').forEach(note => {
+            note.addEventListener('click', function() {
+                const noteId = parseInt(this.getAttribute('data-id'));
+                if (!isNaN(noteId)) {
+                    openEditModal(noteId);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Erro ao carregar anotações:', error);
+        document.getElementById('sidebar-notes-list').innerHTML = 
+            '<div class="error-message">Erro ao carregar anotações. Recarregue a página.</div>';
+    }
+}
+
+/**
+ * Salva uma anotação no localStorage
+ * @param {string} title - Título da anotação
+ * @param {string} content - Conteúdo da anotação
+ * @param {string|null} topic - Tópico selecionado
+ * @returns {object} A nota salva
+ */
+function saveStudentNote(title, content, topic = null) {
     const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
     const user = JSON.parse(localStorage.getItem('user'));
-    
-    // Filtra apenas as anotações do usuário atual
-    const studentNotes = notes.filter(note => note.studentId === user.id);
-    const sidebarList = document.getElementById('sidebar-notes-list');
 
-    // Preenche a lista de anotações no sidebar
-    sidebarList.innerHTML = studentNotes.length > 0
-        ? studentNotes.map(n => `
-            <div class="sidebar-note" data-id="${n.id}">
-                <h4>${n.title || 'Sem título'}</h4>
-                <p>${n.date} • ${n.content.substring(0, 20)}${n.content.length > 20 ? '...' : ''}</p>
-            </div>
-        `).join('')
-        : '<p>Nenhuma anotação ainda.</p>';
+    // Garante um ID único
+    const newId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) + 1 : Date.now();
 
-    // Adiciona eventos de clique para abrir anotações no modal de edição
-    document.querySelectorAll('.sidebar-note').forEach(note => {
-        note.addEventListener('click', function() {
-            const noteId = parseInt(this.dataset.id);
-            openEditModal(noteId);
-        });
-    });
+    const newNote = {
+        id: newId,
+        studentId: user.id,
+        title,
+        content,
+        topic,
+        date: new Date().toLocaleDateString('pt-BR'),
+        suggestions: topic && topic !== 'outro' ? TOPIC_RESPONSES[topic] : null,
+        lastEdited: new Date().toISOString()
+    };
+
+    notes.unshift(newNote);
+    localStorage.setItem('studentNotes', JSON.stringify(notes));
+    return newNote;
 }
 
 /**
@@ -178,28 +171,40 @@ function loadNotes() {
  * @param {number} noteId - ID da anotação a ser editada
  */
 function openEditModal(noteId) {
-    const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
-    const note = notes.find(n => n.id === noteId);
-    if (!note) return;
-    
-    // Preenche os campos do modal com os dados da anotação
-    document.getElementById('edit-note-title').value = note.title || '';
-    document.getElementById('edit-note-content').value = note.content || '';
-    
-    // Exibe sugestões da IA se existirem
-    if (note.suggestions) {
-        document.getElementById('edit-suggestions-content').innerHTML = note.suggestions;
-        document.getElementById('edit-note-suggestions').classList.remove('hidden');
-    } else {
-        document.getElementById('edit-note-suggestions').classList.add('hidden');
+    try {
+        const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
+        const note = notes.find(n => n.id === noteId);
+        
+        if (!note) {
+            alert('Anotação não encontrada!');
+            return;
+        }
+        
+        // Preenche os campos do modal
+        document.getElementById('edit-note-title').value = note.title || '';
+        document.getElementById('edit-note-content').value = note.content || '';
+        
+        // Exibe sugestões se existirem
+        const suggestionsContainer = document.getElementById('edit-note-suggestions');
+        const suggestionsContent = document.getElementById('edit-suggestions-content');
+        
+        if (note.suggestions) {
+            suggestionsContent.innerHTML = note.suggestions;
+            suggestionsContainer.classList.remove('hidden');
+        } else {
+            suggestionsContainer.classList.add('hidden');
+        }
+        
+        // Armazena o ID da nota
+        document.getElementById('update-note-btn').dataset.id = noteId;
+        document.getElementById('delete-note-btn').dataset.id = noteId;
+        
+        // Mostra o modal
+        document.getElementById('edit-note-modal').classList.remove('hidden');
+    } catch (error) {
+        console.error('Erro ao abrir modal de edição:', error);
+        alert('Erro ao carregar anotação para edição');
     }
-    
-    // Armazena o ID da nota nos botões de ação
-    document.getElementById('update-note-btn').dataset.id = noteId;
-    document.getElementById('delete-note-btn').dataset.id = noteId;
-    
-    // Mostra o modal
-    document.getElementById('edit-note-modal').classList.remove('hidden');
 }
 
 /**
@@ -211,6 +216,76 @@ function closeEditModal() {
 
 // Evento para fechar o modal de edição
 document.getElementById('close-edit-modal').addEventListener('click', closeEditModal);
+
+/**
+ * Evento do botão "Salvar"
+ * Salva a anotação com o tópico selecionado
+ */
+document.getElementById('save-btn').addEventListener('click', function() {
+    const topicSelect = document.getElementById('note-topic');
+    const topic = topicSelect.value;
+    const customTopic = document.getElementById('custom-topic').value;
+    
+    if (!topic) {
+        alert('Por favor, selecione um tópico');
+        return;
+    }
+
+    // Define o título baseado no tópico selecionado ou no campo personalizado
+    const title = topic === 'outro' 
+        ? customTopic 
+        : topicSelect.options[topicSelect.selectedIndex].text;
+    
+    const content = document.getElementById('note-content').value.trim();
+
+    if (!content) {
+        alert('Por favor, descreva o procedimento');
+        return;
+    }
+
+    // Salva a anotação
+    saveStudentNote(title, content, topic);
+    
+    // Recarrega a lista de anotações
+    loadNotes();
+
+    // Feedback visual de sucesso
+    const saveBtn = document.getElementById('save-btn');
+    saveBtn.innerHTML = '<i class="fas fa-check"></i> Salvo!';
+    saveBtn.classList.add('success');
+
+    // Limpa os campos (exceto o tópico)
+    document.getElementById('note-content').value = '';
+    if (topic === 'outro') {
+        document.getElementById('custom-topic').value = '';
+    }
+
+    // Restaura o botão após 2 segundos
+    setTimeout(() => {
+        saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar';
+        saveBtn.classList.remove('success');
+    }, 2000);
+});
+
+/**
+ * Evento do botão "Analisar"
+ * Mostra as respostas programadas conforme o tópico selecionado
+ */
+document.getElementById('analyze-btn').addEventListener('click', function() {
+    const topic = document.getElementById('note-topic').value;
+    
+    if (!topic || topic === 'outro') {
+        alert('Por favor, selecione um tópico pré-definido para ver as orientações');
+        return;
+    }
+
+    if (TOPIC_RESPONSES[topic]) {
+        document.getElementById('suggestions-content').innerHTML = TOPIC_RESPONSES[topic];
+        document.getElementById('suggestions-container').classList.remove('hidden');
+    } else {
+        alert('Nenhuma orientação disponível para este tópico');
+    }
+});
 
 /**
  * Evento do botão "Atualizar" no modal de edição
@@ -226,27 +301,32 @@ document.getElementById('update-note-btn').addEventListener('click', function() 
         return;
     }
 
-    const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
-    
-    // Atualiza a nota no array
-    const updatedNotes = notes.map(note => {
-        if (note.id === noteId) {
-            return {
-                ...note,
-                title,
-                content,
-                lastEdited: new Date().toISOString()
-            };
-        }
-        return note;
-    });
-    
-    // Salva no localStorage
-    localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
-    
-    alert('Anotação atualizada com sucesso!');
-    closeEditModal();
-    loadNotes();
+    try {
+        const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
+        
+        // Atualiza a nota no array
+        const updatedNotes = notes.map(note => {
+            if (note.id === noteId) {
+                return {
+                    ...note,
+                    title,
+                    content,
+                    lastEdited: new Date().toISOString()
+                };
+            }
+            return note;
+        });
+        
+        // Salva no localStorage
+        localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
+        
+        alert('Anotação atualizada com sucesso!');
+        closeEditModal();
+        loadNotes();
+    } catch (error) {
+        console.error('Erro ao atualizar anotação:', error);
+        alert('Erro ao atualizar anotação');
+    }
 });
 
 /**
@@ -257,92 +337,104 @@ document.getElementById('delete-note-btn').addEventListener('click', function() 
     if (!confirm('Tem certeza que deseja excluir esta anotação?')) return;
     
     const noteId = parseInt(this.dataset.id);
-    const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
     
-    // Filtra removendo a nota com o ID especificado
-    const updatedNotes = notes.filter(note => note.id !== noteId);
-    
-    // Salva no localStorage
-    localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
-    
-    alert('Anotação excluída com sucesso!');
-    closeEditModal();
-    loadNotes();
+    try {
+        const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
+        
+        // Filtra removendo a nota com o ID especificado
+        const updatedNotes = notes.filter(note => note.id !== noteId);
+        
+        // Salva no localStorage
+        localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
+        
+        alert('Anotação excluída com sucesso!');
+        closeEditModal();
+        loadNotes();
+    } catch (error) {
+        console.error('Erro ao excluir anotação:', error);
+        alert('Erro ao excluir anotação');
+    }
 });
 
 /**
  * Exporta todas as anotações para um arquivo PDF
  */
-document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
-
 function exportToPDF() {
-    const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
-    const user = JSON.parse(localStorage.getItem('user'));
-    
-    // Filtra apenas as anotações do usuário atual
-    const studentNotes = notes.filter(note => note.studentId === user.id);
-    
-    if (studentNotes.length === 0) {
-        alert('Não há anotações para exportar');
-        return;
-    }
+    try {
+        const notes = JSON.parse(localStorage.getItem('studentNotes')) || [];
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        // Filtra apenas as anotações do usuário atual
+        const studentNotes = notes.filter(note => note.studentId === user.id);
+        
+        if (studentNotes.length === 0) {
+            alert('Não há anotações para exportar');
+            return;
+        }
 
-    // Cria um novo documento PDF
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    let yPosition = 20; // Posição vertical inicial
-    
-    // Adiciona cada anotação ao PDF
-    studentNotes.forEach((note, index) => {
-        // Título da anotação
-        doc.setFontSize(18);
-        doc.setTextColor(59, 130, 246);
-        doc.text(note.title || 'Anotação sem título', 105, yPosition, { align: 'center' });
-        yPosition += 10;
+        // Cria um novo documento PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
         
-        // Data da anotação
-        doc.setFontSize(12);
-        doc.setTextColor(107, 114, 128);
-        doc.text(`Criado em: ${note.date}`, 105, yPosition, { align: 'center' });
-        yPosition += 15;
+        let yPosition = 20; // Posição vertical inicial
         
-        // Conteúdo da anotação
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0);
-        const contentLines = doc.splitTextToSize(note.content, 180);
-        doc.text(contentLines, 15, yPosition);
-        yPosition += contentLines.length * 7 + 10;
-        
-        // Sugestões da IA (se existirem)
-        if (note.suggestions) {
-            doc.setFontSize(14);
+        // Adiciona cada anotação ao PDF
+        studentNotes.forEach((note, index) => {
+            // Título da anotação
+            doc.setFontSize(18);
             doc.setTextColor(59, 130, 246);
-            doc.text('Sugestões da IA:', 15, yPosition);
+            doc.text(note.title || 'Anotação sem título', 105, yPosition, { align: 'center' });
             yPosition += 10;
             
-            // Remove tags HTML das sugestões
-            const suggestionsText = note.suggestions.replace(/<[^>]*>/g, '');
-            const suggestionLines = doc.splitTextToSize(suggestionsText, 180);
-            doc.text(suggestionLines, 15, yPosition);
-            yPosition += suggestionLines.length * 7 + 10;
-        }
+            // Tópico e data
+            doc.setFontSize(12);
+            doc.setTextColor(107, 114, 128);
+            doc.text(`Tópico: ${note.topic || 'Geral'} • ${note.date}`, 105, yPosition, { align: 'center' });
+            yPosition += 15;
+            
+            // Conteúdo da anotação
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            const contentLines = doc.splitTextToSize(note.content, 180);
+            doc.text(contentLines, 15, yPosition);
+            yPosition += contentLines.length * 7 + 10;
+            
+            // Sugestões (se existirem)
+            if (note.suggestions) {
+                doc.setFontSize(14);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Orientações:', 15, yPosition);
+                yPosition += 10;
+                
+                // Remove tags HTML das sugestões
+                const suggestionsText = note.suggestions.replace(/<[^>]*>/g, '');
+                const suggestionLines = doc.splitTextToSize(suggestionsText, 180);
+                doc.text(suggestionLines, 15, yPosition);
+                yPosition += suggestionLines.length * 7 + 10;
+            }
+            
+            // Adiciona nova página se não for a última anotação
+            if (index < studentNotes.length - 1) {
+                doc.addPage();
+                yPosition = 20;
+            }
+        });
         
-        // Adiciona nova página se não for a última anotação
-        if (index < studentNotes.length - 1) {
-            doc.addPage();
-            yPosition = 20;
-        }
-    });
-    
-    // Rodapé do PDF
-    doc.setFontSize(10);
-    doc.setTextColor(107, 114, 128);
-    doc.text('Exportado do MedNotes - Caderneta Digital', 105, 285, { align: 'center' });
-    
-    // Salva o PDF com nome baseado na data atual
-    doc.save(`Anotações MedNotes - ${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
+        // Rodapé do PDF
+        doc.setFontSize(10);
+        doc.setTextColor(107, 114, 128);
+        doc.text('Exportado do MedNotes - Caderneta Digital', 105, 285, { align: 'center' });
+        
+        // Salva o PDF
+        doc.save(`Anotações MedNotes - ${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
+    } catch (error) {
+        console.error('Erro ao exportar PDF:', error);
+        alert('Erro ao gerar PDF');
+    }
 }
+
+// Evento do botão de exportar PDF
+document.getElementById('export-pdf-btn').addEventListener('click', exportToPDF);
 
 /**
  * Define o tema da aplicação (claro/escuro)
@@ -381,28 +473,19 @@ document.getElementById('logout-btn').addEventListener('click', function() {
 
 // Evento do botão "Nova Anotação" no menu mobile
 document.getElementById('new-note-btn').addEventListener('click', () => {
-    document.getElementById('note-title').value = '';
     document.getElementById('note-content').value = '';
     document.getElementById('suggestions-container').classList.add('hidden');
 });
 
-// Evento do botão "Visualizar Anotações" no menu mobile
-document.getElementById('view-notes-btn').addEventListener('click', () => {
-    document.getElementById('notes-sidebar').classList.add('active');
-    document.getElementById('sidebar-overlay').classList.add('active');
-});
-
-// Eventos para fechar o sidebar
-document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
-document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
-
-/**
- * Fecha o sidebar de anotações
- */
+// Função para fechar o sidebar
 function closeSidebar() {
     document.getElementById('notes-sidebar').classList.remove('active');
     document.getElementById('sidebar-overlay').classList.remove('active');
 }
+
+// Eventos para fechar o sidebar
+document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
+document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
 // Evento para fechar as sugestões da IA
 document.getElementById('close-suggestions').addEventListener('click', () => {

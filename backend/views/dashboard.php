@@ -73,50 +73,56 @@ $users = User::all();
                         </h2>
                     </div>
 
-                    <!-- Grupos de Usuários -->
+                     <!-- Grupos de Usuários -->
+                <div id="users-by-role">
+                    <!-- Os usuários serão organizados por função aqui -->
+
                     <div class="container">
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Perfil</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <?php foreach ($users as $user): ?>
+                <table class="styled-table">
+                    <thead>
                         <tr>
-                            <td><?= $user['id'] ?></td>
-                            <td><?= $user['nome'] ?></td>
-                            <td><?= $user['email'] ?></td>
-                            <td><?= $user['tipo'] ?></td>
-                            <td>
-
-                            <!-- Botão para editar usuário -->
-                            <button class="edit-user-btn" 
-                            data-id="<?= $user['id'] ?>" 
-                            data-nome="<?= $user['nome'] ?>" 
-                            data-email="<?= $user['email'] ?>" 
-                            data-tipo="<?= $user['tipo'] ?>">
-                            Editar</button>
-
-
-                                <!-- Permitir que administrador exclua -->
-                                <?php if ($_SESSION['tipo'] == 'administrador'): ?>
-                                    <a href="index.php?action=delete&id=<?= $user['id'] ?>" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
-                                <?php endif; ?>
-                            </td>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Ações</th>
                         </tr>
-                    <?php endforeach; ?>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
-        </div>
+                        <?php foreach ($users as $user): ?>
+                            <tr>
+                                <td><?= $user['id'] ?></td>
+                                <td><?= $user['nome'] ?></td>
+                                <td><?= $user['email'] ?></td>
+                                <td><?= $user['tipo'] ?></td>
+                                <td>
+
+                                <!-- Botão para editar usuário -->
+                                <button class="edit-user-btn" 
+                                data-id="<?= $user['id'] ?>" 
+                                data-nome="<?= $user['nome'] ?>" 
+                                data-email="<?= $user['email'] ?>" 
+                                data-tipo="<?= $user['tipo'] ?>">
+                                Editar</button>
+
+
+                                    <!-- Permitir que administrador exclua -->
+                                    <?php if ($_SESSION['tipo'] == 'administrador'): ?>
+                                        <a href="index.php?action=delete&id=<?= $user['id'] ?>" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+
+                    </tbody>
+                </table>
+            </div>
                 </div>
 
+            </div>
+        </div>
+                   
 
 
                 <!-- Modal de Adicionar/Editar Usuário -->
@@ -225,7 +231,7 @@ $users = User::all();
                 <!-- <a href="indexADM.html" class="text-gray-600 p-2">
             <i class="fas fa-home text-lg sm:text-xl"></i>
         </a> -->
-                <a href="configADM.html" class="text-blue-600 p-2">
+                <a href="dashboard.php" class="text-blue-600 p-2">
                     <i class="fas fa-cog text-lg sm:text-xl"></i>
                 </a>
             </nav>
@@ -324,7 +330,7 @@ $users = User::all();
 
         <?php else: ?>
 
-            <body>
+    
     <div id="app" class="app-container">
         <header class="app-header">
             <div class="header-content">
@@ -342,116 +348,113 @@ $users = User::all();
                 </div>
             </div>
         </header>
-            <!-- Conteúdo principal da aplicação -->
-            <main class="main-content">
-                <!-- Editor de anotações -->
-                <div class="note-editor">
-                    <h2>Nova Anotação</h2>
-                    <div class="form-group title-input">
-                        <input type="text" id="note-title" placeholder="Título (ex: Procedimento com Paciente X)">
-                    </div>
-                    <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
-                    <div class="editor-actions">
-                        <!-- Botão para salvar anotação -->
-                        <button id="save-btn" class="save-button">
-                            <i class="fas fa-save"></i> Salvar
-                        </button>
 
-                        <!-- Botão para analisar anotação com IA -->
-                        <button id="analyze-btn" class="analyze-button">
-                            <i class="fas fa-robot"></i> Analisar com IA
-                        </button>
-                    </div>
+        <main class="main-content">
+            <div class="note-editor">
+                <h2>Nova Anotação</h2>
+                <div class="form-group title-input">
+                    <select id="note-topic" class="topic-select">
+                        <option value="">Selecione um tópico</option>
+                        <option value="procedimento-paciente">Procedimento com Paciente</option>
+                        <option value="diagnostico-diferencial">Diagnóstico Diferencial</option>
+                        <option value="farmacologia">Farmacologia Aplicada</option>
+                        <option value="exame-fisico">Exame Físico</option>
+                        <option value="outro">Outro (especifique)</option>
+                    </select>
+                    <input type="text" id="custom-topic" class="hidden" placeholder="Digite o tópico">
                 </div>
-
-                <!-- Container para sugestões da IA (inicialmente oculto) -->
-                <div id="suggestions-container" class="suggestions-container hidden">
-                    <div class="suggestions-header">
-                        <h2>Sugestões da IA</h2>
-                        <button id="close-suggestions" class="close-button">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div id="suggestions-content" class="suggestions-content"></div>
+                <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
+                <div class="editor-actions">
+                    <button id="save-btn" class="save-button">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                    <button id="analyze-btn" class="analyze-button">
+                        <i class="fas fa-robot"></i> Analisar com IA
+                    </button>
                 </div>
-            </main>
+            </div>
 
-            <!-- Sidebar para listagem de anotações (inicialmente oculto) -->
-            <div id="notes-sidebar" class="notes-sidebar">
-                <div class="sidebar-header">
-                    <h2 id="sidebar-student-name">Minhas Anotações</h2>
-                    <button id="close-sidebar" class="close-button">
+            <div id="suggestions-container" class="suggestions-container hidden">
+                <div class="suggestions-header">
+                    <h2>Sugestões da IA</h2>
+                    <button id="close-suggestions" class="close-button">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div id="sidebar-notes-list" class="sidebar-notes-list"></div>
+                <div id="suggestions-content" class="suggestions-content"></div>
+            </div>
+        </main>
 
-                <!-- Botão para exportar anotações como PDF -->
-                <button id="export-pdf-btn" class="export-button">
-                    <i class="fas fa-file-pdf"></i> Exportar PDF
+        <div id="notes-sidebar" class="notes-sidebar">
+            <div class="sidebar-header">
+                <h2 id="sidebar-student-name">Minhas Anotações</h2>
+                <button id="close-sidebar" class="close-button">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-
-            <!-- Overlay para quando o sidebar estiver aberto -->
-            <div id="sidebar-overlay" class="sidebar-overlay"></div>
-
-            <!-- Menu mobile no rodapé -->
-            <nav class="mobile-footer">
-                <!-- Botão para criar nova anotação -->
-                <button id="new-note-btn" class="footer-button active">
-                    <i class="fas fa-plus"></i>
-                </button>
-
-                <!-- Botão para visualizar anotações -->
-                <button id="view-notes-btn" class="footer-button">
-                    <i class="fas fa-book"></i>
-                </button>
-            </nav>
+            
+            <!-- Barra de pesquisa adicionada aqui -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="notes-search" placeholder="Pesquisar anotações..." class="search-input">
+            </div>
+            
+            <div id="sidebar-notes-list" class="sidebar-notes-list"></div>
+            
+            <button id="export-pdf-btn" class="export-button">
+                <i class="fas fa-file-pdf"></i> Exportar PDF
+            </button>
         </div>
+        
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-        <!-- Modal para edição de anotações (inicialmente oculto) -->
-        <div id="edit-note-modal" class="note-modal hidden">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-header">
-                        <div>
-                            <h2>Editar Anotação</h2>
-                        </div>
-                        <button id="close-edit-modal" class="close-button">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="form-group title-input">
-                        <input type="text" id="edit-note-title" placeholder="Título">
-                    </div>
-                    <textarea id="edit-note-content" rows="8" placeholder="Conteúdo da anotação..."></textarea>
+        <nav class="mobile-footer">
+            <button id="new-note-btn" class="footer-button active">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button id="view-notes-btn" class="footer-button">
+                <i class="fas fa-book"></i>
+            </button>
+        </nav>
+    </div>
 
-                    <!-- Container para sugestões da IA na edição -->
-                    <div id="edit-note-suggestions" class="suggestions-container">
-                        <h3>Sugestões da IA</h3>
-                        <div id="edit-suggestions-content" class="suggestions-content"></div>
+    <div id="edit-note-modal" class="note-modal hidden">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <div>
+                        <h2>Editar Anotação</h2>
                     </div>
-
-                    <!-- Ações para a anotação sendo editada -->
-                    <div class="edit-actions">
-                        <button id="update-note-btn" class="primary-button">
-                            <i class="fas fa-save"></i> Atualizar
-                        </button>
-                        <button id="delete-note-btn" class="secondary-button">
-                            <i class="fas fa-trash"></i> Excluir
-                        </button>
-                    </div>
+                    <button id="close-edit-modal" class="close-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group title-input">
+                    <input type="text" id="edit-note-title" placeholder="Título">
+                </div>
+                <textarea id="edit-note-content" rows="8" placeholder="Conteúdo da anotação..."></textarea>
+                <div id="edit-note-suggestions" class="suggestions-container">
+                    <h3>Sugestões da IA</h3>
+                    <div id="edit-suggestions-content" class="suggestions-content"></div>
+                </div>
+                <div class="edit-actions">
+                    <button id="update-note-btn" class="primary-button">
+                        <i class="fas fa-save"></i> Atualizar
+                    </button>
+                    <button id="delete-note-btn" class="secondary-button">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal de carregamento (inicialmente oculto) -->
-        <div id="loading-modal" class="loading-modal hidden">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <span>Analisando com IA...</span>
-            </div>
+    <div id="loading-modal" class="loading-modal hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <span>Analisando com IA...</span>
         </div>
+    </div>
 
         <?php endif; ?>
     </div>
