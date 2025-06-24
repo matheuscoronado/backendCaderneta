@@ -235,7 +235,6 @@ $users = User::all();
         <?php elseif ($_SESSION['tipo'] == 'professor'): ?>
 
             <!-- Aplicação Principal (inicialmente oculta) -->
-            <div id="app" class="hidden">
                 <!-- Cabeçalho -->
                 <header class="app-header">
                     <div class="header-content">
@@ -324,6 +323,25 @@ $users = User::all();
             </div>
 
         <?php else: ?>
+
+            <body>
+    <div id="app" class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <i class="fas fa-book-medical"></i>
+                    <h1>MedNotes</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="logout-btn" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
             <!-- Conteúdo principal da aplicação -->
             <main class="main-content">
                 <!-- Editor de anotações -->
