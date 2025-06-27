@@ -43,8 +43,8 @@ class User
             // Obtém a conexão com o banco de dados
             $conn = Database::getConnection();
             
-            // Prepara uma consulta SQL para inserir um novo usuário na tabela 'usuarios'
-            $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha_hash, tipo) VALUES (:nome, :email, :senha_hash, :tipo)");
+            // Prepara uma consulta SQL para inserir um novo usuário na tabela 'usuario'
+            $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha_hash, tipo) VALUES (:nome, :email, :senha_hash :tipo)");
             
             // Executa a consulta, passando os dados do novo usuário (nome, email, senha e perfil)
             $stmt->execute($data);
@@ -93,4 +93,3 @@ class User
     }
 
 }
-?>
