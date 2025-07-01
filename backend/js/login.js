@@ -1,15 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const togglePassword = document.getElementById('togglePassword');
-    const password = document.getElementById('senha_hash');
-    const icon = togglePassword.querySelector('i');
-    
-    togglePassword.addEventListener('click', function() {
-        // Alternar tipo do input
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-        
-        // Alternar ícone
-        icon.classList.toggle('fa-eye');
-        icon.classList.toggle('fa-eye-slash');
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('senha_hash');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        toggleBtn.addEventListener('click', function() {
+            // Alternar tipo de input
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            // Alternar ícone
+            eyeIcon.classList.toggle('fa-eye-slash');
+            eyeIcon.classList.toggle('fa-eye');
+            
+            // Debug no console
+            console.log('Senha visível?', !isPassword);
+            console.log('Classe do ícone:', eyeIcon.className);
+        });
     });
-});
