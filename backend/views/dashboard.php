@@ -25,7 +25,6 @@ $users = User::all();
 </head>
 
 <body class="<?= $_SESSION['tipo'] ?>">
-    <div class="container">
         <?php if ($_SESSION['tipo'] == 'administrador'): ?>
             <!-- Cabeçalho -->
             <header class="shadow-sm p-4" style="background-color: var(--header-bg);">
@@ -292,7 +291,6 @@ $users = User::all();
                 </nav>
             </div>
         <?php endif; ?>
-    </div>
 
     <?php if ($_SESSION['tipo'] == 'administrador'): ?>
         <script src="js/admin.js"></script>
