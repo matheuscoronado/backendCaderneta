@@ -2,10 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
     const user = JSON.parse(localStorage.getItem('user'));
     
-    // if (!loggedIn || !user) {
-    //     window.location.href = "/../../login.html";
-    //     return;
-    // }
     
     // Define o título padrão do sidebar
     document.getElementById('sidebar-student-name').textContent = 'Minhas Anotações';
@@ -217,55 +213,6 @@ function closeEditModal() {
 // Evento para fechar o modal de edição
 document.getElementById('close-edit-modal').addEventListener('click', closeEditModal);
 
-/**
- * Evento do botão "Salvar"
- * Salva a anotação com o tópico selecionado
- */
-document.getElementById('save-btn').addEventListener('click', function() {
-    const topicSelect = document.getElementById('note-topic');
-    const topic = topicSelect.value;
-    const customTopic = document.getElementById('custom-topic').value;
-    
-    if (!topic) {
-        alert('Por favor, selecione um tópico');
-        return;
-    }
-
-    // Define o título baseado no tópico selecionado ou no campo personalizado
-    const title = topic === 'outro' 
-        ? customTopic 
-        : topicSelect.options[topicSelect.selectedIndex].text;
-    
-    const content = document.getElementById('note-content').value.trim();
-
-    if (!content) {
-        alert('Por favor, descreva o procedimento');
-        return;
-    }
-
-    // Salva a anotação
-    saveStudentNote(title, content, topic);
-    
-    // Recarrega a lista de anotações
-    loadNotes();
-
-    // Feedback visual de sucesso
-    const saveBtn = document.getElementById('save-btn');
-    saveBtn.innerHTML = '<i class="fas fa-check"></i> Salvo!';
-    saveBtn.classList.add('success');
-
-    // Limpa os campos (exceto o tópico)
-    document.getElementById('note-content').value = '';
-    if (topic === 'outro') {
-        document.getElementById('custom-topic').value = '';
-    }
-
-    // Restaura o botão após 2 segundos
-    setTimeout(() => {
-        saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar';
-        saveBtn.classList.remove('success');
-    }, 2000);
-});
 
 /**
  * Evento do botão "Analisar"
