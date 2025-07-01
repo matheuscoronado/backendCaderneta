@@ -351,7 +351,8 @@ $users = User::all();
                 <div class="note-editor">
                     <h2>Nova Anotação</h2>
                     <div class="form-group title-input">
-                        <select id="note-topic" class="topic-select">
+                        <select id="note-topic" class="topic-select w-full border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                            style="background-color: var(--card-bg); color: var(--text-color); border-color: var(--border-color);">
                             <option value="">Selecione um tópico</option>
                             <option value="procedimento-paciente">Procedimento com Paciente</option>
                             <option value="diagnostico-diferencial">Diagnóstico Diferencial</option>
