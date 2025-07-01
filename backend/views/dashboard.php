@@ -27,7 +27,6 @@ $users = User::all();
 </head>
 
 <body class="<?= $_SESSION['tipo'] ?>">
-    <div class="container">
         <?php
         if ($_SESSION['tipo'] == 'administrador'):
             $user = $users ?? [];
