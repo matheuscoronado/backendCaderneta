@@ -27,7 +27,7 @@ $users = User::all();
 <body class="<?= $_SESSION['tipo'] ?>">
         <?php if ($_SESSION['tipo'] == 'administrador'): ?>
             <!-- Cabeçalho -->
-            <header class="shadow-sm p-4" style="background-color: var(--header-bg);">
+            <header class="shadow-sm p-4" style="background-color: var(--card-bg);">
                 <div class="container mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div class="flex items-center">
                         <i class="fas fa-book-medical text-xl text-blue-500 mr-2"></i>
@@ -78,8 +78,15 @@ $users = User::all();
                                         <td><?= htmlspecialchars($user['email']) ?></td>
                                         <td><?= htmlspecialchars($user['tipo']) ?></td>
                                         <td>
-                                            <a href="index.php?action=edit&id=<?= $user['id'] ?>" class="btn">Editar</a>
-                                            <a href="index.php?action=delete&id=<?= $user['id'] ?>" class="btn btn-delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                            <a href="index.php?action=edit&id=<?= $user['id'] ?>" 
+                                                class="inline-block px-3 py-1 sm:px-4 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm sm:text-base text-gray-800 no-underline transition-colors duration-200">
+                                                Editar
+                                            </a>
+                                            <a href="index.php?action=delete&id=<?= $user['id'] ?>" 
+                                                class="inline-block px-3 py-1 sm:px-4 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm sm:text-base"
+                                                onclick="return confirm('Tem certeza que deseja excluir?')">
+                                            Excluir
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -208,88 +215,131 @@ $users = User::all();
         <?php else: ?>
             <!-- Conteúdo do Aluno -->
             <div id="app" class="app-container">
-                <header class="app-header">
-                    <div class="header-content">
-                        <div class="logo-container">
-                            <i class="fas fa-book-medical"></i>
-                            <h1>MedNotes</h1>
-                        </div>
-                        <div class="header-actions">
-                            <button id="theme-toggle" class="theme-toggle">
-                                <i class="fas fa-moon"></i>
-                            </button>
-                            <button id="logout-btn" class="logout-button">
-                                <i class="fas fa-sign-out-alt"></i> Sair
-                            </button>
-                        </div>
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="logo-container">
+                        <i class="fas fa-book-medical"></i>
+                        <h1>MedNotes</h1>
                     </div>
-                </header>
-
-                <main class="main-content">
-                    <div class="note-editor">
-                        <h2>Nova Anotação</h2>
-                        <div class="form-group title-input">
-                            <select id="note-topic" class="topic-select">
-                                <option value="">Selecione um tópico</option>
-                                <option value="procedimento-paciente">Procedimento com Paciente</option>
-                                <option value="diagnostico-diferencial">Diagnóstico Diferencial</option>
-                                <option value="farmacologia">Farmacologia Aplicada</option>
-                                <option value="exame-fisico">Exame Físico</option>
-                                <option value="outro">Outro (especifique)</option>
-                            </select>
-                            <input type="text" id="custom-topic" class="hidden" placeholder="Digite o tópico">
-                        </div>
-                        <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
-                        <div class="editor-actions">
-                            <button id="save-btn" class="save-button">
-                                <i class="fas fa-save"></i> Salvar
-                            </button>
-                            <button id="analyze-btn" class="analyze-button">
-                                <i class="fas fa-robot"></i> Analisar com IA
-                            </button>
-                        </div>
+                    <div class="header-actions">
+                        <button id="theme-toggle" class="theme-toggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <a href="logout.php" id="logout-btn"
+                            class="text-gray-600 hover:text-blue-600 text-sm sm:text-base flex items-center gap-1">
+                            <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Sair</span>
+                        </a>
                     </div>
+                </div>
+            </header>
 
-                    <div id="suggestions-container" class="suggestions-container hidden">
-                        <div class="suggestions-header">
-                            <h2>Sugestões da IA</h2>
-                            <button id="close-suggestions" class="close-button">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div id="suggestions-content" class="suggestions-content"></div>
+            <main class="main-content">
+                <div class="note-editor">
+                    <h2>Nova Anotação</h2>
+                    <div class="form-group title-input">
+                        <select id="note-topic" class="topic-select w-full border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                            style="background-color: var(--card-bg); color: var(--text-color); border-color: var(--border-color);">
+                            <option value="">Selecione um tópico</option>
+                            <option value="procedimento-paciente">Procedimento com Paciente</option>
+                            <option value="diagnostico-diferencial">Diagnóstico Diferencial</option>
+                            <option value="farmacologia">Farmacologia Aplicada</option>
+                            <option value="exame-fisico">Exame Físico</option>
+                            <option value="outro">Outro (especifique)</option>
+                        </select>
+                        <input type="text" id="custom-topic" class="hidden" placeholder="Digite o tópico">
                     </div>
-                </main>
+                    <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
+                    <div class="editor-actions">
+                        <button id="save-btn" class="save-button">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                        <button id="analyze-btn" class="analyze-button">
+                            <i class="fas fa-robot"></i> Analisar com IA
+                        </button>
+                    </div>
+                </div>
 
-                <div id="notes-sidebar" class="notes-sidebar">
-                    <div class="sidebar-header">
-                        <h2 id="sidebar-student-name">Minhas Anotações</h2>
-                        <button id="close-sidebar" class="close-button">
+                <div id="suggestions-container" class="suggestions-container hidden">
+                    <div class="suggestions-header">
+                        <h2>Sugestões da IA</h2>
+                        <button id="close-suggestions" class="close-button">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
+                    <div id="suggestions-content" class="suggestions-content"></div>
+                </div>
+            </main>
 
-                    <div class="search-container">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="notes-search" placeholder="Pesquisar anotações..." class="search-input">
-                    </div>
-
-                    <div id="sidebar-notes-list" class="sidebar-notes-list"></div>
-
-                    <button id="export-pdf-btn" class="export-button">
-                        <i class="fas fa-file-pdf"></i> Exportar PDF
+            <div id="notes-sidebar" class="notes-sidebar">
+                <div class="sidebar-header">
+                    <h2 id="sidebar-student-name">Minhas Anotações</h2>
+                    <button id="close-sidebar" class="close-button">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
 
-                <nav class="mobile-footer">
-                    <button id="new-note-btn" class="footer-button active">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button id="view-notes-btn" class="footer-button">
-                        <i class="fas fa-book"></i>
-                    </button>
-                </nav>
+                <!-- Barra de pesquisa adicionada aqui -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="notes-search" placeholder="Pesquisar anotações..." class="search-input">
+                </div>
+
+                <div id="sidebar-notes-list" class="sidebar-notes-list"></div>
+
+                <button id="export-pdf-btn" class="export-button">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </button>
             </div>
+
+            <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+            <nav class="mobile-footer">
+                <button id="new-note-btn" class="footer-button active">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="view-notes-btn" class="footer-button">
+                    <i class="fas fa-book"></i>
+                </button>
+            </nav>
+        </div>
+
+        <div id="edit-note-modal" class="note-modal hidden">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-header">
+                        <div>
+                            <h2>Editar Anotação</h2>
+                        </div>
+                        <button id="close-edit-modal" class="close-button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-group title-input">
+                        <input type="text" id="edit-note-title" placeholder="Título">
+                    </div>
+                    <textarea id="edit-note-content" rows="8" placeholder="Conteúdo da anotação..."></textarea>
+                    <div id="edit-note-suggestions" class="suggestions-container">
+                        <h3>Sugestões da IA</h3>
+                        <div id="edit-suggestions-content" class="suggestions-content"></div>
+                    </div>
+                    <div class="edit-actions">
+                        <button id="update-note-btn" class="primary-button">
+                            <i class="fas fa-save"></i> Atualizar
+                        </button>
+                        <button id="delete-note-btn" class="secondary-button">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-modal" class="loading-modal hidden">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <span>Analisando com IA...</span>
+            </div>
+        </div>
         <?php endif; ?>
 
     <?php if ($_SESSION['tipo'] == 'administrador'): ?>
