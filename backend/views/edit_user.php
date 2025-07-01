@@ -30,7 +30,7 @@
 
             <button type="submit" class="btn">Salvar</button>
         </form>
-        <a href="index.php?action=list" class="back-link">Voltar para Lista de Usuários</a>
+        <a href="index.php?action=dashboard" class="back-link">Voltar para Lista de Usuários</a>
     </div>
 </body>
 

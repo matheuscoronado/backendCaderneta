@@ -9,6 +9,7 @@ require 'controllers/DashboardController.php'; // Inclui o controlador do dashbo
 $authController = new AuthController(); // Instancia o controlador de autenticação
 $userController = new UserController(); // Instancia o controlador de usuários
 $dashboardController = new DashboardController(); // Instancia o controlador do dashboard
+$controller = new UserController();
 
 // Coleta a ação da URL, se não houver ação definida, usa 'login' como padrão
 $action = $_GET['action'] ?? 'login'; // Usa o operador de coalescência nula (??) para definir 'login' se 'action' não estiver presente
@@ -17,6 +18,9 @@ $action = $_GET['action'] ?? 'login'; // Usa o operador de coalescência nula (?
 switch ($action) {
     case 'login':
         $authController->login(); // Chama o método de login do controlador de autenticação
+        break;
+    case 'ver-anotacoes':
+        $controller->verAnotacoes();
         break;
     case 'logout':
         $authController->logout(); // Chama o método de logout do controlador de autenticação

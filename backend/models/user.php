@@ -43,7 +43,7 @@ class User
             // Obtém a conexão com o banco de dados
             $conn = Database::getConnection();
             
-            // Prepara uma consulta SQL para inserir um novo usuário na tabela 'usuarios'
+            // Prepara uma consulta SQL para inserir um novo usuário na tabela 'usuario'
             $stmt = $conn->prepare("INSERT INTO usuario (nome, email, senha_hash, tipo) VALUES (:nome, :email, :senha_hash, :tipo)");
             
             // Executa a consulta, passando os dados do novo usuário (nome, email, senha e perfil)
@@ -70,7 +70,7 @@ class User
         $conn = Database::getConnection();
             
         // Prepara uma consulta SQL para atualizar o nome, email e perfil de um usuário baseado no ID
-        $stmt = $conn->prepare("UPDATE usuario SET nome = :nome, email = :email, tipo = :tipo WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE usuario SET nome = :nome, email = :email, senha_hash = :senha_hash, tipo = :tipo WHERE id = :id");
         
         // Adiciona o ID ao array de dados que será usado na consulta
         $data['id'] = $id;
@@ -92,5 +92,22 @@ class User
         $stmt->execute(['id' => $id]);
     }
 
+    public static function buscarAnotacoesPorAluno($alunoId)
+{
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("SELECT * FROM caderneta WHERE aluno_id = :aluno_id ORDER BY data_registro DESC");
+    $stmt->execute([':aluno_id' => $alunoId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-?>
+
+public static function buscarAlunoPorId($alunoId)
+{
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("SELECT nome FROM usuario WHERE id = :id AND tipo = 'aluno'");
+    $stmt->execute([':id' => $alunoId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
+
+}
