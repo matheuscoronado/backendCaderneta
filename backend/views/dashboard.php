@@ -251,9 +251,10 @@ $users = User::all();
                     <button id="theme-toggle" class="theme-toggle">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button id="logout-btn" class="logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Sair
-                    </button>
+                    <a href="logout.php" id="logout-btn"
+                            class="text-gray-600 hover:text-blue-600 text-sm sm:text-base flex items-center gap-1">
+                            <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Sair</span>
+                    </a>
                 </div>
             </div>
         </header>
@@ -340,9 +341,10 @@ $users = User::all();
                         <button id="theme-toggle" class="theme-toggle">
                             <i class="fas fa-moon"></i>
                         </button>
-                        <button id="logout-btn" class="logout-button">
-                            <i class="fas fa-sign-out-alt"></i> Sair
-                        </button>
+                        <a href="logout.php" id="logout-btn"
+                            class="text-gray-600 hover:text-blue-600 text-sm sm:text-base flex items-center gap-1">
+                            <i class="fas fa-sign-out-alt"></i> <span class="hidden sm:inline">Sair</span>
+                        </a>
                     </div>
                 </div>
             </header>
