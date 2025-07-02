@@ -59,39 +59,56 @@ $users = User::all();
                     </div>
 
                     <!-- Tabela de Usuários -->
-                    <div class="container">
-                        <table class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Perfil</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($users as $user): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($user['id']) ?></td>
-                                        <td><?= htmlspecialchars($user['nome']) ?></td>
-                                        <td><?= htmlspecialchars($user['email']) ?></td>
-                                        <td><?= htmlspecialchars($user['tipo']) ?></td>
-                                        <td>
-                                            <a href="index.php?action=edit&id=<?= $user['id'] ?>" 
-                                                class="inline-block px-3 py-1 sm:px-4 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm sm:text-base text-gray-800 no-underline transition-colors duration-200">
-                                                Editar
-                                            </a>
-                                            <a href="index.php?action=delete&id=<?= $user['id'] ?>" 
-                                                class="inline-block px-3 py-1 sm:px-4 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm sm:text-base"
-                                                onclick="return confirm('Tem certeza que deseja excluir?')">
-                                            Excluir
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                      <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perfil</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($user['id']) ?></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?= htmlspecialchars($user['nome']) ?></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?= htmlspecialchars($user['email']) ?></td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                <?= match(strtolower($user['tipo'])) {
+                                    'admin', 'administrador' => 'bg-blue-100 text-blue-800',
+                                    'aluno', 'student' => 'bg-green-100 text-green-800',
+                                    'prof', 'professor', 'teacher' => 'bg-purple-100 text-purple-800', 
+                                    default => 'bg-gray-100 text-gray-800'
+                                } ?>">
+                                <?= match(strtolower($user['tipo'])) {
+                                    'admin', 'administrador' => 'ADMIN',
+                                    'prof', 'professor' => 'PROFESSOR',  // caso queira estilizar para formatar mais palavras e exibir como professor - 'prof', 'professor', 'teacher' => 'PROFESSOR', //
+                                    'aluno' => 'ALUNO',
+                                    default => strtoupper($user['tipo'])
+                                } ?>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-2">
+                                <a href="index.php?action=edit&id=<?= $user['id'] ?>" 
+                                   class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                                   Editar
+                                </a>
+                                <a href="index.php?action=delete&id=<?= $user['id'] ?>" 
+                                   class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                                   onclick="return confirm('Tem certeza que deseja excluir?')">
+                                   Excluir
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
                     </div>
                 </div>
 
