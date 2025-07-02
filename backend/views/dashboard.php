@@ -179,9 +179,10 @@ $users = User::all();
                 </div>
                 
                 <!-- Rodapé Móvel -->
-                <nav class="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)] border-t border-[var(--border-color)] flex justify-around py-2 sm:py-3">
-                        <i class="fas fa-cog text-lg sm:text-xl"></i>
-                    </a>
+                <nav class="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)] border-t border-[var(--border-color)] flex justify-center py-3">
+                    <div class="text-[var(--primary-color)]">
+                        <i class="fas fa-cog text-xl"></i>
+                    </div>
                 </nav>
 
             </main>
