@@ -248,7 +248,7 @@ $users = User::all();
                         </select>
                         <input type="text" id="custom-topic" class="hidden" placeholder="Digite o tópico">
                     </div>
-                    <textarea id="note-content" rows="8" placeholder="Descreva o procedimento realizado..."></textarea>
+                    <textarea id="note-content" rows="8" placeholder="Faça sua anotação..."></textarea>
                     <div class="editor-actions">
                         <button id="save-btn" class="save-button">
                             <i class="fas fa-save"></i> Salvar

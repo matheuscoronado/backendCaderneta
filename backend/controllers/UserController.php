@@ -71,24 +71,49 @@ class UserController
     }
 
     public function verAnotacoes()
+    {
+        if (!isset($_GET['aluno_id'])) {
+            echo "ID do aluno não fornecido.";
+            exit;
+        }
+
+        $alunoId = $_GET['aluno_id'];
+
+        $aluno = User::buscarAlunoPorId($alunoId);
+        if (!$aluno) {
+            echo "Aluno não encontrado.";
+            exit;
+        }
+
+        $atividade = User::buscarAnotacoesPorAluno($alunoId);
+
+        include 'views/anotacoes.php';
+    }
+
+    public function salvarAnotacao()
 {
-    if (!isset($_GET['aluno_id'])) {
-        echo "ID do aluno não fornecido.";
-        exit;
+    session_start();
+
+    $dados = json_decode(file_get_contents("php://input"), true);
+    $titulo = $dados['titulo'] ?? '';
+    $subtitulo = $dados['subtitulo'] ?? '';
+    $descricao = $dados['descricao'] ?? '';
+    $alunoId = $_SESSION['id'] ?? null;
+
+    if (!$alunoId || empty($titulo) || empty($subtitulo) || empty($descricao)) {
+        echo json_encode(['erro' => 'Dados inválidos ou sessão expirada']);
+        return;
     }
 
-    $alunoId = $_GET['aluno_id'];
+    require_once 'models/User.php';
+    $userModel = new User();
+    $salvo = $userModel->salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao);
 
-    $aluno = User::buscarAlunoPorId($alunoId);
-    if (!$aluno) {
-        echo "Aluno não encontrado.";
-        exit;
-    }
-
-    $cadernetas = User::buscarAnotacoesPorAluno($alunoId);
-
-    include 'views/anotacoes.php';
+    echo json_encode([
+        'mensagem' => $salvo ? 'Anotação salva com sucesso!' : 'Erro ao salvar anotação.'
+    ]);
 }
+
 
 
 
