@@ -55,60 +55,71 @@ $users = User::all();
                 <!-- Seção de Usuários -->
                 <div class="rounded-xl shadow-md p-4 sm:p-6 mb-6" style="background-color: var(--card-bg); border: 1px solid var(--border-color);">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-base sm:text-lg font-semibold text-[var(--text-color)]">Gerenciamento de Usuários</h2>
+                        <h2 class="text-base sm:text-lg font-semibold" style="color: var(--text-color);">Gerenciamento de Usuários</h2>
                     </div>
 
                     <!-- Tabela de Usuários -->
-                      <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perfil</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <?php foreach ($users as $user): ?>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($user['id']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?= htmlspecialchars($user['nome']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><?= htmlspecialchars($user['email']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                                <?= match(strtolower($user['tipo'])) {
-                                    'admin', 'administrador' => 'bg-blue-100 text-blue-800',
-                                    'aluno', 'student' => 'bg-green-100 text-green-800',
-                                    'prof', 'professor', 'teacher' => 'bg-purple-100 text-purple-800', 
-                                    default => 'bg-gray-100 text-gray-800'
-                                } ?>">
-                                <?= match(strtolower($user['tipo'])) {
-                                    'admin', 'administrador' => 'ADMIN',
-                                    'prof', 'professor' => 'PROFESSOR',  // caso queira estilizar para formatar mais palavras e exibir como professor - 'prof', 'professor', 'teacher' => 'PROFESSOR', //
-                                    'aluno' => 'ALUNO',
-                                    default => strtoupper($user['tipo'])
-                                } ?>
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex justify-end space-x-2">
-                                <a href="index.php?action=edit&id=<?= $user['id'] ?>" 
-                                   class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
-                                   Editar
-                                </a>
-                                <a href="index.php?action=delete&id=<?= $user['id'] ?>" 
-                                   class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-                                   onclick="return confirm('Tem certeza que deseja excluir?')">
-                                   Excluir
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full" style="border-color: var(--border-color);">
+                            <thead>
+                                <tr style="background-color: var(--light-gray);">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Nome</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Email</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Perfil</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style="color: var(--text-color);">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y" style="border-color: var(--border-color);">
+                                <?php foreach ($users as $user): ?>
+                                <tr class="hover:bg-[var(--hover-color)] transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: var(--text-color);"><?= htmlspecialchars($user['id']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-color);"><?= htmlspecialchars($user['nome']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-color);"><?= htmlspecialchars($user['email']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full" 
+                                            style="
+                                                <?= match(strtolower($user['tipo'])) {
+                                                    'admin', 'administrador' => 'background-color: var(--view-bg); color: var(--view-color); border: 1px solid var(--view-border);',
+                                                    'aluno', 'student' => 'background-color: var(--edit-bg); color: var(--edit-color); border: 1px solid var(--edit-border);',
+                                                    'prof', 'professor', 'teacher' => 'background-color: var(--delete-bg); color: var(--delete-color); border: 1px solid var(--delete-border);',
+                                                    default => 'background-color: var(--light-gray); color: var(--secondary-color); border: 1px solid var(--border-color);'
+                                                } ?>">
+                                            <?= match(strtolower($user['tipo'])) {
+                                                'admin', 'administrador' => 'ADMIN',
+                                                'prof', 'professor', 'teacher' => 'PROFESSOR',
+                                                'aluno', 'student' => 'ALUNO',
+                                                default => strtoupper($user['tipo'])
+                                            } ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <a href="index.php?action=edit&id=<?= $user['id'] ?>" 
+                                            class="px-3 py-1 rounded-md transition-colors"
+                                            style="
+                                                color: var(--edit-color);
+                                                background-color: var(--edit-bg);
+                                                border: 1px solid var(--edit-border);
+                                            ">
+                                            Editar
+                                            </a>
+                                            <a href="index.php?action=delete&id=<?= $user['id'] ?>" 
+                                            class="px-3 py-1 rounded-md transition-colors"
+                                            style="
+                                                color: var(--delete-color);
+                                                background-color: var(--delete-bg);
+                                                border: 1px solid var(--delete-border);
+                                            "
+                                            onclick="return confirm('Tem certeza que deseja excluir?')">
+                                            Excluir
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
