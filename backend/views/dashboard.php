@@ -50,6 +50,8 @@ $users = User::all();
                 </div>
             </header>
 
+            <div class="bg-[var(--bg-color)] min-h-screen">
+
             <!-- Conteúdo Principal -->
             <main class="container mx-auto p-2 sm:p-4 pb-20">
                 <!-- Seção de Usuários -->
@@ -183,6 +185,8 @@ $users = User::all();
                 </nav>
 
             </main>
+
+    </div>
 
         <?php elseif ($_SESSION['tipo'] == 'professor'): ?>
             <!-- Conteúdo do Professor -->
