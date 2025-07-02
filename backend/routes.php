@@ -22,6 +22,9 @@ switch ($action) {
     case 'ver-anotacoes':
         $controller->verAnotacoes();
         break;
+    case 'salvar-anotacao':
+        $userController->salvarAnotacao(); // Chama o método no UserController
+        break;
     case 'logout':
         $authController->logout(); // Chama o método de logout do controlador de autenticação
         break;

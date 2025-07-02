@@ -264,8 +264,8 @@ document.getElementById('update-note-btn').addEventListener('click', function() 
             return note;
         });
         
-        // Salva no localStorage
-        localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
+        // // Salva no localStorage
+        // localStorage.setItem('studentNotes', JSON.stringify(updatedNotes));
         
         alert('Anotação atualizada com sucesso!');
         closeEditModal();

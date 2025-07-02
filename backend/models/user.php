@@ -93,19 +93,26 @@ class User
     }
 
     public static function buscarAnotacoesPorAluno($alunoId)
-{
-    $conn = Database::getConnection();
-    $stmt = $conn->prepare("SELECT * FROM caderneta WHERE aluno_id = :aluno_id ORDER BY data_registro DESC");
-    $stmt->execute([':aluno_id' => $alunoId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM atividade WHERE aluno_id = :aluno_id ORDER BY data_registro DESC");
+        $stmt->execute([':aluno_id' => $alunoId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-public static function buscarAlunoPorId($alunoId)
+    public static function buscarAlunoPorId($alunoId)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT nome FROM usuario WHERE id = :id AND tipo = 'aluno'");
+        $stmt->execute([':id' => $alunoId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao)
 {
     $conn = Database::getConnection();
-    $stmt = $conn->prepare("SELECT nome FROM usuario WHERE id = :id AND tipo = 'aluno'");
-    $stmt->execute([':id' => $alunoId]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("INSERT INTO atividade (titulo, subtitulo, descricao) VALUES (:titulo, :subtitulo, :descricao)");
+    return $stmt->execute([$alunoId, $titulo, $subtitulo, $descricao]);
 }
 
 
