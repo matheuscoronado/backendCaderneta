@@ -79,13 +79,13 @@ $users = User::all();
                                     <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-color);"><?= htmlspecialchars($user['nome']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-color);"><?= htmlspecialchars($user['email']) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs font-semibold rounded-full" 
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full"
                                             style="
                                                 <?= match(strtolower($user['tipo'])) {
-                                                    'admin', 'administrador' => 'background-color: var(--view-bg); color: var(--view-color); border: 1px solid var(--view-border);',
-                                                    'aluno', 'student' => 'background-color: var(--edit-bg); color: var(--edit-color); border: 1px solid var(--edit-border);',
-                                                    'prof', 'professor', 'teacher' => 'background-color: var(--delete-bg); color: var(--delete-color); border: 1px solid var(--delete-border);',
-                                                    default => 'background-color: var(--light-gray); color: var(--secondary-color); border: 1px solid var(--border-color);'
+                                                    'admin', 'administrador' => 'background-color: var(--admin-bg); color: var(--admin-text); border: 1px solid var(--admin-border);',
+                                                    'aluno', 'student' => 'background-color: var(--aluno-bg); color: var(--aluno-text); border: 1px solid var(--aluno-border);',
+                                                    'prof', 'professor', 'teacher' => 'background-color: var(--professor-bg); color: var(--professor-text); border: 1px solid var(--professor-border);',
+                                                    default => 'background-color: var(--default-bg); color: var(--default-text); border: 1px solid var(--default-border);'
                                                 } ?>">
                                             <?= match(strtolower($user['tipo'])) {
                                                 'admin', 'administrador' => 'ADMIN',

@@ -35,6 +35,22 @@
     --delete-hover: #dc2626;
     --delete-bg: #fee2e2;
     --delete-border: #fecaca;
+
+    --admin-bg: #dbeafe;       /* rgb(219 234 254) */
+    --admin-text: #1e40af;     /* rgb(30 64 175) */
+    --admin-border: #93c5fd;   /* rgb(147 197 253) */
+    
+    --aluno-bg: #f3e8ff;       /* rgb(243 232 255) */
+    --aluno-text: #6b21a8;     /* rgb(107 33 168) */
+    --aluno-border: #c084fc;   /* rgb(192 132 252) */
+    
+    --professor-bg: #dcfce7;   /* rgb(220 252 231) */
+    --professor-text: #166534;  /* rgb(22 101 52) */
+    --professor-border: #86efac; /* rgb(134 239 172) */
+    
+    --default-bg: #e5e7eb;     /* rgb(229 231 235) */
+    --default-text: #374151;   /* rgb(55 65 81) */
+    --default-border: #9ca3af; /* rgb(156 163 175) */
 }
 
 /* Estilos para o tema escuro */
@@ -62,6 +78,22 @@
     --delete-hover: #f87171;
     --delete-bg: #7f1d1d;
     --delete-border: #991b1b;
+
+     --admin-bg: #1e3a8a;
+    --admin-text: #bfdbfe;
+    --admin-border: #3b82f6;
+    
+    --aluno-bg: #5b21b6;
+    --aluno-text: #e9d5ff;
+    --aluno-border: #a855f7;
+    
+    --professor-bg: #166534;
+    --professor-text: #bbf7d0;
+    --professor-border: #22c55e;
+    
+    --default-bg: #374151;
+    --default-text: #e5e7eb;
+    --default-border: #6b7280;
 }
 
 /* Estilos base para cartões de usuário */
