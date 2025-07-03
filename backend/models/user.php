@@ -92,6 +92,8 @@ class User
         $stmt->execute(['id' => $id]);
     }
 
+
+    // Função para buscar anotações de um aluno específico
     public static function buscarAnotacoesPorAluno($alunoId)
     {
         $conn = Database::getConnection();
@@ -99,6 +101,8 @@ class User
         $stmt->execute([':aluno_id' => $alunoId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Função para buscar o nome de um aluno pelo ID
 
     public static function buscarAlunoPorId($alunoId)
     {
@@ -108,12 +112,33 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao)
-{
+    public static function salvarFeedback($professor_id, $atividade_id, $comentario) {
     $conn = Database::getConnection();
-    $stmt = $conn->prepare("INSERT INTO atividade (titulo, subtitulo, descricao) VALUES (:titulo, :subtitulo, :descricao)");
-    return $stmt->execute([$alunoId, $titulo, $subtitulo, $descricao]);
+    $stmt = $conn->prepare("INSERT INTO Feedback (professor_id, atividade_id, comentario, data_feedback) VALUES (?, ?, ?, NOW())");
+    return $stmt->execute([$professor_id, $atividade_id, $comentario]);
 }
+
+public static function listarFeedbacksPorAtividade($atividade_id) {
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("SELECT F.comentario, U.nome AS professor_nome, F.data_feedback
+                           FROM Feedback F
+                           JOIN Usuario U ON F.professor_id = U.id
+                           WHERE F.atividade_id = ?
+                           ORDER BY F.data_feedback DESC");
+    $stmt->execute([$atividade_id]);
+    return $stmt->fetchAll();
+}
+
+
+
+
+
+    public function salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("INSERT INTO atividade (titulo, subtitulo, descricao) VALUES (:titulo, :subtitulo, :descricao)");
+        return $stmt->execute([$alunoId, $titulo, $subtitulo, $descricao]);
+    }
 
 
 

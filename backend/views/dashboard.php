@@ -232,19 +232,7 @@ $users = User::all();
             </div>
         </div>
             </main>
-
-            <div id="notes-sidebar" class="notes-sidebar">
-                <div class="sidebar-header">
-                    <h2 id="sidebar-student-name">Anotações</h2>
-                    <button id="close-sidebar" class="close-button">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div id="sidebar-notes-list" class="sidebar-notes-list">
-                    <!-- Anotações do aluno serão carregadas aqui -->
-                </div>
-            </div>
-
+            
         <?php else: ?>
             <!-- Conteúdo do Aluno -->
             <div id="app" class="app-container">

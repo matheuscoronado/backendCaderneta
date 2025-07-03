@@ -5,6 +5,7 @@ require 'controllers/AuthController.php'; // Inclui o controlador de autenticaç
 require 'controllers/UserController.php'; // Inclui o controlador de usuários
 require 'controllers/DashboardController.php'; // Inclui o controlador do dashboard
 
+
 // Cria instâncias dos controladores para utilizar seus métodos
 $authController = new AuthController(); // Instancia o controlador de autenticação
 $userController = new UserController(); // Instancia o controlador de usuários
@@ -20,7 +21,10 @@ switch ($action) {
         $authController->login(); // Chama o método de login do controlador de autenticação
         break;
     case 'ver-anotacoes':
-        $controller->verAnotacoes();
+        $controller->verAnotacoes(); // Chama o método de ver anotações do controlador de usuários
+        break;
+    case 'salvar-feedback':
+        $userController->salvarFeedback(); // Chama o método de salvar feedback do controlador de usuários
         break;
     case 'salvar-anotacao':
         $userController->salvarAnotacao(); // Chama o método no UserController
