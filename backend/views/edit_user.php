@@ -123,6 +123,7 @@
             console.log('Classe do ícone:', eyeIcon.className);
         });
     });
+
     </script>
 
 </body>
