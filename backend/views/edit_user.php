@@ -63,8 +63,8 @@
                             <input type="password" name="senha_hash" id="senha_hash" value="<?= $user['senha_hash']?>" required 
                                 class="block w-full border rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
                                 style="border-color: var(--border-color); background-color: var(--input-bg); color: var(--text-color);">
-                            <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                                <i class="far fa-eye"></i>
+                           <button type="button" id="togglePassword" class="absolute right-3 bottom-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <i id="eyeIcon" class="fas fa-eye-slash"></i>
                             </button>
                         </div>
                     </div>
@@ -100,6 +100,31 @@
             </div>
         </nav>
     </div>
+
+
+    <script>
+        // Script para alternar a visibilidade da senha
+        document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('senha_hash');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        toggleBtn.addEventListener('click', function() {
+            // Alternar tipo de input
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            // Alternar ícone
+            eyeIcon.classList.toggle('fa-eye-slash');
+            eyeIcon.classList.toggle('fa-eye');
+            
+            // Debug no console
+            console.log('Senha visível?', !isPassword);
+            console.log('Classe do ícone:', eyeIcon.className);
+        });
+    });
+    </script>
+
 </body>
 
 
