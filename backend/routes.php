@@ -26,8 +26,17 @@ switch ($action) {
     case 'salvar-feedback':
         $userController->salvarFeedback(); // Chama o método de salvar feedback do controlador de usuários
         break;
+    case 'atualizar-anotacao':
+        $userController->atualizarAnotacao(); // Chama o método de atualizar anotação do controlador de usuários
+        break;
+    case 'excluir-anotacao':
+        $userController->excluirAnotacao(); // Chama o método de excluir anotação do controlador de usuários
+        break;
     case 'salvar-anotacao':
-        $userController->salvarAnotacao(); // Chama o método no UserController
+        $userController->salvarAnotacao(); // Chama o método de salvar anotação do controlador de usuários
+        break;
+    case 'listar-anotacoes-aluno':
+        $userController->listarAnotacoesAluno(); // Chama o método de listar anotações de aluno do controlador de usuários
         break;
     case 'logout':
         $authController->logout(); // Chama o método de logout do controlador de autenticação

@@ -1,4 +1,5 @@
 <?php
+
 // Definição da classe UserController, responsável por gerenciar as ações relacionadas aos usuários
 class UserController
 {
@@ -93,55 +94,63 @@ class UserController
         include 'views/views_prof.php';
     }
 
-    public function salvarFeedback() {
-    session_start();
+    // Função para salvar feedback de um professor sobre uma atividade
 
-    if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo'] !== 'professor') {
-        http_response_code(403);
-        echo json_encode(['erro' => 'Acesso negado']);
-        return;
-    }
+    public function salvarFeedback() 
+    {
+        session_start();
 
-    $professor_id = $_SESSION['usuario_id'];
-    $atividade_id = $_POST['atividade_id'] ?? null;
-    $comentario = trim($_POST['comentario'] ?? '');
+        if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo'] !== 'professor') 
+        {
+            http_response_code(403);
+            echo json_encode(['erro' => 'Acesso negado']);
+            return;
+        }
 
-    if (!$atividade_id || empty($comentario)) {
-        http_response_code(400);
-        echo json_encode(['erro' => 'Dados incompletos']);
-        return;
-    }
+            $professor_id = $_SESSION['usuario_id'];
+            $atividade_id = $_POST['atividade_id'] ?? null;
+            $comentario = trim($_POST['comentario'] ?? '');
 
-    try {
-        $sucesso = User::salvarFeedback($professor_id, $atividade_id, $comentario);
-        
-        if ($sucesso) {
-            // Busca os dados atualizados para retornar
-            $feedback = [
-                'professor_nome' => $_SESSION['nome'] ?? 'Professor',
-                'comentario' => $comentario,
-                'data_feedback' => date('Y-m-d H:i:s')
-            ];
+        if (!$atividade_id || empty($comentario)) 
+        {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Dados incompletos']);
+            return;
+        }
+
+        try {
+            $sucesso = User::salvarFeedback($professor_id, $atividade_id, $comentario);
             
+            if ($sucesso) {
+                // Busca os dados atualizados para retornar
+                $feedback = [
+                    'professor_nome' => $_SESSION['nome'] ?? 'Professor',
+                    'comentario' => $comentario,
+                    'data_feedback' => date('Y-m-d H:i:s')
+                ];
+                
+                echo json_encode([
+                    'sucesso' => true,
+                    'feedback' => $feedback
+                ]);
+            } else {
+                echo json_encode([
+                    'sucesso' => false,
+                    'erro' => 'Falha ao salvar no banco de dados'
+                ]);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
             echo json_encode([
-                'sucesso' => true,
-                'feedback' => $feedback
-            ]);
-        } else {
-            echo json_encode([
-                'sucesso' => false,
-                'erro' => 'Falha ao salvar no banco de dados'
+                'erro' => 'Erro no servidor: ' . $e->getMessage()
             ]);
         }
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode([
-            'erro' => 'Erro no servidor: ' . $e->getMessage()
-        ]);
     }
-}
 
-    public function listarFeedbacks($atividade_id) {
+    // Função para listar feedbacks de uma atividade específica
+
+    public function listarFeedbacks($atividade_id) 
+    {
         return User::listarFeedbacksPorAtividade($atividade_id);
     }
 
@@ -151,27 +160,103 @@ class UserController
     {
         session_start();
 
-        $dados = json_decode(file_get_contents("php://input"), true);
-        $titulo = $dados['titulo'] ?? '';
-        $subtitulo = $dados['subtitulo'] ?? '';
-        $descricao = $dados['descricao'] ?? '';
-        $alunoId = $_SESSION['id'] ?? null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $alunoId = $_SESSION['usuario_id'];
+            $titulo = $_POST['titulo'];
+            $subtitulo = $_POST['subtitulo'];
+            $descricao = $_POST['descricao'];
 
-        if (!$alunoId || empty($titulo) || empty($subtitulo) || empty($descricao)) {
-            echo json_encode(['erro' => 'Dados inválidos ou sessão expirada']);
+            if (empty($titulo) || empty($subtitulo) || empty($descricao)) {
+                echo "Todos os campos são obrigatórios!";
+                return;
+            }
+            User::salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao);
+        }
+    }
+
+    // Função para listar as anotações de um aluno específico
+    public function listarAnotacoesAluno() 
+    {
+        session_start();
+        $alunoId = $_SESSION['usuario_id'];
+
+        if (!$alunoId) {
+            echo json_encode([]);
             return;
         }
 
         require_once 'models/User.php';
         $userModel = new User();
-        $salvo = $userModel->salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao);
+        $anotacoes = $userModel->buscarAnotacoesPorAluno($alunoId);
 
-        echo json_encode([
-            'mensagem' => $salvo ? 'Anotação salva com sucesso!' : 'Erro ao salvar anotação.'
-        ]);
+        echo json_encode($anotacoes);
+    }
+
+    // Funções para gerenciar anotações (CRUD)
+
+    public function getAnotacao()
+    {
+        $id = $_GET['id'] ?? null;
+
+        if (!$id) {
+            echo json_encode(['erro' => 'ID não fornecido']);
+            return;
+        }
+
+        $anotacao = User::buscarAnotacaoPorId($id);
+
+        if ($anotacao) {
+            echo json_encode($anotacao);
+        } else {
+            echo json_encode(['erro' => 'Anotação não encontrada']);
+        }
     }
 
 
+    // Função para atualizar uma anotação existente
 
+    public function atualizarAnotacao()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            $titulo = $_POST['titulo'] ?? '';
+            $subtitulo = $_POST['subtitulo'] ?? ''; 
+            $descricao = $_POST['descricao'] ?? '';
 
+            if (!$id || empty($titulo) || empty($subtitulo) || empty($descricao)) {
+                echo json_encode(['erro' => 'Campos obrigatórios ausentes.']);
+                return;
+            }
+
+            $resultado = User::atualizarAnotacao($id, $titulo, $subtitulo, $descricao);
+
+            if ($resultado) {
+                echo json_encode(['sucesso' => true]);
+            } else {
+                echo json_encode(['erro' => 'Erro ao atualizar anotação.']);
+            }
+        }
+    }
+
+    // Função para excluir uma anotação existente
+
+    public function excluirAnotacao()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+
+            if (!$id) {
+                echo json_encode(['erro' => 'ID não fornecido']);
+                return;
+            }
+
+            $excluido = User::excluirAnotacao($id);
+
+            if ($excluido) {
+                echo json_encode(['sucesso' => true]);
+            } else {
+                echo json_encode(['erro' => 'Erro ao excluir anotação']);
+            }
+        }
+    }
 }

@@ -112,34 +112,74 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function salvarFeedback($professor_id, $atividade_id, $comentario) {
-    $conn = Database::getConnection();
-    $stmt = $conn->prepare("INSERT INTO Feedback (professor_id, atividade_id, comentario, data_feedback) VALUES (?, ?, ?, NOW())");
-    return $stmt->execute([$professor_id, $atividade_id, $comentario]);
-}
-
-public static function listarFeedbacksPorAtividade($atividade_id) {
-    $conn = Database::getConnection();
-    $stmt = $conn->prepare("SELECT F.comentario, U.nome AS professor_nome, F.data_feedback
-                           FROM Feedback F
-                           JOIN Usuario U ON F.professor_id = U.id
-                           WHERE F.atividade_id = ?
-                           ORDER BY F.data_feedback DESC");
-    $stmt->execute([$atividade_id]);
-    return $stmt->fetchAll();
-}
-
-
-
-
-
-    public function salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao)
+    // Função para salvar feedback de um professor sobre uma atividade
+    public static function salvarFeedback($professor_id, $atividade_id, $comentario) 
     {
         $conn = Database::getConnection();
-        $stmt = $conn->prepare("INSERT INTO atividade (titulo, subtitulo, descricao) VALUES (:titulo, :subtitulo, :descricao)");
-        return $stmt->execute([$alunoId, $titulo, $subtitulo, $descricao]);
+        $stmt = $conn->prepare("INSERT INTO Feedback (professor_id, atividade_id, comentario, data_feedback) VALUES (?, ?, ?, NOW())");
+        return $stmt->execute([$professor_id, $atividade_id, $comentario]);
     }
 
+    // Função para listar todos os feedbacks de uma atividade específica
 
+    public static function listarFeedbacksPorAtividade($atividade_id) 
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT F.comentario, U.nome AS professor_nome, F.data_feedback
+                            FROM Feedback F
+                            JOIN Usuario U ON F.professor_id = U.id
+                            WHERE F.atividade_id = ?
+                            ORDER BY F.data_feedback DESC");
+        $stmt->execute([$atividade_id]);
+        return $stmt->fetchAll();
+    }
+
+    // Função para salvar uma anotação de um aluno
+
+    public static function salvarAnotacao($alunoId, $titulo, $subtitulo, $descricao)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("INSERT INTO atividade (aluno_id, titulo, subtitulo, descricao) 
+                                VALUES (:aluno_id, :titulo, :subtitulo, :descricao)");
+        return $stmt->execute([
+            ':aluno_id' => $alunoId,
+            ':titulo' => $titulo,
+            ':subtitulo' => $subtitulo,
+            ':descricao' => $descricao
+        ]);
+    }
+
+    // Função para buscar uma anotação específica pelo ID
+    public static function buscarAnotacaoPorId($id)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM atividade WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+// Função para atualizar uma anotação existente
+    
+    public static function atualizarAnotacao($id, $titulo, $subtitulo,  $descricao)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("UPDATE atividade SET titulo = :titulo, subtitulo = :subtitulo, descricao = :descricao WHERE id = :id");
+        $stmt->bindParam(':titulo', $titulo);
+        $stmt->bindParam(':subtitulo', $subtitulo);
+        $stmt->bindParam(':descricao', $descricao);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    // Função para excluir uma anotação pelo ID
+
+    public static function excluirAnotacao($id)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("DELETE FROM atividade WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 
 }
