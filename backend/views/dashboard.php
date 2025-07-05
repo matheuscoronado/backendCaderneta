@@ -429,30 +429,62 @@ $users = User::all();
             <!-- Overlay do sidebar -->
             <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-            <!-- Modal de edição de anotação -->
+            <!-- Modal para edição da anotação, inicialmente oculto pela classe "hidden" -->
             <div id="edit-note-modal" class="note-modal hidden">
+
+                <!-- Conteúdo principal do modal -->
                 <div class="modal-content">
                     <div class="modal-body">
+
+                        <!-- Cabeçalho do modal com título e botão para fechar -->
                         <div class="modal-header">
                             <div>
-                                <h2>Editar Anotação</h2>
+                                <h2>Editar Anotação</h2> <!-- Título do modal -->
                             </div>
                             <button id="close-edit-modal" class="close-button">
-                                <i class="fas fa-times"></i>
+                                <i class="fas fa-times"></i> <!-- Ícone de "X" para fechar o modal -->
                             </button>
                         </div>
+
+                        <!-- Seção para selecionar o título da anotação usando um select -->
                         <div class="form-group title-input">
-                            <input type="text" id="edit-note-title" placeholder="Título">
+                            <select name="titulo" id="edit-note-title" class="topic-select w-full border rounded-md py-2 px-3" required>
+                                <option value="">Selecione um tópico</option> <!-- Opção padrão vazia -->
+                                <option value="Sinais Vitais - Conceitos Gerais">Sinais Vitais - Conceitos Gerais</option>
+                                <option value="Temperatura Corporal">Temperatura Corporal</option>
+                                <option value="Pulso e Frequência Cardíaca">Pulso e Frequência Cardíaca</option>
+                                <option value="Frequência Respiratória">Frequência Respiratória</option>
+                                <option value="Pressão Arterial">Pressão Arterial</option>
+                                <option value="Dor como Sinal Vital">Dor como Sinal Vital</option>
+                                <option value="Administração de Medicamentos - Vias Oral e Sublingual">Administração de Medicamentos - Vias Oral e Sublingual</option>
+                                <option value="Administração Parenteral - IM, ID, SC">Administração Parenteral - IM, ID, SC</option>
+                                <option value="Administração Endovenosa e Inalatória">Administração Endovenosa e Inalatória</option>
+                            </select>
                         </div>
+
+                        <!-- Campo para inserir subtítulo da anotação -->
                         <div class="form-group subtitle-input">
                             <input type="text" id="edit-note-subtitle" placeholder="Subtítulo">
                         </div>
 
+                        <!-- Área de texto para conteúdo da anotação -->
                         <textarea id="edit-note-content" rows="8" placeholder="Conteúdo da anotação..."></textarea>
+
+                        <!-- Seção para exibir feedbacks do professor relacionados à anotação -->
+                        <div id="edit-note-feedbacks" class="feedback-display mt-4">
+                            <h3 class="text-sm font-semibold mb-2">Feedback do Professor</h3>
+                            <div id="edit-feedback-content" class="space-y-2 text-sm text-gray-700 bg-gray-100 rounded-md p-3 overflow-y-auto max-h-48">
+                                <!-- Feedbacks serão inseridos aqui via JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Seção para exibir sugestões adicionais (ex: da Florense) -->
                         <div id="edit-note-suggestions" class="suggestions-container">
                             <h3>Sugestões da Florense</h3>
                             <div id="edit-suggestions-content" class="suggestions-content"></div>
                         </div>
+
+                        <!-- Botões para ações na anotação: atualizar e excluir -->
                         <div class="edit-actions">
                             <button id="update-note-btn" class="primary-button">
                                 <i class="fas fa-save"></i> Atualizar
@@ -461,9 +493,12 @@ $users = User::all();
                                 <i class="fas fa-trash"></i> Excluir
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+
 
             <!-- Modal de loading -->
             <div id="loading-modal" class="loading-modal hidden">

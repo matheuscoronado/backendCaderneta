@@ -1,54 +1,50 @@
 // Aguarda o carregamento completo do DOM antes de executar o código
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtém o tema salvo no localStorage ou usa 'light' como padrão
+    // Aplica o tema salvo no localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme); // Aplica o tema
+    setTheme(savedTheme);
 
     // Define o título da sidebar
     document.getElementById('sidebar-student-name').textContent = 'Minhas Anotações';
 
-    // Carrega as anotações do servidor
+    // Carrega as anotações ao iniciar
     loadNotes();
 
-    // Configura o botão para visualizar anotações
+    // Botão para abrir a sidebar e exibir anotações
     document.getElementById('view-notes-btn').addEventListener('click', function() {
-        loadNotes(); // Recarrega as anotações
-        // Abre a sidebar
+        loadNotes();
         document.getElementById('notes-sidebar').classList.add('active');
         document.getElementById('sidebar-overlay').classList.add('active');
     });
 
-    // Configura o botão de nova anotação
+    // Botão de nova anotação: limpa campos e esconde sugestões
     document.getElementById('new-note-btn').addEventListener('click', () => {
-        // Limpa os campos do formulário
         document.getElementById('note-topic').selectedIndex = 0;
         document.getElementById('note-subtitle').value = '';
         document.getElementById('note-content').value = '';
-        // Esconde o container de sugestões
         document.getElementById('suggestions-container').classList.add('hidden');
     });
 
-    // Configura botões para fechar a sidebar
+    // Fecha sidebar
     document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
     document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
-    // Configura botão para fechar sugestões
+    // Fecha sugestões da Florense
     document.getElementById('close-suggestions').addEventListener('click', () => {
         document.getElementById('suggestions-container').classList.add('hidden');
     });
 
-    // Configura botão para fechar o modal de edição
+    // Fecha o modal de edição
     document.getElementById('close-edit-modal').addEventListener('click', () => {
         document.getElementById('edit-note-modal').classList.add('hidden');
     });
 
-    // Configura o envio do formulário de nova anotação via AJAX
+    // Envia nova anotação via AJAX
     document.getElementById('note-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Previne o envio tradicional do formulário
+        event.preventDefault();
 
-        const formData = new FormData(this); // Cria FormData com os dados do formulário
+        const formData = new FormData(this);
 
-        // Envia os dados via fetch
         fetch('index.php?action=salvar-anotacao', {
             method: 'POST',
             body: formData
@@ -56,9 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.text())
         .then(data => {
             alert("Anotação salva com sucesso!");
-            loadNotes(); // Recarrega a lista de anotações
+            loadNotes();
 
-            // Limpa os campos após o sucesso
+            // Limpa campos e sugestões
             document.getElementById('note-topic').selectedIndex = 0;
             document.getElementById('note-subtitle').value = '';
             document.getElementById('note-content').value = '';
@@ -70,20 +66,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Configura o botão de atualizar anotação no modal de edição
+    // Atualiza anotação existente
     document.getElementById('update-note-btn').addEventListener('click', function () {
-        const id = this.dataset.id; // Obtém o ID da anotação
+        const id = this.dataset.id;
         const titulo = document.getElementById('edit-note-title').value.trim();
         const subtitulo = document.getElementById('edit-note-subtitle').value.trim();
         const descricao = document.getElementById('edit-note-content').value.trim();
 
-        // Validação dos campos
         if (!titulo || !subtitulo || !descricao) {
             alert('Preencha todos os campos!');
             return;
         }
 
-        // Envia os dados atualizados via fetch
         fetch('index.php?action=atualizar-anotacao', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -94,21 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.sucesso) {
                 alert('Anotação atualizada com sucesso!');
                 document.getElementById('edit-note-modal').classList.add('hidden');
-                loadNotes(); // Recarrega a lista
+                loadNotes();
             } else {
                 alert(data.erro || 'Erro ao atualizar.');
             }
         });
     });
 
-    // Configura o botão de excluir anotação no modal de edição
+    // Exclui anotação existente
     document.getElementById('delete-note-btn').addEventListener('click', function () {
-        const id = this.dataset.id; // Obtém o ID da anotação
+        const id = this.dataset.id;
 
-        // Confirmação antes de excluir
         if (!confirm('Tem certeza que deseja excluir esta anotação?')) return;
 
-        // Envia a requisição de exclusão
         fetch('index.php?action=excluir-anotacao', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -119,24 +111,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.sucesso) {
                 alert('Anotação excluída!');
                 document.getElementById('edit-note-modal').classList.add('hidden');
-                loadNotes(); // Recarrega a lista
+                loadNotes();
             } else {
                 alert(data.erro || 'Erro ao excluir.');
             }
         });
     });
 
-    // Configura o botão para analisar com Florense (mostrar sugestões)
+    // Mostra sugestões da Florense conforme o tópico
     document.getElementById('analyze-btn').addEventListener('click', function() {
         const topic = document.getElementById('note-topic').value;
 
-        // Verifica se um tópico válido foi selecionado
         if (!topic || topic === 'outro') {
             alert('Por favor, selecione um tópico pré-definido para ver as orientações');
             return;
         }
 
-        // Verifica se há sugestões para o tópico selecionado
         if (TOPIC_RESPONSES[topic]) {
             document.getElementById('suggestions-content').innerHTML = TOPIC_RESPONSES[topic];
             document.getElementById('suggestions-container').classList.remove('hidden');
@@ -146,13 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Função para fechar a sidebar
+// Fecha a sidebar
 function closeSidebar() {
     document.getElementById('notes-sidebar').classList.remove('active');
     document.getElementById('sidebar-overlay').classList.remove('active');
 }
 
-// Função para aplicar o tema (dark/light mode)
+// Aplica tema claro ou escuro
 function setTheme(theme) {
     if (theme === 'dark') {
         document.body.classList.add('dark-mode');
@@ -163,35 +153,32 @@ function setTheme(theme) {
     }
 }
 
-// Função para alternar entre temas
+// Alterna entre os temas
 function toggleTheme() {
     const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme); // Salva a preferência
+    localStorage.setItem('theme', newTheme);
 }
 
-// Configura o botão de alternar tema
+// Botão de alternância de tema
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
-// Função para carregar anotações do servidor
+// Carrega todas as anotações do aluno
 function loadNotes() {
     fetch('index.php?action=listar-anotacoes-aluno')
         .then(response => response.json())
         .then(anotacoes => {
             const sidebarList = document.getElementById('sidebar-notes-list');
-            
-            // Se não houver anotações, mostra mensagem
+
             if (anotacoes.length === 0) {
                 sidebarList.innerHTML = '<div class="no-notes"><i class="fas fa-book-open"></i><p>Nenhuma anotação encontrada</p></div>';
                 return;
             }
 
-            // Limpa a lista antes de adicionar novos itens
             sidebarList.innerHTML = '';
 
-            // Cria elementos para cada anotação
             anotacoes.forEach(note => {
                 const noteItem = document.createElement('div');
                 noteItem.className = 'sidebar-note';
@@ -202,7 +189,7 @@ function loadNotes() {
                     <p>${new Date(note.data_registro).toLocaleDateString('pt-BR')} • ${note.descricao.substring(0, 30)}${note.descricao.length > 30 ? '...' : ''}</p>
                 `;
 
-                // Adiciona evento para abrir o modal de edição ao clicar
+                // Ao clicar na anotação, abre o modal de edição
                 noteItem.addEventListener('click', () => openEditModal(note));
 
                 sidebarList.appendChild(noteItem);
@@ -215,17 +202,50 @@ function loadNotes() {
         });
 }
 
-// Função para abrir o modal de edição com os dados de uma anotação
+// Abre o modal de edição e carrega os dados da anotação + feedbacks
 function openEditModal(note) {
-    // Preenche os campos do modal com os dados da anotação
+    // Preenche os campos da anotação
     document.getElementById('edit-note-title').value = note.titulo;
     document.getElementById('edit-note-subtitle').value = note.subtitulo;
     document.getElementById('edit-note-content').value = note.descricao;
-    
-    // Armazena o ID da anotação nos botões de atualizar/excluir
+
+    // Armazena o ID da anotação
     document.getElementById('update-note-btn').dataset.id = note.id;
     document.getElementById('delete-note-btn').dataset.id = note.id;
-    
-    // Mostra o modal
+
+    // Carrega os feedbacks do professor para esta anotação
+    carregarFeedbacks(note.id);
+
+    // Exibe o modal
     document.getElementById('edit-note-modal').classList.remove('hidden');
+}
+
+// Busca os feedbacks da anotação específica no servidor
+function carregarFeedbacks(atividadeId) {
+    fetch(`index.php?action=listarFeedbacksPorAtividade&atividade_id=${atividadeId}`)
+        .then(res => res.json())
+        .then(data => {
+            const feedbackContainer = document.getElementById('edit-feedback-content');
+            feedbackContainer.innerHTML = '';
+
+            if (data.length === 0) {
+                feedbackContainer.innerHTML = '<p class="text-gray-500">Nenhum feedback registrado ainda.</p>';
+            } else {
+                data.forEach(fb => {
+                    const item = document.createElement('div');
+                    item.className = 'feedback-item border-b border-gray-200 pb-2 mb-2';
+                    item.innerHTML = `
+                        <div class="feedback-header flex justify-between text-xs text-gray-600 mb-1">
+                            <span><strong>Prof.</strong> ${fb.professor_nome}</span>
+                            <span>${new Date(fb.data_feedback).toLocaleString('pt-BR')}</span>
+                        </div>
+                        <p class="text-sm text-gray-700">${fb.comentario.replace(/\n/g, '<br>')}</p>
+                    `;
+                    feedbackContainer.appendChild(item);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao carregar feedbacks:", error);
+        });
 }

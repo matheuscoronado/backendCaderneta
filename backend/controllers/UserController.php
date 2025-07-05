@@ -260,3 +260,35 @@ class UserController
         }
     }
 }
+
+// Verifica se o parâmetro 'action' está definido na URL e se seu valor é 'listarFeedbacksPorAtividade',
+// e também se o parâmetro 'atividade_id' está presente
+if (isset($_GET['action']) && $_GET['action'] === 'listarFeedbacksPorAtividade' && isset($_GET['atividade_id'])) {
+    
+    // Inclui o arquivo que contém a definição da classe UserController
+    require_once 'models/user.php'; 
+
+    // Desabilita a exibição de erros para o usuário (para evitar mostrar erros no JSON)
+    error_reporting(0);
+    ini_set('display_errors', 0);
+
+    // Limpa qualquer conteúdo que possa ter sido enviado antes (como espaços ou quebras de linha)
+    ob_clean();
+
+    // Cria uma instância do controlador de usuários
+    $userController = new UserController();
+
+    // Chama o método para listar feedbacks relacionados à atividade cujo ID foi passado via GET
+    $feedbacks = $userController->listarFeedbacks($_GET['atividade_id']);
+
+    // Define o cabeçalho da resposta HTTP como JSON
+    header('Content-Type: application/json');
+
+    // Converte o array de feedbacks em JSON e envia na resposta
+    echo json_encode($feedbacks);
+
+    // Encerra a execução do script para garantir que nada mais será enviado
+    exit;
+}
+
+
