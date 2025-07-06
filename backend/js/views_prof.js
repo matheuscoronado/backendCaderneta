@@ -71,3 +71,85 @@ function salvarFeedback(id) {
         alert("Erro ao conectar com o servidor.");
     });
 }
+
+/** Estilos */
+
+    /**
+     * Mostra o formulário de feedback
+     * @param {number} id - ID da atividade
+     */
+    function mostrarFeedback(id) {
+        document.getElementById(`feedback-box-${id}`).style.display = 'block';
+        document.getElementById(`feedback-text-${id}`).focus();
+    }
+
+    /**
+     * Cancela a adição de feedback
+     * @param {number} id - ID da atividade
+     */
+    function cancelarFeedback(id) {
+        document.getElementById(`feedback-box-${id}`).style.display = 'none';
+        document.getElementById(`feedback-text-${id}`).value = '';
+        document.getElementById(`feedback-msg-${id}`).textContent = '';
+    }
+
+    /**
+     * Envia o feedback para o servidor
+     * @param {number} id - ID da atividade
+     */
+    function salvarFeedback(id) {
+        const comentario = document.getElementById(`feedback-text-${id}`).value.trim();
+        const msgElement = document.getElementById(`feedback-msg-${id}`);
+        
+        // Validação
+        if (!comentario) {
+            msgElement.textContent = "Por favor, escreva seu feedback antes de enviar.";
+            msgElement.className = "feedback-saved error";
+            return;
+        }
+
+        // Simulação de envio (substitua pelo AJAX real)
+        fetch('index.php?action=salvar-feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                atividade_id: id,
+                comentario: comentario
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.sucesso) {
+                msgElement.textContent = "Feedback enviado com sucesso!";
+                msgElement.className = "feedback-saved success";
+                
+                setTimeout(() => {
+                    location.reload(); // Recarrega para mostrar o novo feedback
+                }, 1500);
+            } else {
+                msgElement.textContent = data.erro || "Erro ao enviar feedback.";
+                msgElement.className = "feedback-saved error";
+            }
+        })
+        .catch(error => {
+            console.error("Erro:", error);
+            msgElement.textContent = "Erro ao conectar com o servidor.";
+            msgElement.className = "feedback-saved error";
+        });
+    }
+
+    // Alternador de tema
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        // Salva a preferência do tema no armazenamento local
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('dark-mode', isDarkMode);
+    });
+
+    // Restaura a preferência do tema ao carregar a página
+    window.addEventListener('load', function() {
+        const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+    });
