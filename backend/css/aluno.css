@@ -234,18 +234,29 @@ button, input, textarea {
     color: white;
 }
 
+/* Animação de check */
+@keyframes fadeCheck {
+    0% { opacity: 0; transform: translateY(5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
 
- /* Animação de sucesso */
-    @keyframes fadeInOut {
-        0% { background-color: var(--medium-gray); }
-        50% { background-color: var(--green); }
-        100% { background-color: var(--medium-gray); }
-    }
-    
-    .save-button.animate-success {
-        animation: fadeInOut 1.5s ease-in-out;
-    }
+.save-button .icon-check {
+    display: none;
+}
 
+.save-button.success .icon-save {
+    display: none;
+}
+
+.save-button.success .icon-check {
+    display: block;
+    animation: fadeCheck 0.3s ease-out;
+}
+
+/* Transição suave da cor */
+.save-button {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 /* Botão de analisar com IA */
 .analyze-button {
