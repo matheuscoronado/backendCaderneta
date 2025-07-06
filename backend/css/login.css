@@ -1,3 +1,51 @@
+/* Variáveis CSS para temas claro e escuro */
+:root {
+    --primary-color: #3b82f6;         /* Azul principal */
+    --primary-dark: #2563eb;          /* Azul mais escuro */
+    --secondary-color: #6b7280;       /* Cinza para texto secundário */
+    --light-gray: #f3f4f6;            /* Cinza claro para fundos */
+    --medium-gray: #e5e7eb;           /* Cinza médio para bordas */
+    --dark-gray: #4b5563;             /* Cinza escuro */
+    --white: #ffffff;                 /* Branco */
+    --black: #000000;                 /* Preto */
+    --red: #ef4444;                   /* Vermelho para botões de ação */
+    --green: #10b981;                 /* Verde para feedback positivo */
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);          /* Sombra leve */
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);       /* Sombra média */
+    --rounded: 0.5rem;                /* Bordas arredondadas padrão */
+    --rounded-lg: 0.75rem;            /* Bordas arredondadas maiores */
+    
+    /* Valores padrão para o tema claro */
+    --bg-color: #3b82f6;              /* Cor de fundo */
+    --text-color: #1f2937;            /* Cor do texto */
+    --card-bg: #ffffff;               /* Cor de fundo dos cards */
+    --border-color: #e5e7eb;          /* Cor das bordas */
+
+    --view-color: #3b82f6;
+    --view-hover: #2563eb;
+    --view-bg: #ebf2ff; 
+    --view-border: #bfdbfe;
+}
+
+/* Estilos para o tema escuro */
+.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #f4f6f3;
+    --card-bg: #2d2d2d;
+    --border-color: #4b5563;
+    --light-gray: #2d2d2d;
+    --dark-gray: #292929;
+    --medium-gray: #4b5563;
+    --secondary-color: #9ca3af;
+    
+    --default-bg: #374151;
+    --default-text: #e5e7eb;
+    --default-border: #6b7280;
+}
+
+
+
+
 /* Estilos gerais */
 body {
     background-color: #f9fafb;
