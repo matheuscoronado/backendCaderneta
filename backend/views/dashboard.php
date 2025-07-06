@@ -213,11 +213,11 @@ $users = User::all();
                 </div>
 
                 <!-- ========== MODAL DE ADICIONAR NOVO USUÁRIO ========== -->
-                <div id="user-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
-                    <div class="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-2">
+                <div id="user-form-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
+                    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
                         <div class="flex justify-between items-center mb-4">
-                            <h2 id="form-modal-title" class="text-lg font-semibold">Adicionar Novo Usuário</h2>
-                            <button id="close-form-modal" class="text-gray-500 hover:text-gray-700">
+                            <h2 id="form-modal-title" class="text-lg font-semibold" style="color: var(--text-color)">Adicionar Novo Usuário</h2>
+                            <button id="close-form-modal" style="color: var(--secondary-color); hover:color: var(--text-color)">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
@@ -226,43 +226,61 @@ $users = User::all();
                         <form method="post" action="index.php?action=register" class="space-y-4">
                             <!-- Campo Nome -->
                             <div>
-                                <label for="nome" class="block text-sm font-medium text-gray-700">Nome:</label>
-                                <input type="text" name="nome" id="nome" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <label for="nome" class="block text-sm font-medium" style="color: var(--text-color)">Nome:</label>
+                                <input type="text" name="nome" id="nome" required 
+                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
                             </div>
-            
+
                             <!-- Campo Email -->
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                                <input type="email" name="email" id="email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <label for="email" class="block text-sm font-medium" style="color: var(--text-color)">Email:</label>
+                                <input type="email" name="email" id="email" required 
+                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
                             </div>
-            
+
                             <!-- Campo Senha -->
                             <div class="relative">
-                                <label for="senha_hash" class="block text-sm font-medium text-gray-700">Senha:</label>
+                                <label for="senha_hash" class="block text-sm font-medium" style="color: var(--text-color)">Senha:</label>
                                 <div class="relative mt-1">
-                                    <input type="password" name="senha_hash" id="senha_hash" required class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                    <input type="password" name="senha_hash" id="senha_hash" required 
+                                        class="block w-full rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
+                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                                                focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+                                    <button type="button" id="toggle-password" 
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                            style="color: var(--secondary-color); hover:color: var(--text-color)">
                                         <i class="far fa-eye"></i>
                                     </button>
                                 </div>
                             </div>
-            
+
                             <!-- Campo Tipo de Perfil -->
                             <div>
-                                <label for="tipo" class="block text-sm font-medium text-gray-700">Perfil:</label>
-                                <select name="tipo" id="tipo" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <label for="tipo" class="block text-sm font-medium" style="color: var(--text-color)">Perfil:</label>
+                                <select name="tipo" id="tipo" 
+                                        class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
+                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
                                     <option value="administrador">Administrador</option>
                                     <option value="professor">Professor</option>
                                     <option value="aluno">Aluno</option>
                                 </select>
                             </div>
-            
+
                             <!-- Botões do formulário -->
                             <div class="flex justify-end gap-3">
-                                <button type="button" id="cancel-form" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                <button type="button" id="cancel-form" 
+                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
+                                        style="border: 1px solid var(--border-color); color: var(--text-color); background-color: var(--bg-color); hover:background-color: var(--medium-gray)">
                                     Cancelar
                                 </button>
-                                <button type="submit" name="register" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                                <button type="submit" name="register" 
+                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium text-white transition-colors"
+                                        style="background-color: var(--primary-color); hover:background-color: var(--primary-dark)">
                                     Salvar
                                 </button>
                             </div>
@@ -368,7 +386,7 @@ $users = User::all();
         <div class="form-group subtitle-input mb-4">
             <input
                 type="text" name="subtitulo" id="note-subtitle" class="w-full border border-[var(--border-color)] rounded-[var(--rounded)] py-2 px-3 bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]" placeholder="Digite um subtítulo..." required
-            />
+                />
         </div>
 
                     <!-- Área de texto principal -->
