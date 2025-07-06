@@ -54,59 +54,6 @@ button, input, textarea {
     font-size: inherit;
 }
 
-/* Tela de Login */
-#login-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    z-index: 100;
-}
-
-.login-container {
-    background-color: var(--white);
-    border-radius: var(--rounded-lg);
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 28rem;
-    box-shadow: var(--shadow-md);
-}
-
-.login-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.login-icon {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 0.75rem;
-}
-
-.login-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 0.25rem;
-}
-
-.login-header p {
-    color: var(--secondary-color);
-    font-size: 0.875rem;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
 .form-group {
     display: flex;
     flex-direction: column;
