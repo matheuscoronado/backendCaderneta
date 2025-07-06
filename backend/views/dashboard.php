@@ -32,7 +32,7 @@ $users = User::all();
 <body class="<?= $_SESSION['tipo'] ?>">
     <?php if ($_SESSION['tipo'] == 'administrador'): ?>
         <!-- ========== PAINEL ADMINISTRATIVO ========== -->
-        <header class="shadow-sm p-4" style="background-color: var(--card-bg);">
+        <header class="shadow-sm p-4" style="box-shadow: var(--shadow);background-color: var(--card-bg);background-color: var(--card-bg);box-shadow: var(--shadow);padding: 1rem;position: sticky;top: 0;z-index: 10;">
             <div class="container mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <!-- Logo e título do sistema -->
                 <div class="flex items-center">
