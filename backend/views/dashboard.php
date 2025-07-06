@@ -336,29 +336,35 @@ $users = User::all();
         </header>
 
         <main class="main-content">
-            <!-- Barra de busca -->
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Buscar aluno...">
-            </div>
+        <!-- Barra de pesquisa do nome do aluno -->
+       <div class="search-container">
+           <input type="text" id="search-input" placeholder="Buscar aluno...">
+       </div>
 
-            <!-- Lista de alunos -->
-            <div class="students-section">
-                <h2>Turma de Teste</h2>
-                <div id="students-list" class="students-grid">
-                    <?php foreach ($users as $user): ?>
-                        <?php if ($user['tipo'] === 'aluno'): ?>
-                            <tr>
-                                <td><?= $user['nome'] ?></td>
-                                <td><?= $user['email'] ?></td>
-                                <td>
-                                    <a href="index.php?action=ver-anotacoes&aluno_id=<?= $user['id'] ?>" class="btn">Ver Anotações</a>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
+        <!-- Lista de alunos -->
+        <div class="students-section">
+            <h2>Turma de Teste</h2>
+            
+            <div id="students-list" class="students-grid">
+                <?php foreach ($users as $user): ?>
+                    <?php if ($user['tipo'] === 'aluno'): ?>
+                        <div class="student-card">
+                            <span class="student-name"><?= $user['nome'] ?></span>
+                            <span class="student-email"><?= $user['email'] ?></span>
+                            
+                            <div class="seminars-count">
+                                <?= rand(0, 2) ?> Anotações
+                            </div>
+                            
+                            <a href="index.php?action=ver-anotacoes&aluno_id=<?= $user['id'] ?>" class="view-notes-btn">
+                                <i class="fas fa-eye"></i> Ver Anotações
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
-        </main>
+        </div>
+    </main>
             
     <?php else: ?>
         <!-- ========== PAINEL DO ALUNO ========== -->
