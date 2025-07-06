@@ -96,6 +96,7 @@
     --default-border: #6b7280;
 }
 
+/* Estilos para o cabeçalho do painel administrativo */
 header {
     background-color: var(--card-bg);
     box-shadow: var(--shadow);
@@ -103,7 +104,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 10;
-}
+} 
 
 /* Estilos base para cartões de usuário */
 .user-card {
