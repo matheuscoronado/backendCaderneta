@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.text())
         .then(data => {
-            alert("Anotação salva com sucesso!");
+            // alert("Anotação salva com sucesso!"); //Oculto para evitar pop-ups e funcionar apenas com animação
             loadNotes();
 
             // Limpa campos e sugestões
@@ -249,3 +249,15 @@ function carregarFeedbacks(atividadeId) {
             console.error("Erro ao carregar feedbacks:", error);
         });
 }
+
+document.getElementById('note-form').addEventListener('submit', function(e) {
+        const saveButton = document.querySelector('.save-button');
+        
+        // Adiciona a classe de animação
+        saveButton.classList.add('animate-success');
+        
+        // Remove a animação após 1.5 segundos
+        setTimeout(() => {
+            saveButton.classList.remove('animate-success');
+        }, 1500);
+    });
