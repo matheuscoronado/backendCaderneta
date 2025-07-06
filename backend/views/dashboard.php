@@ -153,64 +153,82 @@ $users = User::all();
                 </div>
 
                 <!-- ========== MODAL DE EDIÇÃO ========== -->
-                <div id="edit-user-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4">
-                    <div class="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-2">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 id="edit-modal-title" class="text-lg font-semibold">Editar Usuário</h2>
-                            <button id="close-edit-modal" class="text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Formulário de edição -->
-                        <form method="post" action="index.php?action=edit&id=<?= $user['id']?>" class="space-y-4">
-                            <input type="hidden" name="id" id="edit-user-id" />
-                            
-                            <!-- Campo Nome -->
-                            <div>
-                                <label for="edit-nome" class="block text-sm font-medium text-gray-700">Nome:</label>
-                                <input type="text" name="nome" id="edit-nome" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
+                <div id="edit-user-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
+    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="edit-modal-title" class="text-lg font-semibold" style="color: var(--text-color)">Editar Usuário</h2>
+            <button id="close-edit-modal" style="color: var(--secondary-color); hover:color: var(--text-color)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Formulário de edição -->
+        <form method="post" action="index.php?action=update" class="space-y-4">
+            <input type="hidden" name="id" id="edit-user-id" />
+            
+            <!-- Campo Nome -->
+            <div>
+                <label for="edit-nome" class="block text-sm font-medium" style="color: var(--text-color)">Nome:</label>
+                <input type="text" name="nome" id="edit-nome" required 
+                       class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                       style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                              focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+            </div>
 
-                            <!-- Campo Email -->
-                            <div>
-                                <label for="edit-email" class="block text-sm font-medium text-gray-700">Email:</label>
-                                <input type="email" name="email" id="edit-email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
+            <!-- Campo Email -->
+            <div>
+                <label for="edit-email" class="block text-sm font-medium" style="color: var(--text-color)">Email:</label>
+                <input type="email" name="email" id="edit-email" required 
+                       class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                       style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                              focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+            </div>
 
-                            <!-- Campo Senha -->
-                            <div class="relative">
-                                <label for="edit-senha_hash" class="block text-sm font-medium text-gray-700">Senha:</label>
-                                <div class="relative mt-1">
-                                    <input type="password" name="senha_hash" id="edit-senha_hash" required class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <button type="button" id="toggle-edit-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Campo Tipo de Perfil -->
-                            <div>
-                                <label for="edit-tipo" class="block text-sm font-medium text-gray-700">Perfil:</label>
-                                <select name="tipo" id="edit-tipo" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="administrador">Administrador</option>
-                                    <option value="professor">Professor</option>
-                                    <option value="aluno">Aluno</option>
-                                </select>
-                            </div>
-
-                            <!-- Botões do formulário -->
-                            <div class="flex justify-end gap-3">
-                                <button type="button" id="cancel-edit-form" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
-                                    Salvar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <!-- Campo Senha -->
+            <div class="relative">
+                <label for="edit-senha_hash" class="block text-sm font-medium" style="color: var(--text-color)">Senha:</label>
+                <div class="relative mt-1">
+                    <input type="password" name="senha_hash" id="edit-senha_hash" 
+                           class="block w-full rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
+                           style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                                  focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+                    <button type="button" id="toggle-edit-password" 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            style="color: var(--secondary-color); hover:color: var(--text-color)">
+                        <i class="far fa-eye"></i>
+                    </button>
                 </div>
+            </div>
+
+            <!-- Campo Tipo de Perfil -->
+            <div>
+                <label for="edit-tipo" class="block text-sm font-medium" style="color: var(--text-color)">Perfil:</label>
+                <select name="tipo" id="edit-tipo" 
+                        class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
+                               focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+                    <option value="administrador">Administrador</option>
+                    <option value="professor">Professor</option>
+                    <option value="aluno">Aluno</option>
+                </select>
+            </div>
+
+            <!-- Botões do formulário -->
+            <div class="flex justify-end gap-3">
+                <button type="button" id="cancel-edit-form" 
+                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
+                        style="border: 1px solid var(--border-color); color: var(--text-color); background-color: var(--bg-color); hover:background-color: var(--medium-gray)">
+                    Cancelar
+                </button>
+                <button type="submit" 
+                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium text-white transition-colors"
+                        style="background-color: var(--primary-color); hover:background-color: var(--primary-dark)">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
                 <!-- ========== MODAL DE ADICIONAR NOVO USUÁRIO ========== -->
                 <div id="user-form-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
