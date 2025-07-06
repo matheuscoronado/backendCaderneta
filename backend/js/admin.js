@@ -59,20 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Configuração do tema (dark/light mode)
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  setTheme(savedTheme);
-
-  // Configura o botão para alternar entre temas
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-      localStorage.setItem('theme', nextTheme);
-      setTheme(nextTheme);
-    });
-  }
-
   // Configura o envio do formulário
   if (userForm) {
     userForm.addEventListener('submit', (e) => {
@@ -84,15 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-// Função para aplicar o tema selecionado
-function setTheme(theme) {
-  if (theme === 'dark') {
-    document.body.classList.add('dark-mode');
-  } else {
-    document.body.classList.remove('dark-mode');
-  }
-}
 
 // Função para alternar a visibilidade da senha (versão alternativa)
 document.getElementById('toggle-password').addEventListener('click', function () { 
@@ -161,3 +138,39 @@ document.addEventListener('DOMContentLoaded', function() {
         eyeIconEdit.classList.toggle('fa-eye');
     });
 });
+
+/**
+ * Define o tema visual da aplicação
+ * @param {string} theme - 'light' para tema claro ou 'dark' para tema escuro
+ */
+function setTheme(theme) {
+    if (theme === 'dark') {
+        // Aplica o tema escuro
+        document.body.classList.add('dark-mode');
+        // Altera o ícone para sol (indicando que pode voltar para claro)
+        document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        // Aplica o tema claro
+        document.body.classList.remove('dark-mode');
+        // Altera o ícone para lua (indicando que pode ir para escuro)
+        document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
+    }
+}
+
+/**
+ * Alterna entre os temas claro e escuro
+ */
+function toggleTheme() {
+    // Verifica qual é o tema atual
+    const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    // Define o novo tema oposto ao atual
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Aplica o novo tema
+    setTheme(newTheme);
+    // Salva a preferência no localStorage
+    localStorage.setItem('theme', newTheme);
+}
+
+// Adiciona evento de clique ao botão de alternar tema
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
