@@ -23,14 +23,14 @@
     <div id="login-screen" class="fixed inset-0 bg-blue-500 flex items-center justify-center p-4 z-50" style="background-color: var(--bg-color)">
         
     <!-- Botão modo notruno -->
-    <!-- <div class="fixed bottom-6 right-6 z-50"> -->
-    <!-- <button id="theme-toggle" class="flex items-center justify-center p- rounded-full shadow-md transition-all duration-300 bg-blue-100 dark:bg-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 text-blue-600 dark:text-gray-200"> -->
-        <!-- Ícone da lua (light mode) -->
-        <!-- <i class="fas fa-moon text-lg dark:hidden"></i> -->
-        <!-- Ícone do sol (dark mode) -->
-        <!-- <i class="fas fa-sun text-lg hidden dark:block"></i> -->
-    <!-- </button> -->
-<!-- </div> -->
+        <!-- <div class="fixed bottom-6 right-6 z-50"> -->
+            <!-- <button id="theme-toggle" class="flex items-center justify-center p- rounded-full shadow-md transition-all duration-300 bg-blue-100 dark:bg-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 text-blue-600 dark:text-gray-200"> -->
+                <!-- Ícone da lua (light mode) -->
+                <!-- <i class="fas fa-moon text-lg dark:hidden"></i> -->
+                <!-- Ícone do sol (dark mode) -->
+                <!-- <i class="fas fa-sun text-lg hidden dark:block"></i> -->
+            <!-- </button> -->
+         <!-- </div> -->
     <!-- FIM Botão modo notruno -->
 
         <!-- Card de login (container branco) -->
