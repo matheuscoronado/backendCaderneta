@@ -96,6 +96,15 @@
     --default-border: #6b7280;
 }
 
+header {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
 /* Estilos base para cartões de usuário */
 .user-card {
     transition: all 0.2s ease;
