@@ -250,14 +250,24 @@ function carregarFeedbacks(atividadeId) {
         });
 }
 
-document.getElementById('note-form').addEventListener('submit', function(e) {
-        const saveButton = document.querySelector('.save-button');
-        
-        // Adiciona a classe de animação
-        saveButton.classList.add('animate-success');
-        
-        // Remove a animação após 1.5 segundos
-        setTimeout(() => {
-            saveButton.classList.remove('animate-success');
-        }, 1500);
-    });
+
+//Estilização de animação para o botão de salvar
+
+document.querySelector('.save-button').addEventListener('click', function() {
+    const button = this;
+    
+    // Validação simples do formulário
+    const form = document.getElementById('note-form');
+    if (form && !form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Confirmação visual
+    button.classList.add('success');
+    
+    // Volta ao normal após 1,5 segundos
+    setTimeout(() => {
+        button.classList.remove('success');
+    }, 1500);
+});
