@@ -14,6 +14,7 @@ $users = User::all();
     
     <!-- Importação de frameworks e bibliotecas -->
     <script src="https://cdn.tailwindcss.com"></script> <!-- Framework CSS utilitário -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> <!-- Ícones Font Awesome -->
 
     <!-- Carrega folha de estilo específica para o tipo de usuário -->
