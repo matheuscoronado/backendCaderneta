@@ -234,6 +234,19 @@ button, input, textarea {
     color: white;
 }
 
+
+ /* Animação de sucesso */
+    @keyframes fadeInOut {
+        0% { background-color: var(--medium-gray); }
+        50% { background-color: var(--green); }
+        100% { background-color: var(--medium-gray); }
+    }
+    
+    .save-button.animate-success {
+        animation: fadeInOut 1.5s ease-in-out;
+    }
+
+
 /* Botão de analisar com IA */
 .analyze-button {
     background-color: var(--primary-color);
