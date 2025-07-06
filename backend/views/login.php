@@ -29,8 +29,8 @@
         <!-- <i class="fas fa-moon text-lg dark:hidden"></i> -->
         <!-- Ícone do sol (dark mode) -->
         <!-- <i class="fas fa-sun text-lg hidden dark:block"></i> -->
-    </button>
-</div>
+    <!-- </button> -->
+<!-- </div> -->
     <!-- FIM Botão modo notruno -->
 
         <!-- Card de login (container branco) -->
