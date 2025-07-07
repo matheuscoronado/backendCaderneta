@@ -259,6 +259,18 @@ class UserController
             }
         }
     }
+
+    public function listarUsuariosComContagemDeAnotacoes() {
+    $usuarios = User::all(); 
+
+    foreach ($usuarios as &$usuario) {
+        if ($usuario['tipo'] === 'aluno') {
+            $usuario['total_anotacoes'] = User::contarAnotacoesPorAluno($usuario['id']);
+        }
+    }
+    return $usuarios;
+}
+
 }
 
 // Verifica se o parâmetro 'action' está definido na URL e se seu valor é 'listarFeedbacksPorAtividade',

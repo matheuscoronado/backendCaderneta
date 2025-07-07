@@ -2,7 +2,16 @@
 // Carrega o modelo de usuário e obtém todos os usuários do sistema
 require_once 'models/User.php';
 $users = User::all();
+
+// Adiciona o total de anotações para cada aluno
+foreach ($users as &$user) {
+    if ($user['tipo'] === 'aluno') {
+        $user['total_anotacoes'] = User::contarAnotacoesPorAluno($user['id']);
+    }
+}
+unset($user);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -341,6 +350,7 @@ $users = User::all();
            <input type="text" id="search-input" placeholder="Buscar aluno...">
        </div>
 
+       
         <!-- Lista de alunos -->
         <div class="students-section">
             <h2>Turma de Teste</h2>
@@ -353,8 +363,10 @@ $users = User::all();
                             <span class="student-email"><?= $user['email'] ?></span>
                             
                             <div class="seminars-count">
-                                <?= rand(0, 2) ?> Anotações
+                                <?= isset($user['total_anotacoes']) ? $user['total_anotacoes'] : 0 ?> Anotações
                             </div>
+
+
                             
                             <a href="index.php?action=ver-anotacoes&aluno_id=<?= $user['id'] ?>" class="view-notes-btn">
                                 <i class="fas fa-eye"></i> Ver Anotações

@@ -26,6 +26,9 @@ switch ($action) {
     case 'salvar-feedback':
         $userController->salvarFeedback(); // Chama o método de salvar feedback do controlador de usuários
         break;
+    case 'total_anotacoes':
+        $userController->listarUsuariosComContagemDeAnotacoes(); // Chama o método de total de anotações do controlador de usuários
+        break;
     case 'atualizar-anotacao':
         $userController->atualizarAnotacao(); // Chama o método de atualizar anotação do controlador de usuários
         break;

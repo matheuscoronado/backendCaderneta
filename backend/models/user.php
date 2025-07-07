@@ -182,4 +182,14 @@ class User
         return $stmt->execute();
     }
 
+    public static function contarAnotacoesPorAluno($aluno_id) {
+    $conn = Database::getConnection();
+    $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM atividade WHERE aluno_id = :aluno_id");
+    $stmt->bindParam(':aluno_id', $aluno_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $resultado['total'] ?? 0;
+}
+
+
 }
