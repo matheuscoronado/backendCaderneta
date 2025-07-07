@@ -260,16 +260,19 @@ class UserController
         }
     }
 
-    public function listarUsuariosComContagemDeAnotacoes() {
-    $usuarios = User::all(); 
+    // Função para listar todos os usuários com a contagem de anotações para cada aluno
 
-    foreach ($usuarios as &$usuario) {
-        if ($usuario['tipo'] === 'aluno') {
-            $usuario['total_anotacoes'] = User::contarAnotacoesPorAluno($usuario['id']);
+    public function listarUsuariosComContagemDeAnotacoes() 
+    {
+        $usuarios = User::all(); 
+
+        foreach ($usuarios as &$usuario) {
+            if ($usuario['tipo'] === 'aluno') {
+                $usuario['total_anotacoes'] = User::contarAnotacoesPorAluno($usuario['id']);
+            }
         }
+        return $usuarios;
     }
-    return $usuarios;
-}
 
 }
 

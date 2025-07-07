@@ -362,6 +362,7 @@ unset($user);
                             <span class="student-name"><?= $user['nome'] ?></span>
                             <span class="student-email"><?= $user['email'] ?></span>
                             
+                            <!--  Exibe o total de anotações do aluno, se disponível -->
                             <div class="seminars-count">
                                 <?= isset($user['total_anotacoes']) ? $user['total_anotacoes'] : 0 ?> Anotações
                             </div>
