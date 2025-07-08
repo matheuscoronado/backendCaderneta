@@ -1,5 +1,10 @@
 // Aguarda o carregamento completo do DOM antes de executar o código
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    // Aplica o tema salvo no localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+
   // Elementos do modal de adição de usuário
   const btnAdd = document.getElementById('add-user-btn');
   const modal = document.getElementById('user-form-modal');
@@ -139,38 +144,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-/**
- * Define o tema visual da aplicação
- * @param {string} theme - 'light' para tema claro ou 'dark' para tema escuro
- */
+// Aplica tema claro ou escuro
 function setTheme(theme) {
     if (theme === 'dark') {
-        // Aplica o tema escuro
         document.body.classList.add('dark-mode');
-        // Altera o ícone para sol (indicando que pode voltar para claro)
         document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
     } else {
-        // Aplica o tema claro
         document.body.classList.remove('dark-mode');
-        // Altera o ícone para lua (indicando que pode ir para escuro)
         document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
     }
 }
 
-/**
- * Alterna entre os temas claro e escuro
- */
+// Alterna entre os temas
 function toggleTheme() {
-    // Verifica qual é o tema atual
     const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    // Define o novo tema oposto ao atual
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    // Aplica o novo tema
+
     setTheme(newTheme);
-    // Salva a preferência no localStorage
     localStorage.setItem('theme', newTheme);
 }
 
-// Adiciona evento de clique ao botão de alternar tema
+// Botão de alternância de tema
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
