@@ -499,7 +499,7 @@ unset($user);
 
                         <!-- Seção para selecionar o título da anotação usando um select -->
                         <div class="form-group title-input">
-                            <select name="titulo" id="edit-note-title" class="topic-select w-full border rounded-md py-2 px-3" required>
+                            <select name="titulo" id="edit-note-title" class="topic-select w-full border rounded-md py-2 px-3" required style="background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);">
                                 <option value="">Selecione um tópico</option> <!-- Opção padrão vazia -->
                                 <option value="Sinais Vitais - Conceitos Gerais">Sinais Vitais - Conceitos Gerais</option>
                                 <option value="Temperatura Corporal">Temperatura Corporal</option>
@@ -515,7 +515,7 @@ unset($user);
 
                         <!-- Campo para inserir subtítulo da anotação -->
                         <div class="form-group subtitle-input">
-                            <input type="text" id="edit-note-subtitle" placeholder="Subtítulo">
+                            <input type="text" id="edit-note-subtitle" placeholder="Subtítulo" class="w-full border rounded-md py-2 px-3" style="background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);" required>
                         </div>
 
                         <!-- Área de texto para conteúdo da anotação -->
@@ -524,7 +524,11 @@ unset($user);
                         <!-- Seção para exibir feedbacks do professor relacionados à anotação -->
                         <div id="edit-note-feedbacks" class="feedback-display mt-4">
                             <h3 class="text-sm font-semibold mb-2">Feedback do Professor</h3>
-                            <div id="edit-feedback-content" class="space-y-2 text-sm text-gray-700 bg-gray-100 rounded-md p-3 overflow-y-auto max-h-48">
+                            <div id="edit-feedback-content" class="space-y-2 text-sm text-gray-700 bg-gray-100 rounded-md p-3 overflow-y-auto max-h-48" style="border: 1px solid var(--border-color);
+    border-radius: var(--rounded);
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-color);">
                                 <!-- Feedbacks serão inseridos aqui via JavaScript -->
                             </div>
                         </div>
