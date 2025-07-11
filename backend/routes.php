@@ -54,8 +54,7 @@ switch ($action) {
         $userController->list(); // Chama o método de listagem de usuários do controlador de usuários
         break;
     case 'edit':
-        $id = $_GET['id']; // Obtém o ID do usuário a ser editado da URL
-        $userController->edit($id); // Chama o método de edição do controlador de usuários passando o ID
+        $userController->edit();
         break;
     case 'delete':
         $id = $_GET['id']; // Obtém o ID do usuário a ser excluído da URL

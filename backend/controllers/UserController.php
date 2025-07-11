@@ -6,51 +6,94 @@ class UserController
     // Função para registrar um novo usuário
     public function register()
     {
-        // Verifica se a requisição HTTP é do tipo POST (se o formulário foi enviado)
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Coleta os dados enviados pelo formulário e organiza em um array
+            // Recebe dados do formulário
+            $nome = trim($_POST['nome']);
+            $email = trim($_POST['email']);
+            $senha = $_POST['senha_hash'];
+            $tipo = $_POST['tipo'];
+
+            // Verifica se já existe usuário com esse email
+            if (User::emailExists($email)) {
+                // Email já cadastrado: seta erro e dados na sessão
+                session_start();
+                $_SESSION['erro_cadastro'] = "O email informado já está cadastrado.";
+                $_SESSION['abrir_modal_cadastro'] = true;
+                $_SESSION['dados_cadastro'] = [
+                    'nome' => $nome,
+                    'email' => $email,
+                    'tipo' => $tipo
+                ];
+                
+                // Redireciona para a dashboard para abrir o modal com erro
+                header('Location: index.php?action=dashboard');
+                exit;
+            }
+
+            // Se email não existe, cria usuário normalmente
             $data = [
-                'nome' => $_POST['nome'], // Nome do usuário
-                'email' => $_POST['email'], // E-mail do usuário
-                'senha_hash' => password_hash($_POST['senha_hash'], PASSWORD_DEFAULT), // Criptografa a senha
-                'tipo' => $_POST['tipo'] // Perfil do usuário 
+                'nome' => $nome,
+                'email' => $email,
+                'senha_hash' => password_hash($senha, PASSWORD_DEFAULT),
+                'tipo' => $tipo
             ];
-            // Chama o método create do Model User para criar o novo usuário no banco de dados
+
             User::create($data);
-            // Após o registro, redireciona o usuário para a página inicial
             header('Location: index.php?action=dashboard');
+            exit;
         } else {
-            // Se a requisição não for POST (por exemplo, GET), carrega a página de registro
             include 'views/register.php';
         }
     }
 
+
     // Função para editar os dados de um usuário existente
-    public function edit($id)
+    public function edit()
     {
         session_start();
-        // Permitir apenas admin editar usuários
-        if ($_SESSION['tipo'] == 'administrador') {
-            $user = User::find($id);
 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $data = [
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $email = $_POST['email'];
+
+            // Se o e-mail já existe em outro usuário
+            if (User::emailExisteParaOutroUsuario($email, $id)) {
+                $_SESSION['erro'] = "O e-mail já está em uso por outro usuário.";
+                $_SESSION['abrir_modal'] = true;
+
+                // Salva os dados no session para reusar no modal
+                $_SESSION['dados_edicao'] = [
+                    'id' => $id,
                     'nome' => $_POST['nome'],
-                    'email' => $_POST['email'],
-                    'senha_hash' => password_hash($_POST['senha_hash'], PASSWORD_DEFAULT), // Criptografa a senha
+                    'email' => $email,
                     'tipo' => $_POST['tipo']
                 ];
 
-                User::update($id, $data);
                 header('Location: index.php?action=dashboard');
-            } else {
-                include 'views/edit_user.php';
+                exit;
             }
+
+            // Prepara os dados para update
+            $data = [
+                'nome' => $_POST['nome'],
+                'email' => $email,
+                'tipo' => $_POST['tipo']
+            ];
+
+            if (!empty($_POST['senha_hash'])) {
+                $data['senha_hash'] = password_hash($_POST['senha_hash'], PASSWORD_DEFAULT);
+            }
+
+            User::update($id, $data);
+            $_SESSION['sucesso'] = "Usuário atualizado com sucesso.";
+            header('Location: index.php?action=dashboard');
+            exit;
         } else {
-            // Exibir mensagem de erro se não tiver permissão
-            echo "Você não tem permissão para editar usuários.";
+            include 'views/dashboard.php';
         }
     }
+
+
 
 
     // Função para excluir um usuário

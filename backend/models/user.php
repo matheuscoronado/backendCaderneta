@@ -68,16 +68,51 @@ class User
     {
         // Obtém a conexão com o banco de dados
         $conn = Database::getConnection();
-            
-        // Prepara uma consulta SQL para atualizar o nome, email e perfil de um usuário baseado no ID
-        $stmt = $conn->prepare("UPDATE usuario SET nome = :nome, email = :email, senha_hash = :senha_hash, tipo = :tipo WHERE id = :id");
-        
-        // Adiciona o ID ao array de dados que será usado na consulta
+
+        // Começa a montar a query dinamicamente
+        $set = "nome = :nome, email = :email, tipo = :tipo";
+
+        // Adiciona o campo senha apenas se foi enviado
+        if (!empty($data['senha_hash'])) {
+            $set .= ", senha_hash = :senha_hash";
+        } else {
+            unset($data['senha_hash']); // Remove do array para evitar erro
+        }
+
+        // Monta a SQL final
+        $sql = "UPDATE usuario SET $set WHERE id = :id";
+
+        // Adiciona o ID ao array de dados
         $data['id'] = $id;
-        
-        // Executa a consulta para atualizar os dados do usuário
+
+        // Prepara e executa a query
+        $stmt = $conn->prepare($sql);
         $stmt->execute($data);
     }
+
+
+    // Função para verificar se um email já existe para outro usuário (excluindo o próprio usuário)
+    public static function emailExisteParaOutroUsuario($email, $id)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email AND id != :id");
+        $stmt->execute([
+            'email' => $email,
+            'id' => $id
+        ]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    // Função para verificar se um email já existe no banco de dados
+    public static function emailExists($email)
+    {
+        $conn = Database::getConnection();
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+
 
     // Função para excluir um usuário pelo ID
     public static function delete($id)  

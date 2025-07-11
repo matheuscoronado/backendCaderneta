@@ -136,7 +136,6 @@ unset($user);
                                                 data-id="<?= htmlspecialchars($user['id']) ?>"
                                                 data-nome="<?= htmlspecialchars($user['nome']) ?>"
                                                 data-email="<?= htmlspecialchars($user['email']) ?>"
-                                                data-senha="<?= htmlspecialchars($user['senha_hash']) ?>"
                                                 data-tipo="<?= htmlspecialchars($user['tipo']) ?>"
                                             >
                                                 Editar
@@ -162,159 +161,108 @@ unset($user);
                     </div>
                 </div>
 
-                <!-- ========== MODAL DE EDIÇÃO ========== -->
-                <div id="edit-user-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
-                    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 id="edit-modal-title" class="text-lg font-semibold" style="color: var(--text-color)">Editar Usuário</h2>
-                            <button id="close-edit-modal" style="color: var(--secondary-color); hover:color: var(--text-color)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Formulário de edição -->
-                        <form method="post" action="index.php?action=update" class="space-y-4">
-                            <input type="hidden" name="id" id="edit-user-id" />
-                            
-                            <!-- Campo Nome -->
-                            <div>
-                                <label for="edit-nome" class="block text-sm font-medium" style="color: var(--text-color)">Nome:</label>
-                                <input type="text" name="nome" id="edit-nome" required 
-                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                            </div>
-
-                            <!-- Campo Email -->
-                            <div>
-                                <label for="edit-email" class="block text-sm font-medium" style="color: var(--text-color)">Email:</label>
-                                <input type="email" name="email" id="edit-email" required 
-                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                            </div>
-
-                            <!-- Campo Senha -->
-                            <div class="relative">
-                                <label for="edit-senha_hash" class="block text-sm font-medium" style="color: var(--text-color)">Senha:</label>
-                                <div class="relative mt-1">
-                                    <input type="password" name="senha_hash" id="edit-senha_hash" 
-                                        class="block w-full rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
-                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                                focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                                    <button type="button" id="toggle-edit-password" 
-                                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                            style="color: var(--secondary-color); hover:color: var(--text-color)">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Campo Tipo de Perfil -->
-                            <div>
-                                <label for="edit-tipo" class="block text-sm font-medium" style="color: var(--text-color)">Perfil:</label>
-                                <select name="tipo" id="edit-tipo" 
-                                        class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                                    <option value="administrador">Administrador</option>
-                                    <option value="professor">Professor</option>
-                                    <option value="aluno">Aluno</option>
-                                </select>
-                            </div>
-
-                            <!-- Botões do formulário -->
-                            <div class="flex justify-end gap-3">
-                                <button type="button" id="cancel-edit-form" 
-                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
-                                        style="border: 1px solid var(--border-color); color: var(--text-color); background-color: var(--bg-color); hover:background-color: var(--medium-gray)">
-                                    Cancelar
-                                </button>
-                                <button type="submit" 
-                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium text-white transition-colors"
-                                        style="background-color: var(--primary-color); hover:background-color: var(--primary-dark)">
-                                    Salvar Alterações
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
                 <!-- ========== MODAL DE ADICIONAR NOVO USUÁRIO ========== -->
-                <div id="user-form-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
-                    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 id="form-modal-title" class="text-lg font-semibold" style="color: var(--text-color)">Adicionar Novo Usuário</h2>
-                            <button id="close-form-modal" style="color: var(--secondary-color); hover:color: var(--text-color)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Formulário de cadastro -->
-                        <form method="post" action="index.php?action=register" class="space-y-4">
-                            <!-- Campo Nome -->
-                            <div>
-                                <label for="nome" class="block text-sm font-medium" style="color: var(--text-color)">Nome:</label>
-                                <input type="text" name="nome" id="nome" required 
-                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                            </div>
+<div id="user-form-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
+    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="form-modal-title" class="text-lg font-semibold" style="color: var(--text-color)">Adicionar Novo Usuário</h2>
+            <button id="close-form-modal" style="color: var(--secondary-color); hover:color: var(--text-color)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-                            <!-- Campo Email -->
-                            <div>
-                                <label for="email" class="block text-sm font-medium" style="color: var(--text-color)">Email:</label>
-                                <input type="email" name="email" id="email" required 
-                                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                            </div>
+        <!-- Mensagem de erro -->
+        <?php if (isset($_SESSION['erro_cadastro'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+                <?= $_SESSION['erro_cadastro']; unset($_SESSION['erro_cadastro']); ?>
+            </div>
+        <?php endif; ?>
 
-                            <!-- Campo Senha -->
-                            <div class="relative">
-                                <label for="senha_hash" class="block text-sm font-medium" style="color: var(--text-color)">Senha:</label>
-                                <div class="relative mt-1">
-                                    <input type="password" name="senha_hash" id="senha_hash" required 
-                                        class="block w-full rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
-                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
-                                                focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                                    <button type="button" id="toggle-password" 
-                                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                            style="color: var(--secondary-color); hover:color: var(--text-color)">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
+        <!-- Formulário de cadastro -->
+        <form method="post" action="index.php?action=register" class="space-y-4" id="add-user-form">
+            <!-- Campo Nome -->
+            <div>
+                <label for="nome" class="block text-sm font-medium" style="color: var(--text-color)">Nome:</label>
+                <input type="text" name="nome" id="nome" required
+                    value="<?= htmlspecialchars($_SESSION['dados_cadastro']['nome'] ?? '') ?>"
+                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                           focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+            </div>
 
-                            <!-- Campo Tipo de Perfil -->
-                            <div>
-                                <label for="tipo" class="block text-sm font-medium" style="color: var(--text-color)">Perfil:</label>
-                                <select name="tipo" id="tipo" 
-                                        class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
-                                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
-                                            focus:ring: var(--primary-color); focus:border: var(--primary-color)">
-                                    <option value="administrador">Administrador</option>
-                                    <option value="professor">Professor</option>
-                                    <option value="aluno">Aluno</option>
-                                </select>
-                            </div>
+            <!-- Campo Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium" style="color: var(--text-color)">Email:</label>
+                <input type="email" name="email" id="email" required
+                    value="<?= htmlspecialchars($_SESSION['dados_cadastro']['email'] ?? '') ?>"
+                    class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                    style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                           focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+            </div>
 
-                            <!-- Botões do formulário -->
-                            <div class="flex justify-end gap-3">
-                                <button type="button" id="cancel-form" 
-                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
-                                        style="border: 1px solid var(--border-color); color: var(--text-color); background-color: var(--bg-color); hover:background-color: var(--medium-gray)">
-                                    Cancelar
-                                </button>
-                                <button type="submit" name="register" 
-                                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium text-white transition-colors"
-                                        style="background-color: var(--primary-color); hover:background-color: var(--primary-dark)">
-                                    Salvar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <!-- Campo Senha -->
+            <div class="relative">
+                <label for="senha_hash" class="block text-sm font-medium" style="color: var(--text-color)">Senha:</label>
+                <div class="relative mt-1">
+                    <input type="password" name="senha_hash" id="senha_hash" required
+                        class="block w-full rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none"
+                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); placeholder: var(--secondary-color);
+                               focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+                    <button type="button" id="toggle-password"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            style="color: var(--secondary-color); hover:color: var(--text-color)">
+                        <i class="far fa-eye"></i>
+                    </button>
                 </div>
+            </div>
+
+            <!-- Campo Tipo de Perfil -->
+            <div>
+                <label for="tipo" class="block text-sm font-medium" style="color: var(--text-color)">Perfil:</label>
+                <select name="tipo" id="tipo"
+                        class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
+                        style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
+                               focus:ring: var(--primary-color); focus:border: var(--primary-color)">
+                    <option value="administrador" <?= (($_SESSION['dados_cadastro']['tipo'] ?? '') === 'administrador') ? 'selected' : '' ?>>Administrador</option>
+                    <option value="professor" <?= (($_SESSION['dados_cadastro']['tipo'] ?? '') === 'professor') ? 'selected' : '' ?>>Professor</option>
+                    <option value="aluno" <?= (($_SESSION['dados_cadastro']['tipo'] ?? '') === 'aluno') ? 'selected' : '' ?>>Aluno</option>
+                </select>
+            </div>
+
+            <!-- Botões do formulário -->
+            <div class="flex justify-end gap-3">
+                <button type="button" id="cancel-form"
+                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium transition-colors"
+                        style="border: 1px solid var(--border-color); color: var(--text-color); background-color: var(--bg-color); hover:background-color: var(--medium-gray)">
+                    Cancelar
+                </button>
+                <button type="submit" name="register"
+                        class="px-4 py-2 rounded-md shadow-sm text-sm font-medium text-white transition-colors"
+                        style="background-color: var(--primary-color); hover:background-color: var(--primary-dark)">
+                    Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php
+// Limpa os dados da sessão para não manter o modal aberto e dados no formulário
+unset($_SESSION['dados_cadastro']);
+?>
+
+<!-- Script para abrir o modal automaticamente se a flag estiver ativa -->
+<?php if (isset($_SESSION['abrir_modal_cadastro'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('user-form-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    });
+</script>
+<?php unset($_SESSION['abrir_modal_cadastro']); endif; ?>
+
                 
                 <!-- Rodapé móvel -->
                 <nav class="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)] border-t border-[var(--border-color)] flex justify-center py-3">

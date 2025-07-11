@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             inputId.value = button.dataset.id;
             inputNome.value = button.dataset.nome;
             inputEmail.value = button.dataset.email;
-            inputSenha.value = button.dataset.senha;
+            inputSenha.value = '';
             inputTipo.value = button.dataset.tipo;
 
             // Exibe o modal de edição
