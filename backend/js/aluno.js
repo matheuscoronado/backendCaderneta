@@ -286,3 +286,177 @@ function filtrarAnotacoes() {
         card.style.display = textoCompleto.includes(filtro) ? 'block' : 'none';
     });
 }
+
+// Adicione este código junto com seus outros event listeners
+document.getElementById('export-pdf-btn').addEventListener('click', exportNotesToPDF);
+
+// função para exportar anotações para PDF
+async function exportNotesToPDF() {
+    const loadingModal = document.getElementById('loading-modal');
+    try {
+        loadingModal.classList.remove('hidden');
+        loadingModal.querySelector('span').textContent = 'Gerando PDF...';
+
+        if (!window.jspdf) {
+            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+        }
+        const { jsPDF } = window.jspdf;
+        
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        // Configurações de estilo
+        const styles = {
+            primaryColor: '#3b82f6',
+            textColor: '#000000',
+            lightText: '#555555',
+            header: {
+                fontSize: 18,
+                fontStyle: 'bold',
+                textColor: '#ffffff'
+            },
+            title: {
+                fontSize: 16,
+                fontStyle: 'bold'
+            },
+            noteTitle: {
+                fontSize: 14,
+                fontStyle: 'bold'
+            },
+            subtitle: {
+                fontSize: 12,
+                fontStyle: 'italic'
+            },
+            date: {
+                fontSize: 10
+            },
+            body: {
+                fontSize: 11
+            },
+            footer: {
+                fontSize: 10
+            }
+        };
+
+        // Margens e dimensões
+        const margin = 20;
+        const maxWidth = doc.internal.pageSize.getWidth() - (margin * 2);
+        let yPos = margin;
+        const lineHeight = 6;
+        const pageHeight = doc.internal.pageSize.getHeight() - margin;
+
+        // Função para aplicar estilo consistente
+        const applyStyle = (style) => {
+            doc.setFontSize(style.fontSize);
+            doc.setFont('helvetica', style.fontStyle || 'normal');
+            doc.setTextColor(style.textColor || styles.textColor);
+        };
+
+        // Cabeçalho
+        const addHeader = () => {
+            doc.setFillColor(styles.primaryColor);
+            doc.rect(0, 0, doc.internal.pageSize.getWidth(), 20, 'F');
+            
+            applyStyle(styles.header);
+            doc.text('MedNotes', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+            
+            yPos = 30;
+            applyStyle(styles.body); // Reset para estilo padrão
+        };
+
+        // Função para adicionar texto com quebra de página consistente
+        const addText = (text, style) => {
+            applyStyle(style);
+            
+            const lines = doc.splitTextToSize(text, maxWidth);
+            
+            for (let i = 0; i < lines.length; i++) {
+                if (yPos > pageHeight) {
+                    doc.addPage();
+                    addHeader();
+                    applyStyle(style); // Reaplicar o mesmo estilo na nova página
+                }
+                doc.text(lines[i], margin, yPos);
+                yPos += lineHeight;
+            }
+            yPos += lineHeight / 2;
+        };
+
+        // Buscar anotações
+        const response = await fetch('index.php?action=listar-anotacoes-aluno');
+        const anotacoes = await response.json();
+
+        if (!anotacoes || anotacoes.length === 0) {
+            alert('Nenhuma anotação encontrada para exportar.');
+            return;
+        }
+
+        // Adicionar cabeçalho inicial
+        addHeader();
+
+        // Título principal
+        addText('MINHAS ANOTAÇÕES', { 
+            ...styles.title, 
+            textColor: styles.primaryColor 
+        });
+        yPos += 10;
+
+        // Processar cada anotação
+        anotacoes.forEach((note, index) => {
+            // Divisor
+            if (index > 0) {
+                if (yPos + 5 > pageHeight) {
+                    doc.addPage();
+                    addHeader();
+                }
+                doc.setDrawColor(styles.primaryColor);
+                doc.setLineWidth(0.5);
+                doc.line(margin, yPos, margin + maxWidth, yPos);
+                yPos += 10;
+            }
+            
+            // Título
+            addText(note.titulo, { 
+                ...styles.noteTitle, 
+                textColor: styles.primaryColor 
+            });
+            
+            // Subtítulo
+            addText(note.subtitulo, styles.subtitle);
+            
+            // Data
+            const dataFormatada = new Date(note.data_registro).toLocaleDateString('pt-BR') || '';
+            if (dataFormatada) {
+                addText(dataFormatada, { 
+                    ...styles.date, 
+                    textColor: styles.lightText 
+                });
+            }
+            
+            // Conteúdo
+            addText(note.descricao || 'Sem conteúdo', styles.body);
+        });
+
+        // Rodapé
+        applyStyle({ 
+            ...styles.footer, 
+            textColor: styles.lightText 
+        });
+        doc.text(`Gerado pelo MedNotes • ${new Date().toLocaleDateString('pt-BR')}`, 
+                doc.internal.pageSize.getWidth() / 2, 
+                doc.internal.pageSize.getHeight() - 10, 
+                { align: 'center' });
+
+        doc.save(`Anotacoes_MedNotes.pdf`);
+
+    } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        alert('Ocorreu um erro ao gerar o PDF. Por favor, tente novamente.');
+    } finally {
+        loadingModal.classList.add('hidden');
+    }
+}
+
