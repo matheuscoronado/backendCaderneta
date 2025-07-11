@@ -271,3 +271,18 @@ document.querySelector('.save-button').addEventListener('click', function() {
         button.classList.remove('success');
     }, 1500);
 });
+
+function filtrarAnotacoes() {
+    const filtro = document.getElementById('notes-search').value.toLowerCase();
+    const cards = document.querySelectorAll('#sidebar-notes-list .sidebar-note'); // aqui mudou
+
+    cards.forEach(card => {
+        const titulo = card.querySelector('.note-topic')?.textContent.toLowerCase() || '';
+        const subtitulo = card.querySelector('h4')?.textContent.toLowerCase() || '';
+        const descricao = card.querySelector('p')?.textContent.toLowerCase() || '';
+        
+        const textoCompleto = `${titulo} ${subtitulo} ${descricao}`;
+
+        card.style.display = textoCompleto.includes(filtro) ? 'block' : 'none';
+    });
+}

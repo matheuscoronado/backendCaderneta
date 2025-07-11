@@ -347,32 +347,32 @@ unset($_SESSION['dados_cadastro']);
             </header>
 
             <main class="main-content">
-    <!-- Formulário de nova anotação -->
-    <form id="note-form" action="index.php?action=salvar-anotacao" method="POST" class="bg-[var(--card-bg)] p-6 rounded-[var(--rounded-lg)] shadow-[var(--shadow-md)] border border-[var(--border-color)]">
-        <h2 class="font-bold mb-4 text-center text-[var(--text-color)]">Nova Anotação</h2>
+                <!-- Formulário de nova anotação -->
+                <form id="note-form" action="index.php?action=salvar-anotacao" method="POST" class="bg-[var(--card-bg)] p-6 rounded-[var(--rounded-lg)] shadow-[var(--shadow-md)] border border-[var(--border-color)]">
+                    <h2 class="font-bold mb-4 text-center text-[var(--text-color)]">Nova Anotação</h2>
 
-        <!-- Seleção de tópico -->
-        <div class="form-group title-input mb-4">
-            <select name="titulo" id="note-topic" class="topic-select w-full border border-[var(--border-color)] rounded-[var(--rounded)] py-2 px-3 bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]" required>
-                <option value="">Selecione um tópico</option>
-                <option value="Sinais Vitais - Conceitos Gerais">Sinais Vitais - Conceitos Gerais</option>
-                <option value="Temperatura Corporal">Temperatura Corporal</option>
-                <option value="Pulso e Frequência Cardíaca">Pulso e Frequência Cardíaca</option>
-                <option value="Frequência Respiratória">Frequência Respiratória</option>
-                <option value="Pressão Arterial">Pressão Arterial</option>
-                <option value="Dor como Sinal Vital">Dor como Sinal Vital</option>
-                <option value="Administração de Medicamentos - Vias Oral e Sublingual">Administração de Medicamentos - Vias Oral e Sublingual</option>
-                <option value="Administração Parenteral - IM, ID, SC">Administração Parenteral - IM, ID, SC</option>
-                <option value="Administração Endovenosa e Inalatória">Administração Endovenosa e Inalatória</option>
-            </select>
-        </div>
+                    <!-- Seleção de tópico -->
+                    <div class="form-group title-input mb-4">
+                        <select name="titulo" id="note-topic" class="topic-select w-full border border-[var(--border-color)] rounded-[var(--rounded)] py-2 px-3 bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]" required>
+                            <option value="">Selecione um tópico</option>
+                            <option value="Sinais Vitais - Conceitos Gerais">Sinais Vitais - Conceitos Gerais</option>
+                            <option value="Temperatura Corporal">Temperatura Corporal</option>
+                            <option value="Pulso e Frequência Cardíaca">Pulso e Frequência Cardíaca</option>
+                            <option value="Frequência Respiratória">Frequência Respiratória</option>
+                            <option value="Pressão Arterial">Pressão Arterial</option>
+                            <option value="Dor como Sinal Vital">Dor como Sinal Vital</option>
+                            <option value="Administração de Medicamentos - Vias Oral e Sublingual">Administração de Medicamentos - Vias Oral e Sublingual</option>
+                            <option value="Administração Parenteral - IM, ID, SC">Administração Parenteral - IM, ID, SC</option>
+                            <option value="Administração Endovenosa e Inalatória">Administração Endovenosa e Inalatória</option>
+                        </select>
+                    </div>
 
-        <!-- Campo subtítulo -->
-        <div class="form-group subtitle-input mb-4">
-            <input
-                type="text" name="subtitulo" id="note-subtitle" class="w-full border border-[var(--border-color)] rounded-[var(--rounded)] py-2 px-3 bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]" placeholder="Digite um subtítulo..." required
-                />
-        </div>
+                    <!-- Campo subtítulo -->
+                    <div class="form-group subtitle-input mb-4">
+                        <input
+                            type="text" name="subtitulo" id="note-subtitle" class="w-full border border-[var(--border-color)] rounded-[var(--rounded)] py-2 px-3 bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]" placeholder="Digite um subtítulo..." required
+                            />
+                    </div>
 
                     <!-- Área de texto principal -->
                     <textarea name="descricao" id="note-content" rows="8" placeholder="Faça sua anotação..." required></textarea>
@@ -380,7 +380,7 @@ unset($_SESSION['dados_cadastro']);
                     <!-- Botões de ação -->
                     <div class="editor-actions">
                         <button type="submit" name="salvarAnotacao" class="save-button">
-                            <i class="fas fa-save"></i> Salvar
+                                    <i class="fas fa-save"></i> Salvar
                         </button>
                         <button id="analyze-btn" class="analyze-button">
                             <i class="fas fa-robot"></i> Analisar com Florense
@@ -412,7 +412,7 @@ unset($_SESSION['dados_cadastro']);
                 <!-- Barra de pesquisa -->
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="notes-search" placeholder="Pesquisar anotações..." class="search-input">
+                    <input type="text" id="notes-search" placeholder="Pesquisar anotações..." class="search-input" onkeyup="filtrarAnotacoes()">
                 </div>
 
                 <!-- Lista de anotações -->
@@ -472,10 +472,10 @@ unset($_SESSION['dados_cadastro']);
                         <div id="edit-note-feedbacks" class="feedback-display mt-4">
                             <h3 class="text-sm font-semibold mb-2">Feedback do Professor</h3>
                             <div id="edit-feedback-content" class="space-y-2 text-sm text-gray-700 bg-gray-100 rounded-md p-3 overflow-y-auto max-h-48" style="border: 1px solid var(--border-color);
-    border-radius: var(--rounded);
-    border: 1px solid var(--border-color);
-    background-color: var(--card-bg);
-    color: var(--text-color);">
+                                border-radius: var(--rounded);
+                                border: 1px solid var(--border-color);
+                                background-color: var(--card-bg);
+                                color: var(--text-color);">
                                 <!-- Feedbacks serão inseridos aqui via JavaScript -->
                             </div>
                         </div>
