@@ -294,11 +294,10 @@ unset($_SESSION['dados_cadastro']);
 
         <main class="main-content">
         <!-- Barra de pesquisa do nome do aluno -->
-       <div class="search-container">
-           <input type="text" id="search-input" placeholder="Buscar aluno...">
-       </div>
+        <div class="search-container" style="margin-bottom: 1rem;">
+            <input type="text" id="search-input" placeholder="Buscar aluno..." onkeyup="filtrarAlunos()" />
+        </div>
 
-       
         <!-- Lista de alunos -->
         <div class="students-section">
             <h2>Turma de Teste</h2>

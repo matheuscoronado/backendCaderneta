@@ -231,3 +231,14 @@ document.getElementById('sidebar-overlay').addEventListener('click', closeSideba
 document.getElementById('search-input').addEventListener('input', function() {
     loadStudents(this.value.trim());
 });
+
+function filtrarAlunos() {
+    const input = document.getElementById('search-input');
+    const filtro = input.value.toLowerCase();
+    const cards = document.querySelectorAll('#students-list .student-card');
+
+    cards.forEach(card => {
+        const nome = card.querySelector('.student-name').textContent.toLowerCase();
+        card.style.display = nome.includes(filtro) ? 'block' : 'none';
+    });
+}
