@@ -135,7 +135,7 @@
         }
 
         .content-box {
-            white-space: pre-wrap;
+            white-space: pre-line;
             background-color: var(--light-gray);
             padding: 1rem;
             border-radius: var(--rounded);
