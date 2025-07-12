@@ -19,6 +19,17 @@
 
 <!-- Corpo da página com estilos Tailwind -->
 <body class="bg-gray-50 min-h-screen">
+
+  <?php
+    // Inicia sessão e recupera possíveis mensagens de erro
+    session_start();
+    $error = isset($_SESSION['login_error']) ? $_SESSION['login_error'] : null;
+    $old_email = isset($_SESSION['old_email']) ? $_SESSION['old_email'] : '';
+    
+    // Limpa os dados da sessão após uso
+    unset($_SESSION['login_error']);
+    unset($_SESSION['old_email']);
+    ?>
     <!-- Tela de login (sobreposta, centralizada) -->
     <div id="login-screen" class="fixed inset-0 bg-blue-500 flex items-center justify-center p-4 z-50" style="background-color: var(--bg-color)">
         
@@ -41,6 +52,14 @@
                 <h1 class="text-2xl font-bold text-gray-800">MedNotes</h1> <!-- Título -->
                 <p class="text-gray-600">Sua caderneta médica digital</p> <!-- Subtítulo -->
             </div>
+
+              <!-- Exibe mensagem de erro se existir -->
+            <?php if ($error): ?>
+            <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg flex items-start">
+                <i class="fas fa-exclamation-circle mr-2 mt-0.5"></i>
+                <p><?php echo htmlspecialchars($error); ?></p>
+            </div>
+            <?php endif; ?>
 
             <!-- Formulário de login (envia dados para o backend) -->
             <form method='post' id="login-form" class="space-y-4" action="index.php?action=login">
