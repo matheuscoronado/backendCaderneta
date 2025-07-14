@@ -6,6 +6,8 @@ class UserController
     // Função para registrar um novo usuário
     public function register()
     {
+        session_start(); // garante que a sessão está ativa
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Recebe dados do formulário
             $nome = trim($_POST['nome']);
@@ -13,10 +15,21 @@ class UserController
             $senha = $_POST['senha_hash'];
             $tipo = $_POST['tipo'];
 
+            // Validação básica
+            if (empty($nome) || empty($email) || empty($senha)) {
+                $_SESSION['erro_cadastro'] = "Por favor, preencha todos os campos.";
+                $_SESSION['abrir_modal_cadastro'] = true;
+                $_SESSION['dados_cadastro'] = [
+                    'nome' => $nome,
+                    'email' => $email,
+                    'tipo' => $tipo
+                ];
+                header('Location: index.php?action=dashboard');
+                exit;
+            }
+
             // Verifica se já existe usuário com esse email
             if (User::emailExists($email)) {
-                // Email já cadastrado: seta erro e dados na sessão
-                session_start();
                 $_SESSION['erro_cadastro'] = "O email informado já está cadastrado.";
                 $_SESSION['abrir_modal_cadastro'] = true;
                 $_SESSION['dados_cadastro'] = [
@@ -24,8 +37,6 @@ class UserController
                     'email' => $email,
                     'tipo' => $tipo
                 ];
-                
-                // Redireciona para a dashboard para abrir o modal com erro
                 header('Location: index.php?action=dashboard');
                 exit;
             }
@@ -45,6 +56,7 @@ class UserController
             include 'views/register.php';
         }
     }
+
 
 
     // Função para editar os dados de um usuário existente
@@ -80,11 +92,19 @@ class UserController
                 'tipo' => $_POST['tipo']
             ];
 
-            if (!empty($_POST['senha_hash'])) {
+            if (isset($_POST['senha_hash']) && trim($_POST['senha_hash']) !== '') {
                 $data['senha_hash'] = password_hash($_POST['senha_hash'], PASSWORD_DEFAULT);
             }
 
             User::update($id, $data);
+
+            // Atualiza sessão se o usuário editado for o usuário logado
+            if ($_SESSION['id'] == $id) {
+                $_SESSION['nome'] = $data['nome'];
+                $_SESSION['email'] = $data['email'];
+                $_SESSION['tipo'] = $data['tipo'];
+            }
+
             $_SESSION['sucesso'] = "Usuário atualizado com sucesso.";
             header('Location: index.php?action=dashboard');
             exit;
@@ -92,8 +112,6 @@ class UserController
             include 'views/dashboard.php';
         }
     }
-
-
 
 
     // Função para excluir um usuário
@@ -348,5 +366,3 @@ if (isset($_GET['action']) && $_GET['action'] === 'listarFeedbacksPorAtividade' 
     // Encerra a execução do script para garantir que nada mais será enviado
     exit;
 }
-
-
