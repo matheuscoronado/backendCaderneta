@@ -7,7 +7,7 @@
     <!-- Responsividade: adapta-se a dispositivos móveis -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- Título da página (aparece na aba do navegador) -->
-    <title>Login | MedNotes - Caderneta Digital</title>
+    <title>Login | TrilhaTec - Caderneta Digital</title>
     
     <!-- Importações de bibliotecas externas -->
     <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind CSS (framework de estilização) -->
@@ -49,7 +49,7 @@
             <!-- Cabeçalho do card (logo e título) -->
             <div class="text-center mb-6">
                 <i class="fas fa-book-medical text-4xl text-blue-500 mb-3"></i> <!-- Ícone -->
-                <h1 class="text-2xl font-bold text-gray-800">MedNotes</h1> <!-- Título -->
+                <h1 class="text-2xl font-bold text-gray-800">TrilhaTec</h1> <!-- Título -->
                 <p class="text-gray-600">Sua caderneta médica digital</p> <!-- Subtítulo -->
             </div>
 
