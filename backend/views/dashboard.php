@@ -652,7 +652,7 @@ unset($user);
             </button>
         </div>
         
-        <div id="florence-answer" class="p-3 rounded hidden" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color)">
+        <div id="florence-answer" class="p-3 rounded hidden" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color) ; white-space: pre-line;">
             <!-- Resposta será inserida aqui -->
         </div>
     </div>
