@@ -1,4 +1,3 @@
-// Aguarda o carregamento completo do DOM antes de executar o código
 document.addEventListener('DOMContentLoaded', function() {
     // Aplica o tema salvo no localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -116,25 +115,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // --- MODAL DA FLORENCE - VERSÃO COMPLETA E CORRIGIDA ---
+    // --- MODAL DA FLORENCE - VERSÃO CORRIGIDA ---
     const florenceModal = document.getElementById('florence-modal');
-const closeFlorenceBtn = document.getElementById('close-florence-modal');
-const askFlorenceBtn = document.getElementById('ask-florence-btn');
-const florenceQuestion = document.getElementById('florence-question');
-const florenceAnswer = document.getElementById('florence-answer');
+    const closeFlorenceBtn = document.getElementById('close-florence-modal');
+    const askFlorenceBtn = document.getElementById('ask-florence-btn');
+    const florenceQuestion = document.getElementById('florence-question');
+    const florenceAnswer = document.getElementById('florence-answer');
 
-// Adicionando efeito hover ao botão "Perguntar à Florence"
-if (askFlorenceBtn) {
-    askFlorenceBtn.style.transition = 'background-color 0.3s ease';
-    
-    askFlorenceBtn.addEventListener('mouseenter', () => {
-        askFlorenceBtn.style.backgroundColor = 'var(--primary-dark)';
-    });
-    
-    askFlorenceBtn.addEventListener('mouseleave', () => {
-        askFlorenceBtn.style.backgroundColor = 'var(--primary-color)';
-    });
-}
+    // Configuração do botão de pergunta
+    if (askFlorenceBtn) {
+        askFlorenceBtn.style.transition = 'background-color 0.3s ease';
+        
+        askFlorenceBtn.addEventListener('mouseenter', () => {
+            askFlorenceBtn.style.backgroundColor = 'var(--primary-dark)';
+        });
+        
+        askFlorenceBtn.addEventListener('mouseleave', () => {
+            askFlorenceBtn.style.backgroundColor = 'var(--primary-color)';
+        });
+    }
     
     // Cria botão para aplicar sugestão
     const applySuggestionBtn = document.createElement('button');
@@ -191,7 +190,7 @@ if (askFlorenceBtn) {
         // Se existir resposta pré-definida para o tópico, mostra automaticamente
         if (TOPIC_RESPONSES[topic]) {
             florenceQuestion.value = `Sobre ${topicText}`;
-            florenceAnswer.innerHTML = TOPIC_RESPONSES[topic];
+            florenceAnswer.textContent = formatFlorenceAnswer(TOPIC_RESPONSES[topic].replace(/<[^>]*>/g, '')); // Remove tags HTML
             florenceAnswer.classList.remove('hidden');
             applySuggestionBtn.classList.remove('hidden');
         } else {
@@ -210,6 +209,7 @@ if (askFlorenceBtn) {
         }
 
         // Mostra loading
+        const originalBtnText = this.innerHTML;
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
         this.disabled = true;
 
@@ -225,31 +225,47 @@ if (askFlorenceBtn) {
                 }
             }
 
-            // Exibe a resposta
-            florenceAnswer.innerHTML = answer.replace(/\n/g, '<br>');
+            // Exibe a resposta formatada
+            florenceAnswer.textContent = formatFlorenceAnswer(answer);
             florenceAnswer.classList.remove('hidden');
             applySuggestionBtn.classList.remove('hidden');
             
             // Restaura o botão
-            this.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar';
+            this.innerHTML = originalBtnText;
             this.disabled = false;
         }, 800);
     });
 
-    // Aplica sugestão ao campo de texto principal
+    // Aplica sugestão ao campo de texto principal (CORREÇÃO PRINCIPAL)
     applySuggestionBtn.addEventListener('click', function() {
         const currentContent = document.getElementById('note-content').value;
         const suggestion = florenceAnswer.textContent;
         
-        document.getElementById('note-content').value = currentContent 
-            ? `${currentContent}\n\n- Sugestão da Florence -\n${suggestion}`
-            : suggestion;
+        // Formata a sugestão para manter espaçamento
+        const formattedSuggestion = `\n\n--- Sugestão da Florence ---\n${suggestion}\n\n`;
+        
+        // Insere na posição atual do cursor ou no final
+        const textarea = document.getElementById('note-content');
+        const startPos = textarea.selectionStart;
+        const endPos = textarea.selectionEnd;
+        
+        textarea.value = currentContent.substring(0, startPos) + 
+                         formattedSuggestion + 
+                         currentContent.substring(endPos);
+        
+        // Posiciona o cursor após a sugestão inserida
+        const newCursorPos = startPos + formattedSuggestion.length;
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
         
         // Feedback visual
         this.innerHTML = '<i class="fas fa-check mr-2"></i> Sugestão aplicada!';
         setTimeout(() => {
             this.innerHTML = '<i class="fas fa-copy mr-2"></i> Usar esta sugestão na anotação';
         }, 2000);
+        
+        // Dispara evento de change para quaisquer listeners
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
     });
 
     // Botão de alternância de tema
@@ -299,6 +315,14 @@ function toggleTheme() {
 
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
+}
+
+// Formata as respostas da Florence para manter quebras de linha e listas
+function formatFlorenceAnswer(answer) {
+    return answer
+        .replace(/^- /gm, '• ') // Converte hífens em bullets
+        .replace(/\n•/g, '\n•') // Garante espaçamento consistente
+        .replace(/\n{3,}/g, '\n\n'); // Limita quebras múltiplas
 }
 
 // Carrega todas as anotações do aluno
@@ -536,37 +560,201 @@ function loadScript(url) {
 // Respostas pré-definidas por tópico
 const TOPIC_RESPONSES = {
     "Sinais Vitais - Conceitos Gerais": `
-        <h3 class="font-bold mb-2">Sinais Vitais Básicos</h3>
-        <p>Os sinais vitais incluem:</p>
-        <ul class="list-disc pl-5 mt-2">
-            <li>Temperatura corporal</li>
-            <li>Pulso/frequência cardíaca</li>
-            <li>Frequência respiratória</li>
-            <li>Pressão arterial</li>
-            <li>Dor (considerado o 5º sinal vital)</li>
-            <li>Saturação de oxigênio (em alguns protocolos)</li>
-        </ul>
-        <p class="mt-2">Valores normais de referência podem variar conforme idade e condições específicas.</p>
-    `,
+Sinais Vitais Básicos
+
+Os sinais vitais incluem:
+• Temperatura corporal
+• Pulso/frequência cardíaca
+• Frequência respiratória
+• Pressão arterial
+• Dor (considerado o 5º sinal vital)
+• Saturação de oxigênio (em alguns protocolos)
+
+Valores normais de referência podem variar conforme idade e condições específicas.`,
     "Temperatura Corporal": `
-        <h3 class="font-bold mb-2">Temperatura Corporal Normal</h3>
-        <p>Valores de referência:</p>
-        <ul class="list-disc pl-5 mt-2">
-            <li><strong>Axilar:</strong> 35,5°C - 36,5°C</li>
-            <li><strong>Oral:</strong> 36°C - 37,2°C</li>
-            <li><strong>Retal:</strong> 36°C - 37,5°C</li>
-            <li><strong>Timpânica:</strong> 35,8°C - 37°C</li>
-        </ul>
-        <p class="mt-2">Febre: acima de 37,8°C (axilar) ou 38°C (retal)</p>
-    `,
-    // Adicione mais respostas conforme necessário
+Temperatura Corporal Normal
+
+Valores de referência:
+• Axilar: 35,5°C - 36,5°C
+• Oral: 36°C - 37,2°C
+• Retal: 36°C - 37,5°C
+• Timpânica: 35,8°C - 37°C
+
+Febre: acima de 37,8°C (axilar) ou 38°C (retal)`,
+    "Pulso e Frequência Cardíaca": `
+Pulso e Frequência Cardíaca
+
+Valores normais por faixa etária:
+• Recém-nascido: 120-160 bpm
+• Lactente: 80-140 bpm
+• Criança: 70-120 bpm
+• Adolescente: 60-100 bpm
+• Adulto: 60-100 bpm
+• Idoso: 60-100 bpm (pode ser mais baixo em atletas)
+
+Locais de aferição: radial, carotídeo, braquial, femoral, poplíteo, pedioso dorsal.`,
+    "Frequência Respiratória": `
+Frequência Respiratória
+
+Valores normais por faixa etária:
+• Recém-nascido: 30-60 rpm
+• Lactente: 20-40 rpm
+• Criança: 20-30 rpm
+• Adolescente: 12-20 rpm
+• Adulto: 12-20 rpm
+• Idoso: 12-20 rpm
+
+Avaliar também ritmo, profundidade e esforço respiratório.`,
+    "Pressão Arterial": `
+Pressão Arterial
+
+Classificação para adultos (mmHg):
+• Normal: <120/80
+• Pré-hipertensão: 120-139/80-89
+• Hipertensão Estágio 1: 140-159/90-99
+• Hipertensão Estágio 2: ≥160/≥100
+
+Em crianças, utilize tabelas específicas por idade, sexo e percentil de altura.`,
+    "Dor como Sinal Vital": `
+Avaliação da Dor
+
+Escalas mais utilizadas:
+• Escala Numérica (0-10): 0 = sem dor, 10 = pior dor imaginável
+• Escala Visual Analógica (EVA)
+• Escala de Faces Wong-Baker (para crianças)
+• FLACC (para bebês e não verbais)
+
+Avaliar localização, características, intensidade, duração e fatores agravantes/aliviadores.`,
+    "Administração de Medicamentos - Vias Oral e Sublingual": `
+Vias Oral e Sublingual
+
+Via Oral:
+• Medicamentos sólidos (comprimidos, cápsulas) ou líquidos
+• Orientar paciente a ingerir com água
+• Verificar necessidade de jejum
+
+Via Sublingual:
+• Colocar medicamento sob a língua
+• Não engolir até completa absorção
+• Exemplo: Nitroglicerina`,
+    "Administração Parenteral - IM, ID, SC": `
+Vias Parenterais
+
+Intramuscular (IM):
+• Locais: Deltóide, vasto lateral, glúteo (músculo ventroglúteo ou dorsoglúteo)
+• Agulha: 20-25G, 1-1,5" (varia conforme local e paciente)
+• Ângulo: 90 graus
+
+Subcutânea (SC):
+• Locais: Abdômen, coxa, braço
+• Agulha: 25-30G, 3/8" a 5/8"
+• Ângulo: 45 ou 90 graus (depende da agulha e tecido)
+
+Intradérmica (ID):
+• Local: Face anterior do antebraço
+• Agulha: 26-27G, 3/8" a 1/2"
+• Ângulo: 10-15 graus
+• Volume máximo: 0,1 mL`,
+    "Administração Endovenosa e Inalatória": `
+Vias Endovenosa e Inalatória
+
+Endovenosa (EV):
+• Verificar compatibilidade de medicamentos
+• Controlar velocidade de infusão
+• Monitorar sinais de flebite ou extravasamento
+• Manutenção de acesso: lavagem com SF 0,9%
+
+Inalatória:
+• Uso de nebulizadores ou inaladores dosimetrados
+• Orientar técnica adequada de inalação
+• Enxaguar boca após corticosteroides inalatórios`
 };
 
 // Respostas para perguntas customizadas
 const FLORENCE_ANSWERS = {
-    "o que é uma laranja": "A laranja é uma fruta cítrica rica em vitamina C, de cor alaranjada e sabor variando entre doce e levemente ácido. É excelente para fortalecer o sistema imunológico.",
-    "o que é pressão arterial": "Pressão arterial é a força que o sangue exerce contra as paredes das artérias. Valores normais são em torno de 120/80 mmHg. A hipertensão ocorre quando esses valores estão consistentemente elevados.",
-    "como medir temperatura": "Para medir temperatura corporal corretamente:\n1. Use um termômetro limpo\n2. Coloque sob a língua, na axila ou reto\n3. Aguarde o tempo recomendado pelo fabricante\n4. Leia o valor - normal é entre 36°C e 37,2°C",
-    "como medir pressão": "Para medir a pressão arterial corretamente:\n1. Sente-se e descanse por 5 minutos\n2. Use um esfigmomanômetro validado\n3. Coloque a braçadeira no braço na altura do coração\n4. Não fale durante a medição\nValores normais: 120/80 mmHg",
-    "o que é dor": "Dor é uma experiência sensorial e emocional desagradável associada a dano tecidual real ou potencial. É classificada em:\n- Aguda: curta duração\n- Crônica: persiste por mais de 3 meses\n- Nociceptiva: por dano tecidual\n- Neuropática: por lesão nervosa"
+    "Quais são os cuidados necessários ao administrar medicamentos por via oral?": `1. Verificar a prescrição médica
+2. Garantir que o paciente esteja consciente
+3. Confirmar capacidade de deglutição
+4. Evitar alimentos que interfiram na absorção
+5. Observar horários específicos (jejum/com alimentos)`,
+    "Quais os cuidados ao administrar medicamentos via sublingual?": `• Orientar a não engolir o comprimido
+• Manter sob a língua até dissolver
+• Evitar água/alimentos durante absorção
+• Garantir boca limpa
+• Exemplos: Nitroglicerina, Buprenorfina`,
+    "Quais são os principais locais de aplicação e angulação para as vias IM, ID e SC?": `IM (Intramuscular):
+- Locais: Nádegas (glúteo), deltoide, vasto lateral
+- Angulação: 90°
+
+SC (Subcutânea):
+- Locais: Abdômen, coxa, braço
+- Angulação: 45°
+
+ID (Intradérmica):
+- Locais: Antebraço
+- Angulação: 10-15°`,
+    "Quais são os riscos de se administrar um medicamento em local incorreto?": `• Dor intensa
+• Lesão tecidual/nervosa
+• Abscesso ou necrose
+• Ineficácia do tratamento
+• Reações adversas`,
+    "Quais cuidados são necessários durante a administração por via EV para evitar flebite?": `• Técnica asséptica rigorosa
+• Escolha adequada da veia
+• Fixação correta do acesso
+• Velocidade de infusão adequada
+• Observação constante do local
+• Rodízio de punções`,
+    "Quais são os tipos de administração endovenosa e em que situações são indicadas?": `Bolus (rápida):
+- Emergências
+- Ação imediata necessária
+
+Infusão intermitente:
+- Antibióticos
+- Medicamentos incompatíveis
+
+Infusão contínua:
+- Soro terapia
+- Medicamentos de meia-vida curta`,
+    "Descreva o passo a passo da técnica correta para a via intramuscular.": `1. Higienizar as mãos
+2. Preparar material
+3. Identificar paciente
+4. Selecionar local
+5. Limpar pele
+6. Inserir agulha 90°
+7. Aspirar levemente
+8. Injetar lentamente
+9. Retirar agulha
+10. Comprimir local
+11. Descartar material`,
+    "Por que alguns medicamentos devem ser tomados em jejum ou com alimentos?": `Jejum:
+- Melhor absorção (ex: levotiroxina, alendronato)
+- Evitar interações
+
+Com alimentos:
+- Reduzir irritação gástrica (ex: AINEs)
+- Melhorar absorção lipossolúvel
+- Evitar náuseas
+- Atraso absorção desejado`,
+    "Quais medicamentos são comumente utilizados na via inalatória?": `Broncodilatadores:
+- Salbutamol
+- Ipratrópio
+
+Corticosteroides:
+- Budesonida
+- Fluticasona
+
+Combinações:
+- Salmeterol + Fluticasona
+
+Antibióticos:
+- Tobramicina (fibrose cística)`,
+    "Quais os dispositivos utilizados na administração de medicamentos inalatórios?": `Inaladores dosimetrados (bombinhas)
+Inaladores de pó seco
+Nebulizadores
+Espaçadores
+
+Vantagens:
+- Entrega direta pulmonar
+- Efeitos sistêmicos reduzidos
+- Rápido início de ação`
 };
