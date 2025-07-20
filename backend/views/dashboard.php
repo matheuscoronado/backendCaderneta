@@ -19,7 +19,7 @@ unset($user);
     <!-- Configurações básicas da página -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Configurações - MedNotes</title>
+    <title>Configurações - TrilhaTec</title>
     
     <!-- Importação de frameworks e bibliotecas -->
     <script src="https://cdn.tailwindcss.com"></script> <!-- Framework CSS utilitário --> 
@@ -47,7 +47,7 @@ unset($user);
                 <!-- Logo e título do sistema -->
                 <div class="flex items-center">
                     <i class="fas fa-book-medical text-xl text-blue-500 mr-2"></i>
-                    <h1 class="text-lg sm:text-xl font-bold text-[var(--text-color)]">MedNotes - Admin Center</h1>
+                    <h1 class="text-lg sm:text-xl font-bold text-[var(--text-color)]">TrilhaTec - Admin Center</h1>
                 </div>
 
                 <!-- Ações do cabeçalho -->
@@ -110,12 +110,12 @@ unset($user);
                                                 <?= match(strtolower($user['tipo'])) {
                                                     'admin', 'administrador' => 'background-color: var(--admin-bg); color: var(--admin-text); border: 1px solid var(--admin-border);',
                                                     'aluno', 'student' => 'background-color: var(--aluno-bg); color: var(--aluno-text); border: 1px solid var(--aluno-border);',
-                                                    'prof', 'professor', 'teacher' => 'background-color: var(--professor-bg); color: var(--professor-text); border: 1px solid var(--professor-border);',
+                                                    'prof', 'professor', 'teacher', 'instrutor' => 'background-color: var(--professor-bg); color: var(--professor-text); border: 1px solid var(--professor-border);',
                                                     default => 'background-color: var(--default-bg); color: var(--default-text); border: 1px solid var(--default-border);'
                                                 } ?>">
                                             <?= match(strtolower($user['tipo'])) {
                                                 'admin', 'administrador' => 'ADMIN',
-                                                'prof', 'professor', 'teacher' => 'PROFESSOR',
+                                                'prof', 'professor', 'teacher', 'instrutor' => 'INSTRUTOR',
                                                 'aluno', 'student' => 'ALUNO',
                                                 default => strtoupper($user['tipo'])
                                             } ?>
@@ -222,7 +222,7 @@ unset($user);
                                         class="mt-1 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-none"
                                         style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);">
                                     <option value="administrador" <?= (($_SESSION['dados_edicao']['tipo'] ?? '') === 'administrador') ? 'selected' : '' ?>>Administrador</option>
-                                    <option value="professor" <?= (($_SESSION['dados_edicao']['tipo'] ?? '') === 'professor') ? 'selected' : '' ?>>Professor</option>
+                                    <option value="professor" <?= (($_SESSION['dados_edicao']['tipo'] ?? '') === 'professor') ? 'selected' : '' ?>>Instrutor</option>
                                     <option value="aluno" <?= (($_SESSION['dados_edicao']['tipo'] ?? '') === 'aluno') ? 'selected' : '' ?>>Aluno</option>
                                 </select>
                             </div>
@@ -308,7 +308,7 @@ unset($user);
                                         style="background-color: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
                                             focus:ring: var(--primary-color); focus:border: var(--primary-color)">
                                     <option value="administrador">Administrador</option>
-                                    <option value="professor">Professor</option>
+                                    <option value="professor">Instrutor</option>
                                     <option value="aluno">Aluno</option>
                                 </select>
                             </div>
@@ -397,14 +397,14 @@ unset($user);
                 </nav>
             </main>
         </div>
-
+<!-- ========== PAINEL DO Instrutor ========== -->
     <?php elseif ($_SESSION['tipo'] == 'professor'): ?>
-        <!-- ========== PAINEL DO PROFESSOR ========== -->
+        
         <header class="app-header">
             <div class="header-content">
                 <div class="logo-container">
                     <i class="fas fa-book-medical"></i>
-                    <h1>MedNotes - Professor</h1>
+                    <h1>TrilhaTec - Instrutor</h1>
                 </div>
                 <div class="header-actions">
                     <button id="theme-toggle" class="theme-toggle">
@@ -425,7 +425,7 @@ unset($user);
 
         <!-- Lista de alunos -->
         <div class="students-section">
-            <h2>Turma de Teste</h2>
+            <h2>Turma 2025000003 - Técnico em Enfermagem</h2>
             
             <div id="students-list" class="students-grid">
                 <?php foreach ($users as $user): ?>
@@ -458,7 +458,7 @@ unset($user);
                 <div class="header-content">
                     <div class="logo-container">
                         <i class="fas fa-book-medical"></i>
-                        <h1>MedNotes</h1>
+                        <h1>TrilhaTec</h1>
                     </div>
                     <div class="header-actions">
                         <button id="theme-toggle" class="theme-toggle">
@@ -504,19 +504,19 @@ unset($user);
 
                     <!-- Botões de ação -->
                     <div class="editor-actions">
-                        <button type="submit" name="salvarAnotacao" class="save-button">
-                                    <i class="fas fa-save"></i> Salvar
-                        </button>
-                        <button id="analyze-btn" class="analyze-button">
-                            <i class="fas fa-robot"></i> Analisar com Florense
-                        </button>
-                    </div>
+                <button type="submit" name="salvarAnotacao" class="save-button">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+                <button type="button" id="analyze-btn" class="analyze-button">
+                    <i class="fas fa-robot"></i> Analisar com Florence
+                </button>
+            </div>
                 </form>
 
                 <!-- Container de sugestões (inicialmente oculto) -->
                 <div id="suggestions-container" class="suggestions-container hidden">
                     <div class="suggestions-header">
-                        <h2>Sugestões da Florense</h2>
+                        <h2>Sugestões da Florence</h2>
                         <button id="close-suggestions" class="close-button">
                             <i class="fas fa-times"></i>
                         </button>
@@ -595,7 +595,7 @@ unset($user);
 
                         <!-- Seção para exibir feedbacks do professor relacionados à anotação -->
                         <div id="edit-note-feedbacks" class="feedback-display mt-4">
-                            <h3 class="text-sm font-semibold mb-2">Feedback do Professor</h3>
+                            <h3 class="text-sm font-semibold mb-2">Feedback do Instrutor</h3>
                             <div id="edit-feedback-content" class="space-y-2 text-sm text-gray-700 bg-gray-100 rounded-md p-3 overflow-y-auto max-h-48" style="border: 1px solid var(--border-color);
                                 border-radius: var(--rounded);
                                 border: 1px solid var(--border-color);
@@ -605,9 +605,9 @@ unset($user);
                             </div>
                         </div>
 
-                        <!-- Seção para exibir sugestões adicionais (ex: da Florense) -->
+                        <!-- Seção para exibir sugestões adicionais (ex: da Florence) -->
                         <div id="edit-note-suggestions" class="suggestions-container">
-                            <h3>Sugestões da Florense</h3>
+                            <h3>Sugestões da Florence</h3>
                             <div id="edit-suggestions-content" class="suggestions-content"></div>
                         </div>
 
@@ -631,9 +631,33 @@ unset($user);
             <div id="loading-modal" class="loading-modal hidden">
                 <div class="loading-content">
                     <div class="loading-spinner"></div>
-                    <span>Analisando com Florense...</span>
+                    <span>Analisando com Florence...</span>
                 </div>
             </div>
+
+            <!-- Modal de Sugestões da Florence -->
+<div id="florence-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4" style="background-color: rgba(0, 0, 0, 0.7)">
+    <div class="rounded-xl p-4 sm:p-6 w-full max-w-md mx-2" style="background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md)">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold" style="color: var(--text-color)">Sugestões da Florence</h2>
+            <button id="close-florence-modal" class="close-button" style="color: var(--secondary-color)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mb-4">
+            <textarea id="florence-question" class="w-full p-3 rounded border mb-3" style="background-color: var(--input-bg); color: var(--text-color); border-color: var(--border-color); min-height: 100px" placeholder="Digite sua pergunta para a Florence..."></textarea>
+            <button id="ask-florence-btn" class="w-full py-2 px-4 rounded font-medium" style="background-color: var(--primary-color); color: white">
+                <i class="fas fa-paper-plane mr-2"></i> Enviar Pergunta
+            </button>
+        </div>
+        
+        <div id="florence-answer" class="p-3 rounded hidden" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color)">
+            <!-- Resposta será inserida aqui -->
+        </div>
+    </div>
+</div>
+            
 
             <!-- Navegação móvel -->
             <nav class="mobile-footer">
