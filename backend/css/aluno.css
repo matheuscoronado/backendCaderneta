@@ -195,6 +195,7 @@ button, input, textarea {
     resize: vertical;
     background-color: var(--card-bg);
     color: var(--text-color);
+    white-space: pre-line;
 }
 
 #note-content:focus, #edit-note-content:focus {
@@ -742,6 +743,7 @@ button, input, textarea {
     border-radius: 0.5rem;
     padding: 1rem;
     margin-top: 1rem;
+    white-space: pre-line;
 }
 
 #ask-florence-btn {
