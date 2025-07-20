@@ -23,13 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('note-subtitle').value = '';
         document.getElementById('note-content').value = '';
         document.getElementById('suggestions-container').classList.add('hidden');
+        document.getElementById('florence-modal').classList.add('hidden');
     });
 
     // Fecha sidebar
     document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
     document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
-    // Fecha sugestões da Florense
+    // Fecha sugestões da Florence
     document.getElementById('close-suggestions').addEventListener('click', () => {
         document.getElementById('suggestions-container').classList.add('hidden');
     });
@@ -51,10 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.text())
         .then(data => {
-            // alert("Anotação salva com sucesso!"); //Oculto para evitar pop-ups e funcionar apenas com animação
             loadNotes();
-
-            // Limpa campos e sugestões
             document.getElementById('note-topic').selectedIndex = 0;
             document.getElementById('note-subtitle').value = '';
             document.getElementById('note-content').value = '';
@@ -118,23 +116,164 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mostra sugestões da Florense conforme o tópico
+    // --- MODAL DA FLORENCE - VERSÃO COMPLETA E CORRIGIDA ---
+    const florenceModal = document.getElementById('florence-modal');
+const closeFlorenceBtn = document.getElementById('close-florence-modal');
+const askFlorenceBtn = document.getElementById('ask-florence-btn');
+const florenceQuestion = document.getElementById('florence-question');
+const florenceAnswer = document.getElementById('florence-answer');
+
+// Adicionando efeito hover ao botão "Perguntar à Florence"
+if (askFlorenceBtn) {
+    askFlorenceBtn.style.transition = 'background-color 0.3s ease';
+    
+    askFlorenceBtn.addEventListener('mouseenter', () => {
+        askFlorenceBtn.style.backgroundColor = 'var(--primary-dark)';
+    });
+    
+    askFlorenceBtn.addEventListener('mouseleave', () => {
+        askFlorenceBtn.style.backgroundColor = 'var(--primary-color)';
+    });
+}
+    
+    // Cria botão para aplicar sugestão
+    const applySuggestionBtn = document.createElement('button');
+    applySuggestionBtn.id = 'apply-suggestion-btn';
+    applySuggestionBtn.className = 'w-full py-2 px-4 rounded font-medium mt-3';
+    applySuggestionBtn.style.backgroundColor = 'var(--primary-color)';
+    applySuggestionBtn.style.color = 'white';
+    applySuggestionBtn.innerHTML = '<i class="fas fa-copy mr-2"></i> Usar esta sugestão na anotação';
+
+    // Adiciona transição e efeitos hover
+    applySuggestionBtn.style.transition = 'background-color 0.3s ease';
+    applySuggestionBtn.addEventListener('mouseenter', () => {
+        applySuggestionBtn.style.backgroundColor = 'var(--primary-dark)';
+    });
+    applySuggestionBtn.addEventListener('mouseleave', () => {
+        applySuggestionBtn.style.backgroundColor = 'var(--primary-color)';
+    });
+
+    // Adiciona o botão ao DOM e oculta inicialmente
+    florenceAnswer.parentNode.appendChild(applySuggestionBtn);
+    applySuggestionBtn.classList.add('hidden');
+
+    // Fecha modal com botão X
+    closeFlorenceBtn.addEventListener('click', () => {
+        florenceModal.classList.add('hidden');
+    });
+
+    // Fecha modal ao clicar no backdrop (área escura)
+    florenceModal.addEventListener('click', (e) => {
+        if (e.target === florenceModal) {
+            florenceModal.classList.add('hidden');
+        }
+    });
+
+    // Impede que cliques no conteúdo fechem o modal
+    document.querySelector('#florence-modal > div').addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Mostra sugestões da Florence conforme o tópico
     document.getElementById('analyze-btn').addEventListener('click', function() {
         const topic = document.getElementById('note-topic').value;
+        const topicText = document.getElementById('note-topic').options[document.getElementById('note-topic').selectedIndex].text;
 
         if (!topic || topic === 'outro') {
             alert('Por favor, selecione um tópico pré-definido para ver as orientações');
             return;
         }
 
+        // Mostra o modal da Florence
+        florenceModal.classList.remove('hidden');
+        florenceQuestion.focus();
+        
+        // Se existir resposta pré-definida para o tópico, mostra automaticamente
         if (TOPIC_RESPONSES[topic]) {
-            document.getElementById('suggestions-content').innerHTML = TOPIC_RESPONSES[topic];
-            document.getElementById('suggestions-container').classList.remove('hidden');
+            florenceQuestion.value = `Sobre ${topicText}`;
+            florenceAnswer.innerHTML = TOPIC_RESPONSES[topic];
+            florenceAnswer.classList.remove('hidden');
+            applySuggestionBtn.classList.remove('hidden');
         } else {
-            alert('Nenhuma orientação disponível para este tópico');
+            florenceAnswer.classList.add('hidden');
+            applySuggestionBtn.classList.add('hidden');
         }
     });
+
+    // Processar perguntas customizadas
+    askFlorenceBtn.addEventListener('click', function() {
+        const question = florenceQuestion.value.trim();
+        
+        if (!question) {
+            alert('Por favor, digite sua pergunta');
+            return;
+        }
+
+        // Mostra loading
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+        this.disabled = true;
+
+        setTimeout(() => {
+            // Verifica se temos resposta pré-definida
+            let answer = "Desculpe, não encontrei informações sobre este tópico. Por favor, reformule sua pergunta.";
+            
+            // Procura por correspondência aproximada
+            for (const [key, value] of Object.entries(FLORENCE_ANSWERS)) {
+                if (question.toLowerCase().includes(key.toLowerCase())) {
+                    answer = value;
+                    break;
+                }
+            }
+
+            // Exibe a resposta
+            florenceAnswer.innerHTML = answer.replace(/\n/g, '<br>');
+            florenceAnswer.classList.remove('hidden');
+            applySuggestionBtn.classList.remove('hidden');
+            
+            // Restaura o botão
+            this.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar';
+            this.disabled = false;
+        }, 800);
+    });
+
+    // Aplica sugestão ao campo de texto principal
+    applySuggestionBtn.addEventListener('click', function() {
+        const currentContent = document.getElementById('note-content').value;
+        const suggestion = florenceAnswer.textContent;
+        
+        document.getElementById('note-content').value = currentContent 
+            ? `${currentContent}\n\n- Sugestão da Florence -\n${suggestion}`
+            : suggestion;
+        
+        // Feedback visual
+        this.innerHTML = '<i class="fas fa-check mr-2"></i> Sugestão aplicada!';
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-copy mr-2"></i> Usar esta sugestão na anotação';
+        }, 2000);
+    });
+
+    // Botão de alternância de tema
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+    // Botão de exportar PDF
+    document.getElementById('export-pdf-btn').addEventListener('click', exportNotesToPDF);
+
+    // Animação do botão salvar
+    document.querySelector('.save-button').addEventListener('click', function() {
+        const button = this;
+        const form = document.getElementById('note-form');
+        if (form && !form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        button.classList.add('success');
+        setTimeout(() => {
+            button.classList.remove('success');
+        }, 1500);
+    });
 });
+
+// --- FUNÇÕES GLOBAIS ---
 
 // Fecha a sidebar
 function closeSidebar() {
@@ -162,9 +301,6 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
 }
 
-// Botão de alternância de tema
-document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-
 // Carrega todas as anotações do aluno
 function loadNotes() {
     fetch('index.php?action=listar-anotacoes-aluno')
@@ -189,9 +325,7 @@ function loadNotes() {
                     <p>${new Date(note.data_registro).toLocaleDateString('pt-BR')} • ${note.descricao.substring(0, 30)}${note.descricao.length > 30 ? '...' : ''}</p>
                 `;
 
-                // Ao clicar na anotação, abre o modal de edição
                 noteItem.addEventListener('click', () => openEditModal(note));
-
                 sidebarList.appendChild(noteItem);
             });
         })
@@ -204,19 +338,14 @@ function loadNotes() {
 
 // Abre o modal de edição e carrega os dados da anotação + feedbacks
 function openEditModal(note) {
-    // Preenche os campos da anotação
     document.getElementById('edit-note-title').value = note.titulo;
     document.getElementById('edit-note-subtitle').value = note.subtitulo;
     document.getElementById('edit-note-content').value = note.descricao;
 
-    // Armazena o ID da anotação
     document.getElementById('update-note-btn').dataset.id = note.id;
     document.getElementById('delete-note-btn').dataset.id = note.id;
 
-    // Carrega os feedbacks do professor para esta anotação
     carregarFeedbacks(note.id);
-
-    // Exibe o modal
     document.getElementById('edit-note-modal').classList.remove('hidden');
 }
 
@@ -250,31 +379,10 @@ function carregarFeedbacks(atividadeId) {
         });
 }
 
-
-//Estilização de animação para o botão de salvar
-
-document.querySelector('.save-button').addEventListener('click', function() {
-    const button = this;
-    
-    // Validação simples do formulário
-    const form = document.getElementById('note-form');
-    if (form && !form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    
-    // Confirmação visual
-    button.classList.add('success');
-    
-    // Volta ao normal após 1,5 segundos
-    setTimeout(() => {
-        button.classList.remove('success');
-    }, 1500);
-});
-
+// Filtra anotações na sidebar
 function filtrarAnotacoes() {
     const filtro = document.getElementById('notes-search').value.toLowerCase();
-    const cards = document.querySelectorAll('#sidebar-notes-list .sidebar-note'); // aqui mudou
+    const cards = document.querySelectorAll('#sidebar-notes-list .sidebar-note');
 
     cards.forEach(card => {
         const titulo = card.querySelector('.note-topic')?.textContent.toLowerCase() || '';
@@ -282,15 +390,11 @@ function filtrarAnotacoes() {
         const descricao = card.querySelector('p')?.textContent.toLowerCase() || '';
         
         const textoCompleto = `${titulo} ${subtitulo} ${descricao}`;
-
         card.style.display = textoCompleto.includes(filtro) ? 'block' : 'none';
     });
 }
 
-// Adicione este código junto com seus outros event listeners
-document.getElementById('export-pdf-btn').addEventListener('click', exportNotesToPDF);
-
-// função para exportar anotações para PDF
+// Exporta anotações para PDF
 async function exportNotesToPDF() {
     const loadingModal = document.getElementById('loading-modal');
     try {
@@ -308,76 +412,53 @@ async function exportNotesToPDF() {
             format: 'a4'
         });
 
-        // Configurações de estilo
+        // Configurações de estilo e margens
         const styles = {
             primaryColor: '#3b82f6',
             textColor: '#000000',
             lightText: '#555555',
-            header: {
-                fontSize: 18,
-                fontStyle: 'bold',
-                textColor: '#ffffff'
-            },
-            title: {
-                fontSize: 16,
-                fontStyle: 'bold'
-            },
-            noteTitle: {
-                fontSize: 14,
-                fontStyle: 'bold'
-            },
-            subtitle: {
-                fontSize: 12,
-                fontStyle: 'italic'
-            },
-            date: {
-                fontSize: 10
-            },
-            body: {
-                fontSize: 11
-            },
-            footer: {
-                fontSize: 10
-            }
+            header: { fontSize: 18, fontStyle: 'bold', textColor: '#ffffff' },
+            title: { fontSize: 16, fontStyle: 'bold' },
+            noteTitle: { fontSize: 14, fontStyle: 'bold' },
+            subtitle: { fontSize: 12, fontStyle: 'italic' },
+            date: { fontSize: 10 },
+            body: { fontSize: 11 },
+            footer: { fontSize: 10 }
         };
 
-        // Margens e dimensões
         const margin = 20;
         const maxWidth = doc.internal.pageSize.getWidth() - (margin * 2);
         let yPos = margin;
         const lineHeight = 6;
         const pageHeight = doc.internal.pageSize.getHeight() - margin;
 
-        // Função para aplicar estilo consistente
+        // Função para aplicar estilo
         const applyStyle = (style) => {
             doc.setFontSize(style.fontSize);
             doc.setFont('helvetica', style.fontStyle || 'normal');
             doc.setTextColor(style.textColor || styles.textColor);
         };
 
-        // Cabeçalho
+        // Adiciona cabeçalho
         const addHeader = () => {
             doc.setFillColor(styles.primaryColor);
             doc.rect(0, 0, doc.internal.pageSize.getWidth(), 20, 'F');
-            
             applyStyle(styles.header);
             doc.text('MedNotes', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
-            
             yPos = 30;
-            applyStyle(styles.body); // Reset para estilo padrão
+            applyStyle(styles.body);
         };
 
-        // Função para adicionar texto com quebra de página consistente
+        // Adiciona texto com quebra de página
         const addText = (text, style) => {
             applyStyle(style);
-            
             const lines = doc.splitTextToSize(text, maxWidth);
             
             for (let i = 0; i < lines.length; i++) {
                 if (yPos > pageHeight) {
                     doc.addPage();
                     addHeader();
-                    applyStyle(style); // Reaplicar o mesmo estilo na nova página
+                    applyStyle(style);
                 }
                 doc.text(lines[i], margin, yPos);
                 yPos += lineHeight;
@@ -385,7 +466,7 @@ async function exportNotesToPDF() {
             yPos += lineHeight / 2;
         };
 
-        // Buscar anotações
+        // Busca anotações
         const response = await fetch('index.php?action=listar-anotacoes-aluno');
         const anotacoes = await response.json();
 
@@ -394,19 +475,12 @@ async function exportNotesToPDF() {
             return;
         }
 
-        // Adicionar cabeçalho inicial
         addHeader();
-
-        // Título principal
-        addText('MINHAS ANOTAÇÕES', { 
-            ...styles.title, 
-            textColor: styles.primaryColor 
-        });
+        addText('MINHAS ANOTAÇÕES', { ...styles.title, textColor: styles.primaryColor });
         yPos += 10;
 
-        // Processar cada anotação
+        // Adiciona cada anotação
         anotacoes.forEach((note, index) => {
-            // Divisor
             if (index > 0) {
                 if (yPos + 5 > pageHeight) {
                     doc.addPage();
@@ -418,33 +492,19 @@ async function exportNotesToPDF() {
                 yPos += 10;
             }
             
-            // Título
-            addText(note.titulo, { 
-                ...styles.noteTitle, 
-                textColor: styles.primaryColor 
-            });
-            
-            // Subtítulo
+            addText(note.titulo, { ...styles.noteTitle, textColor: styles.primaryColor });
             addText(note.subtitulo, styles.subtitle);
             
-            // Data
             const dataFormatada = new Date(note.data_registro).toLocaleDateString('pt-BR') || '';
             if (dataFormatada) {
-                addText(dataFormatada, { 
-                    ...styles.date, 
-                    textColor: styles.lightText 
-                });
+                addText(dataFormatada, { ...styles.date, textColor: styles.lightText });
             }
             
-            // Conteúdo
             addText(note.descricao || 'Sem conteúdo', styles.body);
         });
 
-        // Rodapé
-        applyStyle({ 
-            ...styles.footer, 
-            textColor: styles.lightText 
-        });
+        // Adiciona rodapé
+        applyStyle({ ...styles.footer, textColor: styles.lightText });
         doc.text(`Gerado pelo MedNotes • ${new Date().toLocaleDateString('pt-BR')}`, 
                 doc.internal.pageSize.getWidth() / 2, 
                 doc.internal.pageSize.getHeight() - 10, 
@@ -460,3 +520,53 @@ async function exportNotesToPDF() {
     }
 }
 
+// Carrega scripts externos
+function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// --- DICIONÁRIOS DE RESPOSTAS ---
+
+// Respostas pré-definidas por tópico
+const TOPIC_RESPONSES = {
+    "Sinais Vitais - Conceitos Gerais": `
+        <h3 class="font-bold mb-2">Sinais Vitais Básicos</h3>
+        <p>Os sinais vitais incluem:</p>
+        <ul class="list-disc pl-5 mt-2">
+            <li>Temperatura corporal</li>
+            <li>Pulso/frequência cardíaca</li>
+            <li>Frequência respiratória</li>
+            <li>Pressão arterial</li>
+            <li>Dor (considerado o 5º sinal vital)</li>
+            <li>Saturação de oxigênio (em alguns protocolos)</li>
+        </ul>
+        <p class="mt-2">Valores normais de referência podem variar conforme idade e condições específicas.</p>
+    `,
+    "Temperatura Corporal": `
+        <h3 class="font-bold mb-2">Temperatura Corporal Normal</h3>
+        <p>Valores de referência:</p>
+        <ul class="list-disc pl-5 mt-2">
+            <li><strong>Axilar:</strong> 35,5°C - 36,5°C</li>
+            <li><strong>Oral:</strong> 36°C - 37,2°C</li>
+            <li><strong>Retal:</strong> 36°C - 37,5°C</li>
+            <li><strong>Timpânica:</strong> 35,8°C - 37°C</li>
+        </ul>
+        <p class="mt-2">Febre: acima de 37,8°C (axilar) ou 38°C (retal)</p>
+    `,
+    // Adicione mais respostas conforme necessário
+};
+
+// Respostas para perguntas customizadas
+const FLORENCE_ANSWERS = {
+    "o que é uma laranja": "A laranja é uma fruta cítrica rica em vitamina C, de cor alaranjada e sabor variando entre doce e levemente ácido. É excelente para fortalecer o sistema imunológico.",
+    "o que é pressão arterial": "Pressão arterial é a força que o sangue exerce contra as paredes das artérias. Valores normais são em torno de 120/80 mmHg. A hipertensão ocorre quando esses valores estão consistentemente elevados.",
+    "como medir temperatura": "Para medir temperatura corporal corretamente:\n1. Use um termômetro limpo\n2. Coloque sob a língua, na axila ou reto\n3. Aguarde o tempo recomendado pelo fabricante\n4. Leia o valor - normal é entre 36°C e 37,2°C",
+    "como medir pressão": "Para medir a pressão arterial corretamente:\n1. Sente-se e descanse por 5 minutos\n2. Use um esfigmomanômetro validado\n3. Coloque a braçadeira no braço na altura do coração\n4. Não fale durante a medição\nValores normais: 120/80 mmHg",
+    "o que é dor": "Dor é uma experiência sensorial e emocional desagradável associada a dano tecidual real ou potencial. É classificada em:\n- Aguda: curta duração\n- Crônica: persiste por mais de 3 meses\n- Nociceptiva: por dano tecidual\n- Neuropática: por lesão nervosa"
+};
