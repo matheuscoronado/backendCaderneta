@@ -12,7 +12,7 @@
     <!-- Importações de bibliotecas externas -->
     <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind CSS (framework de estilização) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/> <!-- Font Awesome (ícones) -->
-    <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg"/> <!-- Ícone da aba do navegador -->
+    <link rel="shortcut icon" type="image/svg" href="./img/android-chrome-512x512.png"/> <!-- Ícone da aba do navegador -->
     <!-- Importação do CSS personalizado -->
     <link rel="stylesheet" href="./css/login.css" />
 </head>
@@ -48,7 +48,9 @@
         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
             <!-- Cabeçalho do card (logo e título) -->
             <div class="text-center mb-6">
-                <i class="fas fa-book-medical text-4xl text-blue-500 mb-3"></i> <!-- Ícone -->
+                <!-- <i class="fas fa-book-medical text-4xl text-blue-500 mb-3"></i> Ícone -->
+                <!-- <img src="./img/trilhatec.png" alt="Logo TrilhaTec" class="mx-auto mb-2 w-24 h-16"> Logo -->
+                 <img class= "Logo" src="./img/trilhatec.png" alt="Logo TrilhaTec" class="mx-auto mb-2" style="    scale: 80%;"> <!-- Logo -->
                 <h1 class="text-2xl font-bold text-gray-800">TrilhaTec</h1> <!-- Título -->
                 <p class="text-gray-600">Sua caderneta médica digital</p> <!-- Subtítulo -->
             </div>
