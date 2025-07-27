@@ -35,7 +35,7 @@ unset($user);
         <link rel="stylesheet" href="css/aluno.css" />
     <?php endif; ?>
 
-    <link rel="shortcut icon" type="image/svg" href="/logo-aba_book-medical-solid.svg" />
+    <link rel="shortcut icon" type="image/svg" href="./img/android-chrome-512x512.png"/> 
 </head>
 
 <!-- Corpo da página com classe específica para o tipo de usuário -->
