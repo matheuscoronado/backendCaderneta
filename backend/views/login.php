@@ -52,7 +52,7 @@
                 <!-- <img src="./img/trilhatec.png" alt="Logo TrilhaTec" class="mx-auto mb-2 w-24 h-16"> Logo -->
                  <img class= "Logo" src="./img/trilhatec.png" alt="Logo TrilhaTec" class="mx-auto mb-2" style="    scale: 80%;"> <!-- Logo -->
                 <h1 class="text-2xl font-bold text-gray-800">TrilhaTec</h1> <!-- Título -->
-                <p class="text-gray-600">Sua caderneta médica digital</p> <!-- Subtítulo -->
+                <p class="text-gray-600">Sua trilha de aprendizagem tecnológica.</p> <!-- Subtítulo -->
             </div>
 
               <!-- Exibe mensagem de erro se existir -->
