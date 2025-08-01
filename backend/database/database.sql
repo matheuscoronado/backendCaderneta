@@ -1,5 +1,4 @@
-CREATE DATABASE cadernetadigital;
-USE cadernetadigital;
+USE u748262474_trilhatech;
 
 CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,7 +34,7 @@ CREATE TABLE atividade (
 
 CREATE TABLE feedback (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    professor_id INT NULL, -- Alterado para aceitar NULL
+    professor_id INT NULL,
     atividade_id INT NOT NULL,
     comentario TEXT NOT NULL,
     data_feedback DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
