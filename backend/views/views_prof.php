@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anotações de <?= htmlspecialchars($aluno['nome']) ?> - MedNotes</title>
+    <title>Anotações de <?= htmlspecialchars($aluno['nome']) ?> - TrilhaTec</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/views_prof.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,7 @@
             <div class="header-content">
                 <div class="logo-container">
                     <i class="fas fa-book-medical"></i>
-                    <h1>MedNotes</h1>
+                    <h1>TrilhaTec</h1>
                 </div>
                 <div class="header-actions">
                     <button id="theme-toggle" class="theme-toggle">
