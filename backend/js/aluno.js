@@ -389,7 +389,7 @@ function carregarFeedbacks(atividadeId) {
                     item.className = 'feedback-item border-b border-gray-200 pb-2 mb-2';
                     item.innerHTML = `
                         <div class="feedback-header flex justify-between text-xs text-gray-600 mb-1" style="color: var(--text-color);">
-                            <span><strong>Prof.</strong> ${fb.professor_nome}</span>
+                            <span><strong>Instrutor</strong> ${fb.professor_nome}</span>
                             <span>${new Date(fb.data_feedback).toLocaleString('pt-BR')}</span>
                         </div>
                         <p class="text-sm text-gray-700" style="color: var(--text-color);">${fb.comentario.replace(/\n/g, '<br>')}</p>
