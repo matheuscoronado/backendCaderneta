@@ -468,7 +468,7 @@ async function exportNotesToPDF() {
             doc.setFillColor(styles.primaryColor);
             doc.rect(0, 0, doc.internal.pageSize.getWidth(), 20, 'F');
             applyStyle(styles.header);
-            doc.text('MedNotes', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+            doc.text('TrilhaTec', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
             yPos = 30;
             applyStyle(styles.body);
         };
@@ -529,12 +529,12 @@ async function exportNotesToPDF() {
 
         // Adiciona rodapé
         applyStyle({ ...styles.footer, textColor: styles.lightText });
-        doc.text(`Gerado pelo MedNotes • ${new Date().toLocaleDateString('pt-BR')}`, 
+        doc.text(`Gerado pelo TrilhaTec • ${new Date().toLocaleDateString('pt-BR')}`, 
                 doc.internal.pageSize.getWidth() / 2, 
                 doc.internal.pageSize.getHeight() - 10, 
                 { align: 'center' });
 
-        doc.save(`Anotacoes_MedNotes.pdf`);
+        doc.save(`Anotacoes_TrilhaTec.pdf`);
 
     } catch (error) {
         console.error('Erro ao gerar PDF:', error);
